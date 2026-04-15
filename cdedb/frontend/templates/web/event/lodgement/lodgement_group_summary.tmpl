@@ -27,7 +27,7 @@
 {% block content %}
     <form action="{{ cdedblink('event/lodgement_group_summary') }}" method="POST" id="lodgementgroupsummaryform">
         {{ util.anti_csrf_token('event/lodgement_group_summary') }}
-        <table class="table table-condensed" id="drow-table">
+        <table class="table table-sm" id="drow-table">
             <thead>
                 <tr>
                     <th class="required-col">{% trans %}Name{% endtrans %}</th>

@@ -127,13 +127,13 @@
 
                 <!-- Tabs to chose between NonJS- and JS-form -->
                 <ul class="nav nav-tabs softhide" role="tablist" id="qf_tablist">
-                    <li role="presentation" class="active">
-                        <a href="#tab_qf_nojs" data-bs-toggle="tab" aria-controls="tab_qf_nojs" role="tab" id="tab_link_qf_nojs">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" href="#tab_qf_nojs" data-bs-toggle="tab" aria-controls="tab_qf_nojs" role="tab" id="tab_link_qf_nojs">
                             {{ util.make_icon('list') }} {% trans %}Tabular{% endtrans %}
                         </a>
                     </li>
-                    <li role="presentation">
-                        <a href="#tab_qf_js" data-bs-toggle="tab" aria-controls="tab_qf_js" role="tab" id="tab_link_qf_js">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" href="#tab_qf_js" data-bs-toggle="tab" aria-controls="tab_qf_js" role="tab" id="tab_link_qf_js">
                             {{ util.make_icon('magic') }} {% trans %}Magic{% endtrans %}
                         </a>
                     </li>
@@ -472,7 +472,7 @@
             </button>
         </div>
         <div class="table-container" id="result-container">
-        <table class="table table-condensed table-hover ls-list" id="query-result">
+        <table class="table table-sm table-hover ls-list" id="query-result">
             <thead>
                 <tr>
                     <th><span class="softhide" id="js-select-num">(<span id="label-select-num">0</span>)</span></th>
@@ -667,8 +667,8 @@
 {% endmacro %}
 
 {% macro nav_tab(target, label, icon=none, anid="") %}
-    <li role="presentation">
-        <a data-bs-toggle="tab" role="tab" data-bs-target="{{ target }}" id="{{ anid }}">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="{{ target }}" id="{{ anid }}">
             {{ util.make_icon(icon) if icon }}{{ nbsp if icon and label -}}
             {{ label }}
         </a>

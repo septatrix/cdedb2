@@ -11,7 +11,7 @@
 {% endblock %}
 {% block content %}
     <div id="cde-simple-stats">
-        <table class="table table-slim table-condensed">
+        <table class="table table-slim table-sm">
             <thead>
                 <tr>
                     <th colspan="2"></th>
@@ -38,7 +38,7 @@
 
     {{ util.h(n_("Stats by Year")) }}
     <div id="cde-year-stats">
-        <table class="table table-slim table-condensed" id="year-stats">
+        <table class="table table-slim table-sm" id="year-stats">
             <thead>
                 <tr>
                     <th></th>
@@ -75,7 +75,7 @@
 {% endblock %}
 
 {% macro stat_table(view, view_stats, processing="") %}
-    <table class="table table-slim table-condensed" id="complex-stats-{{ view }}">
+    <table class="table table-slim table-sm" id="complex-stats-{{ view }}">
         <thead>
             <tr>
                 <th></th>

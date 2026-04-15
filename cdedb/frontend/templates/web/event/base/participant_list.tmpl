@@ -70,12 +70,14 @@
     {% if list_consent and ambience['event']['parts']|length > 1 %}
         <nav>
             <ul class="nav nav-tabs mosp">
-                <li role="presentation" {% if part_id is none %}class="active" aria-current="page" {% endif %}>
-                    {{ util.href(cdedblink('event/participant_list', {'part_id': None}), gettext("Overview")) }}
+                <li class="nav-item" role="presentation" {% if part_id is none %}aria-current="page" {% endif %}>
+                    {{ util.href(cdedblink('event/participant_list', {'part_id': None}), gettext("Overview"),
+                                 aclass="nav-link" + (" active" if part_id is none else "")) }}
                 </li>
                 {% for p in ambience['event']['parts'].values()|sort %}
-                    <li role="presentation" {% if p.id == part_id %}class="active" aria-current="page" {% endif %}>
-                        {{ util.href(cdedblink('event/participant_list', {'part_id': p.id}), p['title']) }}
+                    <li class="nav-item" role="presentation" {% if p.id == part_id %}aria-current="page" {% endif %}>
+                        {{ util.href(cdedblink('event/participant_list', {'part_id': p.id}), p['title'],
+                                     aclass="nav-link" + (" active" if p.id == part_id else "")) }}
                     </li>
                 {% endfor %}
             </ul>
@@ -88,7 +90,7 @@
         {% if registrations %}
         {% if part_id %}
             <div class="table-container">
-            <table class="table table-condensed">
+            <table class="table table-sm">
                 <thead>
                     <tr>
                         <th>{{ display_sorting_header(part_id, "given_names", gettext("Given Names")) }}</th>
@@ -136,7 +138,7 @@
         {# this makes an overview over all event parts #}
         {% else %}
             <div class="table-container">
-            <table class="table table-condensed">
+            <table class="table table-sm">
                 <thead>
                     <tr>
                         <th>{{ display_sorting_header(None, "given_names", gettext("Given Names")) }}</th>

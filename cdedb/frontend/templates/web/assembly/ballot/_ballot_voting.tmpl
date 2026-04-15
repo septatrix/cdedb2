@@ -224,14 +224,14 @@
 
     {# Tab controls to switch to javascript preferential voting form #}
     <ul class="nav nav-tabs mosp softhide" role="tablist" id="tablist-formselect">
-        <li role="presentation" class="active">
-            <a href="#tab-textform" aria-controls="tab-textform" role="tab" data-bs-toggle="tab"
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="#tab-textform" aria-controls="tab-textform" role="tab" data-bs-toggle="tab"
                id="tablink-textform">
                 {{ util.make_icon('terminal') }} {% trans %}Text-based Voting{% endtrans %}
             </a>
         </li>
-        <li role="presentation">
-            <a href="#tab-jsform" aria-controls="tab-jsform" role="tab" data-bs-toggle="tab"
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#tab-jsform" aria-controls="tab-jsform" role="tab" data-bs-toggle="tab"
                     id="tablink-jsform">
                 {{ util.make_icon('magic') }} {% trans %}Interactive Voting{% endtrans %}
             </a>
@@ -323,7 +323,7 @@
     <form action="{{ cdedblink('assembly/edit_candidates') }}" method="POST" id="candidatessummaryform">
         {{ util.anti_csrf_token('assembly/edit_candidates') }}
 
-        <table class="table table-condensed" id="drow-table">
+        <table class="table table-sm" id="drow-table">
             <thead>
                 <tr>
                     <th class="required-col">{% trans %}Shortname{% endtrans %}</th>

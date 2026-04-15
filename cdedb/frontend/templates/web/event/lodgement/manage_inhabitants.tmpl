@@ -32,7 +32,7 @@
                     {% call util.bootstrap_panel(title=(part['title'] if ambience['event']['parts']|length > 1
                                                                       else gettext("Assigned Inhabitants")),
                                                  aclass="border-info", anid="inhabitants-{}".format(part.id)) %}
-                        <table class="table table-condensed">
+                        <table class="table table-sm">
                             <tbody>
                             {% for registration_id in inhabitants[(ambience['lodgement']['id'], part.id)] %}
                                 {% set registration_part_status = registrations[registration_id]['parts'][part.id]['status'] %}

@@ -53,7 +53,7 @@
         {% endtrans %}
     </p>
 
-    <table class="table table-condensed" id="open-dd-authorization">
+    <table class="table table-sm" id="open-dd-authorization">
         <tbody>
         {% for lastschrift_id, lastschrift in active_lastschrifts.items() if lastschrift['open']%}
             <tr>
@@ -145,7 +145,7 @@
 
         <form action="{{ cdedblink('cde/lastschrift_finalize_transactions') }}" method="POST" id="finalizationform">
             {{ util.anti_csrf_token('cde/lastschrift_finalize_transactions') }}
-            <table class="table table-condensed ls-list" id="open_lastschrift_table">
+            <table class="table table-sm ls-list" id="open_lastschrift_table">
                 <thead>
                     <tr>
                         <th><span class="softhide" id="js-select-num">(<span id="label-select-num">0</span>)</span></th>

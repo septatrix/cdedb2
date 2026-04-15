@@ -57,11 +57,13 @@
 
     <nav>
         <ul class="nav nav-tabs mosp">
-            <li role="presentation" {% if not checkout %}class="active" aria-current="page" {% endif %}>
-                {{ util.href(cdedblink('event/checkin_form', {'part_ids': part_ids, 'checkout': false}), gettext("Checkin")) }}
+            <li class="nav-item" role="presentation" {% if not checkout %}aria-current="page" {% endif %}>
+                {{ util.href(cdedblink('event/checkin_form', {'part_ids': part_ids, 'checkout': false}), gettext("Checkin"),
+                             aclass="nav-link" + (" active" if not checkout else "")) }}
             </li>
-            <li role="presentation" {% if checkout %}class="active" aria-current="page" {% endif %}>
-                {{ util.href(cdedblink('event/checkin_form', {'part_ids': part_ids, 'checkout': true}), gettext("Checkout")) }}
+            <li class="nav-item" role="presentation" {% if checkout %}aria-current="page" {% endif %}>
+                {{ util.href(cdedblink('event/checkin_form', {'part_ids': part_ids, 'checkout': true}), gettext("Checkout"),
+                             aclass="nav-link" + (" active" if checkout else "")) }}
             </li>
         </ul>
     </nav>
