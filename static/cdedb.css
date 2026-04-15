@@ -224,8 +224,7 @@ ul.slim {
     background-color: #eee;
 }
 .list-group-item-muted .text-unmuted {
-    /* TODO: replace this with the --bs-* variable for text color in bootstrap 4/5 */
-    color: #333;
+    color: var(--bs-body-color, #333);
 }
 .list-group-item-muted a:not(.btn), .text-muted a, a.text-muted {
     color: #96b4cd;
@@ -503,6 +502,10 @@ h1.title {
 }
 .breadcrumb {
     font-size: 0.9em;
+    --bs-breadcrumb-divider: '>';
+    background-color: #f5f5f5;
+    padding: 8px 15px;
+    border-radius: 4px;
 }
 @media (min-width: 992px) {
     .breadcrumb-hanging {

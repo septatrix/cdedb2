@@ -13,14 +13,14 @@
             if (input.length > 0) {
                 (input.parent().is('label') ? input.parent() : input)
                     .after(' <button type="button" class="btn btn-danger align-top" title="' + delete_title + '">' + delete_icon + '</button>')
-                    .after(' <button type="button" class="btn btn-default align-top" title="' + restore_title + '">' + restore_icon + '</button>')
+                    .after(' <button type="button" class="btn btn-secondary align-top" title="' + restore_title + '">' + restore_icon + '</button>')
                     .css('display', 'inline');
                 if (input.css('width') === input.parent().css('width')) {
                     input.css('width', '80%');
                 }
             }
             let delete_button = group.find('button.btn-danger');
-            let restore_button = group.find('button.btn-default');
+            let restore_button = group.find('button.btn-secondary');
 
             /* Save the original value. This is the new, but not saved, value in case of validation error. */
             /* Adjust the changenotes width to fit the input width, if it is not a checkbox. */

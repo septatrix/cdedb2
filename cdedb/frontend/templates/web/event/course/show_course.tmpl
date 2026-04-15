@@ -70,7 +70,7 @@
 
     {% if ambience['course'].notes %}
         {% call util.bootstrap_panel(title=gettext("Orga-Notes"), icon="tag",
-                                     aclass=" panel-condensed") %}
+                                     aclass=" card-condensed") %}
             {{ ambience['course'].notes|md }}
         {% endcall %}
     {% endif %}
@@ -91,7 +91,7 @@
             {% set involved_attendees = attendee_stats.involved[(ambience['course'].id, track.id)] %}
             {% set uninvolved_attendees = attendee_stats.uninvolved[(ambience['course'].id, track.id)] %}
             <div class="col-md-4">
-                <div class="card border-info panel-condensed" id="track{{ track.id }}-attendees">
+                <div class="card border-info card-condensed" id="track{{ track.id }}-attendees">
                     <div class="card-header">
                         <div class="float-end">{{ involved_attendees.num_learners }}&nbsp;+&nbsp;{{ involved_attendees.num_instructors }}</div>
                         <h3 class="card-title">
@@ -188,7 +188,7 @@
         </div>
     {% endfor %}
     {% call util.bootstrap_panel(
-                icon="thumbtack", aclass=" panel-condensed",
+                icon="thumbtack", aclass=" card-condensed",
                 title=
                     gettext("Description") + " (<i>{}</i>)".format(gettext("not visible"))|s
                     if not ambience['course'].is_visible else

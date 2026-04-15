@@ -37,7 +37,7 @@
    newrow rows will have 'create' instead of 'delete' checkbox and have 'data-basename' attributes #}
 {% macro print_field(field_id, association, deletable, changeable, aclass="", newrow=False) %}
     <div class="col-md-12 {{ aclass }}" role="group" data-drow-id="{{ field_id }}">
-        <div class="card  panel-condensed">
+        <div class="card  card-condensed">
             <div class="card-header {{ util.has_errors(drow_name('title', field_id)) }}">
                 {{ util.input_text(name=drow_name('title', field_id),
                                    placeholder=gettext("Title of the Custom Field"),
@@ -151,7 +151,7 @@
     </div>
     {% if ambience['event']['field_definition_notes'] %}
         {% call util.bootstrap_panel(title=gettext("Custom Fields Notes") + nbsp + generic_event.edit_free_text_button("field_definition_notes"),
-                                     icon="tag", aclass=" panel-condensed") %}
+                                     icon="tag", aclass=" card-condensed") %}
             <div id="field-definition-notes">{{ ambience['event']['field_definition_notes']|md }}</div>
         {% endcall %}
     {% endif %}

@@ -65,7 +65,7 @@
 
     {% if ambience['lodgement']['notes'] %}
         {% call util.bootstrap_panel(title=gettext("Orga-Notes"), icon="tag",
-                                 aclass=" panel-condensed") %}
+                                 aclass=" card-condensed") %}
             {{ ambience['lodgement']['notes']|md }}
         {% endcall %}
     {% endif %}
@@ -75,7 +75,7 @@
         <div class="row" id="inhabitants">
         {% for part in batch %}
             <div class="col-md-4" id="inhabitants-{{ part.id }}">
-                <div class="card border-info panel-condensed">
+                <div class="card border-info card-condensed">
                     <div class="card-header">
                         <div class="float-end">{{ inhabitant_numbers[part.id][0] }}&nbsp;+&nbsp;{{ inhabitant_numbers[part.id][1] }}</div>
                         <h3 class="card-title">

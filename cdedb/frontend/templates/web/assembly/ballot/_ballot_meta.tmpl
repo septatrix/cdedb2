@@ -192,7 +192,7 @@
 
     {% if ("assembly_presider" in user.admin_views or ambience['assembly']['id'] in user.presider)
            and ambience['ballot']['notes'] %}
-        {% call util.bootstrap_panel(title=gettext("Admin Notes"), icon="tag", aclass=" panel-condensed",
+        {% call util.bootstrap_panel(title=gettext("Admin Notes"), icon="tag", aclass=" card-condensed",
                                      anid='notes') %}
             {{ ambience['ballot']['notes']|md }}
         {% endcall %}
@@ -201,7 +201,7 @@
 
 
 {% macro show_attachments() -%}
-    {% call util.bootstrap_panel(title=gettext("Files"), icon='file', aclass=" panel-condensed mosp") %}
+    {% call util.bootstrap_panel(title=gettext("Files"), icon='file', aclass=" card-condensed mosp") %}
         <div class="row" id="attachments">
             {% for slice in definitive_versions|keydictsort(EntitySorter.attachment)|slice(2) if definitive_versions %}
                 <div class="col-sm-6">

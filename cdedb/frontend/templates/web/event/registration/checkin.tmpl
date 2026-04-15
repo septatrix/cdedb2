@@ -23,7 +23,7 @@
 {% endblock %}
 {% block content %}
     {% if ambience['event']['parts']|length == 1 %}
-        <div class="card border-primary panel-condensed softhide" id="namesearch">
+        <div class="card border-primary card-condensed softhide" id="namesearch">
             <div class="card-header">
                 <h3 class="card-title">{{ util.make_icon("search") }}{{ nbsp }}{{ gettext("Filter") }}</h3>
             </div>
@@ -33,7 +33,7 @@
             </div>
         </div>
     {% else %}
-        <div class="card border-primary panel-condensed">
+        <div class="card border-primary card-condensed">
             <div class="card-header">
                 <h3 class="card-title">{{ util.make_icon("search") }}{{ nbsp }}{{ gettext("Filter") }}</h3>
             </div>

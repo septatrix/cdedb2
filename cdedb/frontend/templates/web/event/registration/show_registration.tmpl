@@ -96,7 +96,7 @@
 
     {% if ambience['registration']['orga_notes'] %}
         {% call util.bootstrap_panel(title=gettext("Orga-Notes"), icon="tag",
-                                     aclass=" panel-condensed") %}
+                                     aclass=" card-condensed") %}
             {{ ambience['registration']['orga_notes']|md }}
         {% endcall %}
     {% endif %}
@@ -456,7 +456,7 @@
                 </div>
             {% endfor %}
         {% endif %}
-    {% call util.bootstrap_panel(title=gettext("Notes"), aclass=" panel-condensed") %}
+    {% call util.bootstrap_panel(title=gettext("Notes"), aclass=" card-condensed") %}
         {{ ambience['registration']['notes']|md }}
     {% endcall %}
 

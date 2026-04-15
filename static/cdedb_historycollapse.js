@@ -20,7 +20,7 @@
                 .text((labels['more_versions']).replace('{num}', String($rows.length - 1)));
             
             var $hide_button = $('<button></button>',
-                    {'type': 'button', 'class': 'btn btn-default btn-sm softhide collapse-button'})
+                    {'type': 'button', 'class': 'btn btn-secondary btn-sm softhide collapse-button'})
                 .append($('<span></span>', {'class': 'fas fa-caret-up'}));
             
             $more_row.click(function(){

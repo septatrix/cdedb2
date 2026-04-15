@@ -19,7 +19,7 @@
 {% block content %}
     {% if now() < ambience['assembly']['signup_end'] and ("assembly_presider" in user.admin_views
                                                           or ambience['assembly']['id'] in user.presider) %}
-        {% call util.bootstrap_panel(title=gettext("Add external participants"), aclass='border-success panel-condensed',
+        {% call util.bootstrap_panel(title=gettext("Add external participants"), aclass='border-success card-condensed',
                 icon='plus') %}
             <p class="text-muted">
                 {{ util.make_icon('info-circle') }}

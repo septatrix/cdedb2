@@ -71,7 +71,7 @@
          */
 
         let domain_inp = $(this).find("[name='domain']");
-        let local_part_addon = $(this).find("[name='local_part'] ~ .input-group-addon");
+        let local_part_addon = $(this).find("[name='local_part'] ~ .input-group-text");
 
         function update_domain() {
             local_part_addon.text(domain_inp.find(':selected').text());

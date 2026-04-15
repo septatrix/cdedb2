@@ -192,7 +192,7 @@
             var f = fieldList[number];
 
             var $button = $('<button></button>', {
-                'class': "btn btn-sm btn-danger pull-right",
+                'class': "btn btn-sm btn-danger float-end",
                 'type': "button",
                 'title': settings.labels['del_filter'] || ''
             })
@@ -471,7 +471,7 @@
             }[f.type] ?? ['0→9','9→0'];
 
             var $button = $('<button></button>', {
-                'class': "btn btn-sm btn-danger pull-right",
+                'class': "btn btn-sm btn-danger float-end",
                 'type': "button",
                 'title': settings.labels['del_sort'] || ''
             })

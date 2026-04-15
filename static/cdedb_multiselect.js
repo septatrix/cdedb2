@@ -54,14 +54,14 @@
             var $box = $(this);
             var $li = $(this).closest('li,tr');
             var $button = $('<button></button>', {
-                'class': 'btn btn-xs btn-danger pull-right',
+                'class': 'btn btn-xs btn-danger float-end',
                 'type': 'button',
                 'aria-pressed': 'false',
                 'aria-label': title,
                 'title': title
             });
             $button.append($('<span></span>', {'class': 'fas fa-minus'}));
-            $button.append($('<span></span>', {'class': 'sr-only'}).append(title));
+            $button.append($('<span></span>', {'class': 'visually-hidden'}).append(title));
             $button.click(function () {
                 $(this).toggleClass('active');
                 if ($(this).hasClass('active')) {
