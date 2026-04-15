@@ -297,20 +297,18 @@
         const loading_spinner = `
 <div class="text-center">
     <span class="fas fa-sync fa-spin" aria-hidden="true"></span>
-    <span class="sr-only">${translations["loading"]}</span>
+    <span class="visually-hidden">${translations["loading"]}</span>
 </div>
         `;
         const modal = `
-<div class="modal fade" id="cdedb-modal" tabindex="-1" role="dialog" aria-labelledby="mdpreview-modal-title">
-    <div class="modal-dialog${ small ? ' modal-sm' : '' }" role="document">
+<div class="modal fade" id="cdedb-modal" tabindex="-1" aria-labelledby="cdedb-modal-title" aria-hidden="true">
+    <div class="modal-dialog${ small ? ' modal-sm' : '' }">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
                 <h4 class="modal-title" id="cdedb-modal-title">
                     ${ translations["title"] }
                 </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="cdedb-modal-content">
                 ${ loading_spinner }
@@ -319,7 +317,7 @@
                     ${ translations["note"] }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="cdedb-modal-close" data-dismiss="modal">
+                <button type="button" class="btn btn-secondary" id="cdedb-modal-close" data-bs-dismiss="modal">
                     ${ translations["close"] }
                 </button>
             </div>
@@ -335,7 +333,9 @@
             $("#cdedb-modal-content-note").text(translations["note"]);
             $("#cdedb-modal-close").text(translations["close"]);
         }
-        $("#cdedb-modal").modal("show");
+        var modalEl = document.getElementById("cdedb-modal");
+        var bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        bsModal.show();
     }
 
     /**

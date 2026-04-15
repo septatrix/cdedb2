@@ -18,9 +18,9 @@
         <link rel="manifest" href="{{ staticurl("favicon/site.webmanifest") }}" />
 
         <script src="{{ staticurl("jquery-3.min.js") }}"></script>
-        <link href="{{ staticurl("bootstrap-3/css/bootstrap.min.css") }}" rel="stylesheet" />
+        <link href="{{ staticurl("bootstrap-5/css/bootstrap.min.css") }}" rel="stylesheet" />
         <link href="{{ staticurl("fontawesome/css/all.min.css") }}" rel="stylesheet" />
-        <script src="{{ staticurl("bootstrap-3/js/bootstrap.min.js") }}"></script>
+        <script src="{{ staticurl("bootstrap-5/js/bootstrap.bundle.min.js") }}"></script>
         <script src="{{ staticurl("cdedb-general.js") }}"></script>
         {% if CDEDB_DEV %}
             <!-- script for adding links to view emails -->
@@ -54,15 +54,15 @@
                     <a href={{ cdedblink("core/index") }} class="logo">
                         <img src="{{ staticurl("logo.svg") }}" alt="CdE-Datenbank" />
                     </a>
-                    <div class="pull-right text-right">
+                    <div class="float-end text-end">
                         {% if CDEDB_DEV %}
                             <span class="text-danger text-uppercase small">Development Mode</span>
-                            <span class="hidden-md hidden-lg">|</span>
-                            <br class="hidden-xs hidden-sm" />
+                            <span class="d-md-none">|</span>
+                            <br class="d-none d-md-inline" />
                         {% elif CDEDB_OFFLINE_DEPLOYMENT %}
                             <span class="text-info text-uppercase small">Offline Deployment</span>
-                            <span class="hidden-md hidden-lg">|</span>
-                            <br class="hidden-xs hidden-sm" />
+                            <span class="d-md-none">|</span>
+                            <br class="d-none d-md-inline" />
                         {% endif %}
                         {% if I18N_LANGUAGES %}
                             <form action="{{ cdedblink('core/change_locale') }}" id="changelocaleform" method="post"
@@ -113,34 +113,31 @@
                 {% endif %}
             </div>
             <!-- main navigation bar -->
-            <nav class="navbar navbar-default" aria-label="{% trans %}Main Menu{% endtrans %}">
-                <div class="navbar-header">
+            <nav class="navbar navbar-expand-md navbar-light" aria-label="{% trans %}Main Menu{% endtrans %}">
+                <div class="container-fluid p-0">
                     <p class="navbar-collapse-header">{% trans %}Main Menu{% endtrans %}</p>
-                    <button type="button" class="navbar-toggle collapsed hide" data-toggle="collapse"
-                            data-target="#navbar-collapse-1" aria-expanded="false" id="button-navbar-toggle">
-                        <span class="sr-only">{% trans %}Display Main Menu{% endtrans %}</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                    <button type="button" class="navbar-toggler collapsed hide" data-bs-toggle="collapse"
+                            data-bs-target="#navbar-collapse-1" aria-expanded="false" id="button-navbar-toggle">
+                        <span class="visually-hidden">{% trans %}Display Main Menu{% endtrans %}</span>
+                        <span class="navbar-toggler-icon"></span>
                     </button>
-                </div>
 
-                <div class="collapse navbar-collapse in" id="navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
+                <div class="collapse navbar-collapse show" id="navbar-collapse-1">
+                    <ul class="nav navbar-nav ms-auto">
+                        <li class="nav-item">
                             {% if "persona" in user.roles %}
                                 <form action="{{ cdedblink("core/logout") }}" method="POST" id="logoutform"
-                                  class="navbar-form">
-                                    <p class="navbar-text">
-                                        <span class="sr-only">{% trans %}Logged-In as{% endtrans %}</span>
+                                  class="d-flex align-items-center navbar-form">
+                                    <p class="navbar-text mb-0">
+                                        <span class="visually-hidden">{% trans %}Logged-In as{% endtrans %}</span>
                                         <span id="displayname">
                                             {{ util.href(cdedblink("core/mydata"), user.given_names, icon="user") }}
                                         </span>
                                     </p>
                                     <button type="submit" name="submitlogout" value="{% trans %}Logout{% endtrans %}"
-                                      class="btn navbar-button btn-default" title="{% trans %}Logout{% endtrans %}">
+                                      class="btn navbar-button btn-secondary ms-2" title="{% trans %}Logout{% endtrans %}">
                                         {{ util.make_icon("power-off") }}
-                                        <span class="visible-xs-inline-block">{% trans %}Logout{% endtrans %}</span>
+                                        <span class="d-inline-block d-md-none">{% trans %}Logout{% endtrans %}</span>
                                     </button>
                                 </form>
                             {% elif not login_form and original_request %}
@@ -148,38 +145,44 @@
                                            "core/index", "wants", original_request.url, user.persona_id,
                                            timeout=EXTENDED_PARAMETER_TIMEOUT) %}
                                 {{ util.href(cdedblink('core/index', {'wants': encoded_parameter}), gettext("Login"),
-                                             aclass='btn navbar-button btn-default', icon='power-off') }}
+                                             aclass='btn navbar-button btn-secondary', icon='power-off') }}
                             {% endif %}
                         </li>
                     </ul>
 
                     <ul class="nav navbar-nav">
-                        <li {% if mainnav_active == 'core' %}class="active" aria-current="page"{% endif %}>
-                            {{ util.href(cdedblink("core/index"), gettext("Index"), icon="home") }}
+                        <li class="nav-item" {% if mainnav_active == 'core' %}aria-current="page"{% endif %}>
+                            {{ util.href(cdedblink("core/index"), gettext("Index"), icon="home",
+                                         aclass="nav-link" + (" active" if mainnav_active == 'core' else "")) }}
                             </li>
                         {% if "cde" in user.roles and not CDEDB_OFFLINE_DEPLOYMENT %}
-                            <li {% if mainnav_active == 'cde' %}class="active" aria-current="page"{% endif %}>
-                                {{ util.href(cdedblink("cde/index"), gettext("Members"), icon="graduation-cap") }}
+                            <li class="nav-item" {% if mainnav_active == 'cde' %}aria-current="page"{% endif %}>
+                                {{ util.href(cdedblink("cde/index"), gettext("Members"), icon="graduation-cap",
+                                             aclass="nav-link" + (" active" if mainnav_active == 'cde' else "")) }}
                                 </li>
                         {% endif %}
-                        <li {% if mainnav_active == 'event' %}class="active" aria-current="page"{% endif %}>
-                            {{ util.href(cdedblink("event/index"), gettext("Events"), icon="chalkboard-teacher") }}
+                        <li class="nav-item" {% if mainnav_active == 'event' %}aria-current="page"{% endif %}>
+                            {{ util.href(cdedblink("event/index"), gettext("Events"), icon="chalkboard-teacher",
+                                         aclass="nav-link" + (" active" if mainnav_active == 'event' else "")) }}
                         </li>
                         {% if "ml" in user.roles and not CDEDB_OFFLINE_DEPLOYMENT %}
-                            <li {% if mainnav_active == 'ml' %}class="active" aria-current="page"{% endif %}>
-                                {{ util.href(cdedblink("ml/index"), gettext("Mailinglists"), icon="envelope") }}
+                            <li class="nav-item" {% if mainnav_active == 'ml' %}aria-current="page"{% endif %}>
+                                {{ util.href(cdedblink("ml/index"), gettext("Mailinglists"), icon="envelope",
+                                             aclass="nav-link" + (" active" if mainnav_active == 'ml' else "")) }}
                             </li>
                         {% endif %}
                         {% if "assembly" in user.roles and not CDEDB_OFFLINE_DEPLOYMENT %}
-                            <li {% if mainnav_active == 'assembly' %}class="active" aria-current="page"{% endif %}>
-                                {{ util.href(cdedblink("assembly/index"), gettext("Assemblies"), icon="bullhorn") }}
+                            <li class="nav-item" {% if mainnav_active == 'assembly' %}aria-current="page"{% endif %}>
+                                {{ util.href(cdedblink("assembly/index"), gettext("Assemblies"), icon="bullhorn",
+                                             aclass="nav-link" + (" active" if mainnav_active == 'assembly' else "")) }}
                             </li>
                         {% endif %}
                     </ul>
                 </div><!-- /.navbar-collapse -->
+                </div>
             </nav>
             <script nonce="{{ csp_nonce }}">
-                $('#navbar-collapse-1').removeClass('in');
+                $('#navbar-collapse-1').removeClass('show');
                 $('#button-navbar-toggle').removeClass('hide');
             </script>
 
@@ -196,7 +199,7 @@
                 </nav>
                 <div class="col-md-9">
                     {% if self.breadcrumb() %}
-                        <h6 id="bc-title" class="sr-only">{% trans %}You are here:{% endtrans %}</h6>
+                        <h6 id="bc-title" class="visually-hidden">{% trans %}You are here:{% endtrans %}</h6>
                         <nav id="breadcrumb">
                             <ol class="breadcrumb breadcrumb-hanging" aria-labelledby="bc-title">
                                 {% block breadcrumb %}{% endblock %}

@@ -76,7 +76,7 @@
         title=title,
         **{ "aria-hidden": "true" }
     )|xmlattr }}></span>
-    {%- if arialabel or title %}<span class="sr-only">{{ arialabel or title }}</span>{% endif %}
+    {%- if arialabel or title %}<span class="visually-hidden">{{ arialabel or title }}</span>{% endif %}
 {%- endmacro %}
 
 {# Strike-through a value if parameter is false #}
@@ -105,22 +105,31 @@
         title="", aclass="panel-default", icon=none, anid=none, button=none,
         footer_text=none, footer_class="", footer_icon=none, level=3
 ) %}
-    <div{{ dict(class="panel " + aclass, id=anid)|xmlattr }}>
+    {# Map BS3 panel-* classes to BS5 card equivalents #}
+    {% set card_class = aclass
+        |replace("panel-default", "")
+        |replace("panel-primary", "border-primary")
+        |replace("panel-success", "border-success")
+        |replace("panel-info", "border-info")
+        |replace("panel-warning", "border-warning")
+        |replace("panel-danger", "border-danger")
+    %}
+    <div{{ dict(class="card " + card_class, id=anid)|xmlattr }}>
         {%- if title or icon or button %}
-            <div class="panel-heading">
+            <div class="card-header">
                 {{- button -}}
-                <h{{ level }} class="panel-title">
+                <h{{ level }} class="card-title">
                     {{- make_icon(icon) + nbsp if icon }}
                     {{- title -}}
                 </h{{ level }}>
                 <div style="clear:both;"></div>
             </div>
         {%- endif %}
-        <div class="panel-body">
+        <div class="card-body">
             {{- caller() -}}
         </div>
         {% if footer_text or footer_icon -%}
-            <div class="panel-footer {{ footer_class }}">
+            <div class="card-footer {{ footer_class }}">
                 {%- if footer_icon -%}
                     {{ make_icon(footer_icon) }}{{ nbsp }}
                 {%- endif -%}
@@ -168,7 +177,7 @@
         {% set title = titles[2] if titles else none %}
         <span class="far fa-circle" {{ dict(id=anid, title=title)|xmlattr }} aria-hidden="true"></span>
     {% endif %}
-    {%- if title %}<span class="sr-only">{{ title }}</span>{% endif %}{%- endmacro %}
+    {%- if title %}<span class="visually-hidden">{{ title }}</span>{% endif %}{%- endmacro %}
 
 {# Special tri-state macro to represent subscription states
 
@@ -270,7 +279,7 @@
     <a href="{{ docurl(topic, anchor) }}" class="btn btn-info pull-right" target="_blank">
         {{ make_icon('question-circle') }}
         {% trans %}Help{% endtrans %}
-        <span class="sr-only">{% trans %}for this site{% endtrans %}</span>
+        <span class="visually-hidden">{% trans %}for this site{% endtrans %}</span>
     </a>
 {%- endmacro %}
 
@@ -425,7 +434,7 @@
             )|xmlattr }}>
                 {{ label -}}
                 {%- if name in mandatory_fields -%}
-                    <span class="sr-only"> {% trans %}(mandatory input){% endtrans %}</span>
+                    <span class="visually-hidden"> {% trans %}(mandatory input){% endtrans %}</span>
                     {{ required_marker() }}
                 {% endif -%}
             </label>
@@ -433,12 +442,12 @@
         {%- if horizontal %}
             <div class="
                 {{ "col-sm-6" if (small and not wide) else "col-sm-8" }}
-                {{ ("col-sm-offset-2" if small else "col-sm-offset-4") if not label }}
+                {{ ("offset-sm-2" if small else "offset-sm-4") if not label }}
             ">
         {%- endif %}
         {% if addon %}<div class="input-group">{% endif %}
             {{- caller() }}
-        {% if addon %}<span class="input-group-addon">{{ addon }}</span></div>{% endif %}
+        {% if addon %}<span class="input-group-text">{{ addon }}</span></div>{% endif %}
             {{- output_errors(errorname or name, displayerrors) }}
             {{- output_info(info) }}
         {%- if markdown %}{{ markdown_preview(anid) }}{% endif %}
@@ -639,7 +648,7 @@
         {{ ("has-warning" if is_warning(name) else "has-error") if name in errors }}
     ">
         <div{% if horizontal %} class="
-            {{ "col-sm-6 col-sm-offset-2" if small else "col-sm-8 col-sm-offset-4" }}
+            {{ "col-sm-6 offset-sm-2" if small else "col-sm-8 offset-sm-4" }}
         "{% endif %}>
             <div class="checkbox{% if readonly or actualreadonly %} disabled{% endif %}">
                 {{ input_checkbox(name, label, value, defaultvalue, readonly, actualreadonly, anid,
@@ -811,14 +820,14 @@
 {%- endmacro%}
 
 {% macro input_static(value, anid=none) %}
-    <div class="form-control-static"{% if anid %} id="{{ anid }}"{% endif %}>{{ value }}</div>
+    <div class="form-control-plaintext"{% if anid %} id="{{ anid }}"{% endif %}>{{ value }}</div>
 {%- endmacro %}
 
 {% macro form_input_static(label="", info='', value='', anid=none, small=False, horizontal=True, aclass=none, icon=none,
         name=none, outerclass='', displayerrors=False, errorname=none) %}
     {%- if caller %}{% set value=caller() %}{% endif %}
     {%- call form_input_general(name, label, none, small, info, displayerrors, horizontal, aclass=outerclass, errorname=errorname) %}
-        <div {% if name %}name="{{ name }}" {% endif %}class="form-control-static {{ aclass }}"{% if anid %} id="{{ anid }}"{% endif %}>
+        <div {% if name %}name="{{ name }}" {% endif %}class="form-control-plaintext {{ aclass }}"{% if anid %} id="{{ anid }}"{% endif %}>
             {{ make_icon(icon) if icon }}
             {{- value -}}
         </div>
@@ -864,7 +873,7 @@
     {% endif %}
     <div class="form-group mosp {{ outerclass }}">
         <div{% if horizontal %} class="
-            {{ "col-sm-offset-2 col-sm-10" if small else "col-sm-offset-4 col-sm-8" }}
+            {{ "offset-sm-2 col-sm-10" if small else "offset-sm-4 col-sm-8" }}
         "{% endif %}>
             {%- if info -%}
                 <p class="text-info">
@@ -874,7 +883,7 @@
             {%- endif %}
             {{- input_submit(label, value, name, anid, aclass, icon, readonly, title, display_ignore_warnings=False) }}
             {%- for cancellink, cancelvalue, cancelicon in (cancellinks or []) + [(cancellink, cancelvalue, "times")] if cancellink %}
-                &emsp;{{ href(cancellink, gettext(cancelvalue), icon=cancelicon, aclass="btn btn-default cancel") }}
+                &emsp;{{ href(cancellink, gettext(cancelvalue), icon=cancelicon, aclass="btn btn-secondary cancel") }}
             {%- endfor %}
         </div>
     </div>
@@ -893,9 +902,9 @@
         </label>
         <div{% if horizontal %} class="{{ "col-sm-6" if small else "col-sm-8" }}"{% endif %}>
             <div class="input-group">
-                <span class="input-group-addon">{% trans %}from{% endtrans %}</span>
+                <span class="input-group-text">{% trans %}from{% endtrans %}</span>
                 {{ input_text(name=name1, type=type, arialabel=gettext('%s from')|format(label), attributes=attributes) }}
-                <span class="input-group-addon">{% trans %}to{% endtrans %}</span>
+                <span class="input-group-text">{% trans %}to{% endtrans %}</span>
                 {{ input_text(name=name2, type=type, arialabel=gettext('%s to')|format(label), attributes=attributes) }}
             </div>
             {{- output_errors(name1, displayerrors) }}
@@ -996,7 +1005,7 @@ attribute to each field of a dynamic row. #}
                 title=(gettext("Hide %(label)s") if active else gettext("Show %(label)s"))|format(label=label)
             )|xmlattr }}>
                 {{- make_icon('wrench') }} {{ label -}}
-                {% if active %} <span class="sr-only">{% trans %}(enabled){% endtrans %}</span>{% endif -%}
+                {% if active %} <span class="visually-hidden">{% trans %}(enabled){% endtrans %}</span>{% endif -%}
             </button>
         {% endif -%}
     {% endfor -%}

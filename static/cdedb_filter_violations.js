@@ -10,7 +10,7 @@
     ) {
         // Turn radio groups into buttongroups.
         $(this).find('.row[role=radiogroup]')
-            .attr('data-toggle', 'buttons')
+            .attr('data-bs-toggle', 'buttons')
             .addClass('btn-group')
             .removeClass('row')
             .children().each(function () {

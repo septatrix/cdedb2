@@ -11,12 +11,14 @@
 
         // Show navbar and activate first tab.
         let nav_tabs = $(this).find('.nav-tabs').show().find('a');
-        nav_tabs.first().tab('show');
+        var firstTab = new bootstrap.Tab(nav_tabs.first()[0]);
+        firstTab.show();
         nav_tabs
             // Activate the specified tab.
             .each(function() {
                 if (active_tab === $(this).data('target')) {
-                    $(this).tab('show');
+                    var tab = new bootstrap.Tab(this);
+                    tab.show();
                     return false;
                 }
             })
