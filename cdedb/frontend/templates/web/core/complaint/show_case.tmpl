@@ -29,7 +29,7 @@
         {{ util.href(cdedblink('core/change_case'), gettext("Edit"),
                      aclass="btn btn-sm btn-warning", icon="pen") }}
         {{ util.href(cdedblink('core/view_complaint_log', {'case_id': ambience['case']['id'], 'case_id_include_empty': enums["IncludeEmpty"].no}),
-                     gettext("View Log"), aclass="btn btn-sm btn-default", icon="list") }}
+                     gettext("View Log"), aclass="btn btn-sm btn-secondary", icon="list") }}
     </div>
 
     <dl class="dl-horizontal">
@@ -82,7 +82,7 @@
 
 
     {% if ambience['case']['notes'] %}
-        {% call util.bootstrap_panel(title=gettext("Notes"), icon="tag", aclass="panel-default") %}
+        {% call util.bootstrap_panel(title=gettext("Notes"), icon="tag", aclass="") %}
             <div id="case-notes">{{ ambience['case']['notes']|md }}</div>
         {% endcall %}
     {% endif %}
@@ -93,7 +93,7 @@
         {{ util.anti_csrf_token('core/add_involved') }}
 
         <div class="input-group has-success">
-            <span class="input-group-addon">{{ util.make_icon('plus') }}</span>
+            <span class="input-group-text">{{ util.make_icon('plus') }}</span>
             {{ util.input_text(type="search", name="persona_ids", anid="input-add-involved",
                                placeholder="DB-XXXX-X,DB-XXXX-X,…",
                                arialabel=gettext("IDs of the new involved people"),
@@ -121,7 +121,7 @@
             <div id="involved_{{ type.name }}" class="col-sm-6">
                 {% if involved_ids %}
                     {% call util.bootstrap_panel(
-                        title=gettext(type|string), aclass="panel-info", icon=type.get_icon(), level=4) %}
+                        title=gettext(type|string), aclass="border-info", icon=type.get_icon(), level=4) %}
                     {% for involved_id in involved_ids %}
                         <div class="hide-hover-container">
                             {{ util.persona_anchor(personas[involved_id]) }}
@@ -262,7 +262,7 @@
                      aclass="btn btn-sm btn-success", icon="plus") }}
         {{ util.href(cdedblink('core/show_case', {'case_id': ambience['case']['id'], 'show_log_entries': not show_log_entries})
                      + "#Events_[[in_a_complaint]]"|s,
-                     gettext("Show log entries"), aclass="btn btn-sm btn-default", icon="list-alt", active=show_log_entries) }}
+                     gettext("Show log entries"), aclass="btn btn-sm btn-secondary", icon="list-alt", active=show_log_entries) }}
         {{ util.href(cdedblink('core/case_history'), gettext("Show entry history"),
                      aclass="btn btn-sm btn-info", icon="clock", readonly=is_locked) }}
     </div>
@@ -304,7 +304,7 @@
         <div class="list-group list-group-hover nosp">
         {% if entry.entry_type %}
             <div id="entry{{ entry.id }}" class="list-group-item{% if entry.is_revoked %} list-group-item-muted{% endif %}">
-                <div class="float-right text-right">
+                <div class="float-right text-end">
                     <div style="margin-bottom: 5px;">
                         {{ entry.active_version.timestamp|datetime(lang=lang) -}}
                         {% if entry.active_version.etime %}
@@ -376,7 +376,7 @@
             </div>
         {% elif entry['code'].is_historic %}
             <div id="logentry{{ entry.id }}" class="list-group-item">
-                <div class="float-right text-right">
+                <div class="float-right text-end">
                     {{ entry['ctime']|datetime(lang=lang) }}
                 </div>
                 <strong>

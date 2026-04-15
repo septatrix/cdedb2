@@ -65,6 +65,6 @@
                     {{ util.input_submit(name="honorary_member", value=True, label=gettext("Grant Honorary Membership (and Membership)"), aclass="btn btn-primary", icon="plus") }}
                 {% endif %}
             </form>
-            {{ util.href(show_user_link(user, ambience['persona']['id']), gettext("Cancel"), icon="times-circle", aclass="btn btn-default") }}
+            {{ util.href(show_user_link(user, ambience['persona']['id']), gettext("Cancel"), icon="times-circle", aclass="btn btn-secondary") }}
        </div>
 {% endblock %}

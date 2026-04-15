@@ -40,7 +40,7 @@
         {{ util.href(cdedblink("event/configure_additional_questionnaire_form", {"event_id": ambience["event"].id}),
                      gettext("Configure Questionnaire"), icon="plus-square", aclass="btn btn-sm btn-warning") }}
         {{ util.href(cdedblink("event/register", {"preview": True}), gettext("Registration Preview"),
-                         aclass="btn btn-default btn-sm", icon="eye") }}
+                         aclass="btn btn-secondary btn-sm", icon="eye") }}
     </div>
 {% endmacro %}
 
@@ -52,7 +52,7 @@
         {% if is_privileged_for("event/configure_additional_questionnaire") %}
             <div class="p button-par">
                 {{ util.href(cdedblink("event/additional_questionnaire", {"preview": True}),
-                             gettext("Questionnaire Preview"), aclass="btn btn-default btn-sm", icon="eye") }}
+                             gettext("Questionnaire Preview"), aclass="btn btn-secondary btn-sm", icon="eye") }}
             </div>
         {% endif %}
         <form action="{{ cdedblink('event/additional_questionnaire') }}" method="POST" id="questionnaireform"
@@ -76,7 +76,7 @@
     {% endif %}
     {% if lodgement_wishes %}
         <hr />
-        {% call util.bootstrap_panel(gettext("Lodgement Wishes"), aclass="panel-info", icon="home", anid="lodgement-wishes") %}
+        {% call util.bootstrap_panel(gettext("Lodgement Wishes"), aclass="border-info", icon="home", anid="lodgement-wishes") %}
             <div class="p">
                 {% trans link=util.href("#field.{}".format(lodgement_wishes['field']['field_name']), label=gettext("questionnaire field")) %}
                     You can enter lodgement wishes in the respective {{ link }} in the following formats:

@@ -20,7 +20,7 @@
 
 {% block content %}
     {% if new_token %}
-        {% call util.bootstrap_panel(title=gettext("Your New Orga Token"), icon="robot", aclass="panel-success") %}
+        {% call util.bootstrap_panel(title=gettext("Your New Orga Token"), icon="robot", aclass="border-success") %}
             <p class="text-danger">
                 {{ util.make_icon("exclamation-triangle") }}
                 {% trans %}The token cannot be shown again later. Write it down somewhere safe now!{% endtrans %}

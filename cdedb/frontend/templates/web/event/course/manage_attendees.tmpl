@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                     {% call util.bootstrap_panel(title=(track['title'] if ambience['event']['tracks']|length > 1
                                                                        else gettext("Assigned Attendees")),
-                                                 aclass="panel-info", anid="track{}-attendees".format(track_id)) %}
+                                                 aclass="border-info", anid="track{}-attendees".format(track_id)) %}
                         <table class="table table-condensed">
                             <tbody>
                             {% for registration_id in attendees[(ambience['course']['id'], track_id)] %}
@@ -83,6 +83,6 @@
             </div>
         {% endfor %}
         {{ util.input_submit(label=gettext("Save")) }}&emsp;
-        {{ util.href(cdedblink('event/show_course'), gettext("Cancel"), icon='times-circle', aclass="btn btn-default") }}
+        {{ util.href(cdedblink('event/show_course'), gettext("Cancel"), icon='times-circle', aclass="btn btn-secondary") }}
     </form>
 {% endblock %}

@@ -31,7 +31,7 @@
                 <div class="col-md-6">
                     {% call util.bootstrap_panel(title=(part['title'] if ambience['event']['parts']|length > 1
                                                                       else gettext("Assigned Inhabitants")),
-                                                 aclass="panel-info", anid="inhabitants-{}".format(part.id)) %}
+                                                 aclass="border-info", anid="inhabitants-{}".format(part.id)) %}
                         <table class="table table-condensed">
                             <tbody>
                             {% for registration_id in inhabitants[(ambience['lodgement']['id'], part.id)] %}
@@ -80,7 +80,7 @@
         </script>
 
         {{ util.input_submit(label=gettext("Save")) }}&emsp;
-        {{ util.href(cdedblink('event/show_lodgement'), gettext("Cancel"), icon='times-circle', aclass="btn btn-default") }}
+        {{ util.href(cdedblink('event/show_lodgement'), gettext("Cancel"), icon='times-circle', aclass="btn btn-secondary") }}
     </form>
 
     <hr />
@@ -91,13 +91,13 @@
         {% if ambience['event'].parts|length == 1 %}
             {# using the form_input_select or the form_input_general macro looks ugly #}
             <div class="form-group">
-                <div class="col-sm-6 col-sm-offset-0">
+                <div class="col-sm-6 offset-sm-0">
                     {{ util.input_select("swap_with_{}".format(ambience['event'].parts|first), entries=other_lodgements.items(),
                                          nulloption=nbsp, sort=True) }}
                 </div>
             </div>
             {{ util.input_submit(label=gettext("Save")) }}&emsp;
-            {{ util.href(cdedblink('event/show_lodgement'), gettext("Cancel"), icon='times-circle', aclass="btn btn-default") }}
+            {{ util.href(cdedblink('event/show_lodgement'), gettext("Cancel"), icon='times-circle', aclass="btn btn-secondary") }}
         {% else %}
             {% for part in ambience['event'].parts.values()|sort %}
                 {{ util.form_input_select("swap_with_{}".format(part.id), entries=other_lodgements.items(),

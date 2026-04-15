@@ -42,9 +42,9 @@
 
     <p>
         {% if not decided_search %}
-            {{ util.href(cdedblink("core/index"), gettext("Decide later"), icon="clock", aclass="btn btn-default") }}
+            {{ util.href(cdedblink("core/index"), gettext("Decide later"), icon="clock", aclass="btn btn-secondary") }}
         {% endif %}
-        {{ util.href(docurl('Realm_Core_Privacy'), gettext("Who can see my data?"), aclass="btn btn-info btn-default", icon="question-circle") }}
+        {{ util.href(docurl('Realm_Core_Privacy'), gettext("Who can see my data?"), aclass="btn btn-info btn-secondary", icon="question-circle") }}
     </p>
 
     <h2>{% trans %}Consent{% endtrans %}</h2>
@@ -116,9 +116,9 @@
             {{ util.input_submit(label=gettext("Refuse consent"), icon="times-circle", aclass="btn btn-danger") }}
         </form>
 
-        {{ util.href(cdedblink("core/index"), gettext("Decide later"), icon="clock", aclass="btn btn-default") }}
+        {{ util.href(cdedblink("core/index"), gettext("Decide later"), icon="clock", aclass="btn btn-secondary") }}
     {% elif "searchable" not in user.roles %}
-        {{ util.href(cdedblink("cde/index"), gettext("Don’t change anything"), icon="asterisk", aclass="btn btn-default") }}
+        {{ util.href(cdedblink("cde/index"), gettext("Don’t change anything"), icon="asterisk", aclass="btn btn-secondary") }}
     {% endif %}
 
 {% endblock %}

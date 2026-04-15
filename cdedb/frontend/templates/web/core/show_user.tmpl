@@ -85,7 +85,7 @@
                                              title=gettext("Logout Everywhere"), icon="power-off",
                                              aclass="btn btn-danger btn-sm") }}
                     </form>
-                    {{ util.href(docurl('Realm_Core_Privacy'), gettext("Who can see my data?"),aclass="btn btn-info btn-sm pull-right", icon="question-circle") }}
+                    {{ util.href(docurl('Realm_Core_Privacy'), gettext("Who can see my data?"),aclass="btn btn-info btn-sm float-end", icon="question-circle") }}
                 {% endif %}
             {% elif not ambience['persona']['is_purged'] %}
                 {{ util.href(cdedblink('core/dearchive_persona_form'), gettext("Restore Account"),
@@ -128,7 +128,7 @@
     {% if data.hasattr("foto") or show_vcard %}
         {# prevent floating of the above buttons beside the photo, which looks ugly (esp. on mobile) #}
         <div style="clear: both"></div>
-        <div class="pull-right-responsive text-right-responsive">
+        <div class="float-end-responsive text-end-responsive">
             {# Profile photo/avatar #}
             {% if data.hasattr("foto") %}
                 <div id="profile-foto">
@@ -151,7 +151,7 @@
                 <div id="vcard">
                     {% set confirm_id = encode_parameter("core/qr_vcard", "confirm_id", ambience['persona']['id'],
                                                          persona_id=user.persona_id, timeout=None) %}
-                    <a id="show-vcard-qr" class="btn btn-default mosp"
+                    <a id="show-vcard-qr" class="btn btn-secondary mosp"
                        href="{{ cdedblink('core/qr_vcard',
                                           {'persona_id': ambience['persona']['id'], 'confirm_id': confirm_id}) }}">
                         {{ util.make_icon('qrcode') }}
@@ -165,7 +165,7 @@
                     </script>
                     {% set confirm_id = encode_parameter("core/download_vcard", "confirm_id", ambience['persona']['id'],
                                                          persona_id=user.persona_id, timeout=None) %}
-                    <a class="btn btn-default mosp"
+                    <a class="btn btn-secondary mosp"
                        href="{{ cdedblink("core/download_vcard",
                                           {'persona_id': ambience['persona']['id'], 'confirm_id': confirm_id}) }}">
                         {{ util.make_icon('download') }}
@@ -684,7 +684,7 @@ automatisch eine Bestätigung per E-Mail
     </div>
 
     {% if data['id'] != user.persona_id and is_relative_admin_view and not ambience['persona']['is_purged'] %}
-        {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="panel-danger mosp") %}
+        {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="border-danger mosp") %}
             {% if not ambience['persona']['is_archived'] %}
                     <div class="row">
                         <div class="col-sm-4">

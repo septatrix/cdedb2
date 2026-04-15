@@ -19,7 +19,7 @@
 {% block heading %}
     {% if is_privileged_for("event/show_registration") %}
         {{ util.href(cdedblink('event/show_registration', {'registration_id': registration['id']}),
-                     gettext("View as Orga"), icon='eye', aclass='btn btn-default pull-right') }}
+                     gettext("View as Orga"), icon='eye', aclass='btn btn-secondary float-end') }}
     {% endif %}
     {{ util.context_heading(gettext("Your Registration"), ambience['event']['title'],
                             'chalkboard-teacher', gettext("Event")) }}
@@ -84,7 +84,7 @@
             {% set button = generic_event.edit_free_text_button("registration_text") %}
         {% endif %}
         {% call util.bootstrap_panel(gettext("Note of the Orga Team"), button=button,
-                                     icon="info-circle", aclass="panel-info") %}
+                                     icon="info-circle", aclass="border-info") %}
             {{ ambience['event']['registration_text']|md }}
         {% endcall %}
     {% endif %}
@@ -133,7 +133,7 @@
         {% endif %}
         {% if ambience['event']['iban'] and to_pay > 0 %}
             {{ util.href(cdedblink('event/registration_fee_qr'), label=gettext("QR"), icon='qrcode',
-                         aclass="btn btn-xs btn-default pull-right", anid="show-registration-fee-qr",
+                         aclass="btn btn-xs btn-secondary float-end", anid="show-registration-fee-qr",
                          title=gettext("Bank transfer data as QR code")) }}
             {{ util.h(n_("Bank Transfer"), underline=true, level=4) }}
             <script nonce="{{ csp_nonce }}">

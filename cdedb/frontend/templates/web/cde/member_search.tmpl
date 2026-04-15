@@ -34,7 +34,7 @@
     {% if values['is_search'] %}
         {% if result %}
             <div class="p">
-                {{ util.href("#membersearchform", gettext("Go to Search."), aclass="btn btn-default btn-sm", icon="arrow-down") }}
+                {{ util.href("#membersearchform", gettext("Go to Search."), aclass="btn btn-secondary btn-sm", icon="arrow-down") }}
             </div>
             <h2 id="result-count">
                 {% trans %}Result{% endtrans %}
@@ -75,11 +75,11 @@
 
     <form action="{{ cdedblink('cde/member_search') }}" method="GET" id="membersearchform" class="form-horizontal">
         {{ util.input_hidden(name="is_search", value=True) }}
-        <div class="panel panel-primary mosp">
-            <div class="panel-heading">
-                <h2 class="panel-title">{{ util.make_icon('search') }} {% trans %}Search Mask{% endtrans %}</h2>
+        <div class="card border-primary mosp">
+            <div class="card-header">
+                <h2 class="card-title">{{ util.make_icon('search') }} {% trans %}Search Mask{% endtrans %}</h2>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-sm-6">
                         {{ util.form_input_text(name="qval_fulltext", label=gettext("Fulltext"), aclass="input-sm") }}
@@ -113,12 +113,12 @@
                                 link=util.href(cdedblink("cde/user_search"), label=gettext("Manage Users")))|s) }}
             {%- endif %}
             </div>
-            <div class="panel-footer text-right">
+            <div class="card-footer text-end">
                 {{ util.input_submit(gettext("Search"), icon='search') }}
             </div>
         </div>
     </form>
-    {% call util.bootstrap_panel(title=gettext("Properties of the search"), aclass='panel-default mosp', icon='info-circle') %}
+    {% call util.bootstrap_panel(title=gettext("Properties of the search"), aclass=' mosp', icon='info-circle') %}
         <ul class="slim">
             <li>
                 {% trans %}

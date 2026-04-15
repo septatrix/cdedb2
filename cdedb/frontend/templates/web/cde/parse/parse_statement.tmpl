@@ -18,13 +18,13 @@
 {% endblock %}
 {% macro print_transaction(t_id) %}
     {% if data["errors{}".format(t_id)] %}
-        {% set aclass="panel-danger" %}
+        {% set aclass="border-danger" %}
         {% set anicon="exclamation-circle" %}
     {% elif data["warnings{}".format(t_id)] %}
-        {% set aclass="panel-warning" %}
+        {% set aclass="border-warning" %}
         {% set anicon="exclamation-triangle" %}
     {% else %}
-        {% set aclass="panel-default" %}
+        {% set aclass="" %}
         {% set anicon="info-circle" %}
     {% endif %}
     {% call util.bootstrap_panel(title=gettext("Line %(lineno)s")|format(lineno=t_id), aclass=aclass,
@@ -147,14 +147,14 @@
         </div>
         {% if t_id in params["jump_order"] %}
             {% if params["jump_order"][t_id] %}
-                <a class="btn btn-default btn-sm" href="#transaction-container{{ params["jump_order"][t_id] }}">
+                <a class="btn btn-secondary btn-sm" href="#transaction-container{{ params["jump_order"][t_id] }}">
                     {{ util.make_icon('arrow-down') }}
                     {% trans %}
                         Go to next Error.
                     {% endtrans %}
                 </a>
             {% else %}
-                <a class="btn btn-default btn-sm" href="#submit-container">
+                <a class="btn btn-secondary btn-sm" href="#submit-container">
                     {{ util.make_icon('arrow-down') }}
                     {% trans %}
                         Go to submit buttons.
@@ -200,14 +200,14 @@
             </div>
             <div class="p button-par">
             {% if params["jump_order"][None] %}
-                <a class="btn btn-default btn-sm" href="#transaction-container{{ params["jump_order"][None] }}">
+                <a class="btn btn-secondary btn-sm" href="#transaction-container{{ params["jump_order"][None] }}">
                     {{ util.make_icon('arrow-down') }}
                     {% trans %}
                         Go to first Error.
                     {% endtrans %}
                 </a>
             {% endif %}
-            <a class="btn btn-default btn-sm" href="#submit-container">
+            <a class="btn btn-secondary btn-sm" href="#submit-container">
                 {{ util.make_icon('arrow-down') }}
                 {% trans %}
                     Go to submit buttons.
@@ -223,9 +223,9 @@
             {% if not params["has_error"] %}
                 {% for account in enums["Accounts"] if account in params["accounts"] %}
                     {{ util.input_submit(label=(gettext("Excel Download") + " " + account.display_str()),
-                                         aclass="btn btn-default", value=account, name="excel", icon='download') }}
+                                         aclass="btn btn-secondary", value=account, name="excel", icon='download') }}
                 {% endfor %}
-                {{ util.input_submit(label=gettext("Download DB-Import"), aclass="btn btn-default",
+                {{ util.input_submit(label=gettext("Download DB-Import"), aclass="btn btn-secondary",
                                      value="db_import", name="db_import", icon="download") }}
             {% endif %}
             </div>

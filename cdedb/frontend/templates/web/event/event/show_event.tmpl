@@ -176,7 +176,7 @@
         {% if ambience['event']['notes'] %}
             {% call util.bootstrap_panel(title=gettext("Orga-Notes"),
                                          button=generic.edit_free_text_button("notes"),
-                                         icon="tag", aclass="panel-default") %}
+                                         icon="tag", aclass="") %}
                 <div id="orga-notes">{{ ambience['event']['notes']|md }}</div>
             {% endcall %}
         {% endif %}
@@ -204,7 +204,7 @@
             {% endif %}
 
             <div class="col-md-6" id="minor-form">
-                {% call util.bootstrap_panel(title=gettext("Minor Form"), icon='file', aclass='panel-warning') %}
+                {% call util.bootstrap_panel(title=gettext("Minor Form"), icon='file', aclass='border-warning') %}
                     <div class="p">
                         {% if minor_form_present %}
                             {% trans link=util.href(cdedblink('event/get_minor_form'), gettext("current Form"),
@@ -244,7 +244,7 @@
             <div class="col-md-6" id="lock-event">
                 {% call util.bootstrap_panel(
                         title=gettext("Unlock Event") if ambience['event'].is_locked else gettext("Lock Event"),
-                        icon='lock', aclass='panel-danger') %}
+                        icon='lock', aclass='border-danger') %}
                     {% if CDEDB_OFFLINE_DEPLOYMENT %}
                         <div class="p">
                             {% trans %}Cannot lock offline instance.{% endtrans %}
@@ -278,7 +278,7 @@
         {% endif %}
     </div>
 
-    {% call util.conditional_bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="panel-danger mosp") %}
+    {% call util.conditional_bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="border-danger mosp") %}
             {% if not ambience['event']['orga_address'] and orga_view %}
                 <div class="row" id="create-orga-list">
                     <div class="col-sm-4">

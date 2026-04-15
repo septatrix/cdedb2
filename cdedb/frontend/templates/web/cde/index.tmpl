@@ -17,7 +17,7 @@
     </p>
     <div class="row">
         <div class="col-md-6" id="member-quick-search">
-            {% call util.bootstrap_panel(title=gettext("CdE-Member Quick-Search"), icon='search', aclass="panel-primary") %}
+            {% call util.bootstrap_panel(title=gettext("CdE-Member Quick-Search"), icon='search', aclass="border-primary") %}
                 {% if "searchable" in user.roles %}
                     <form action="{{ cdedblink('cde/member_search') }}" method="GET" id="membersearchform"
                             class="form-horizontal">
@@ -25,7 +25,7 @@
                         <p>
                             {{ util.input_text(type="search", name="qval_fulltext", arialabel=gettext("Search item")) }}
                         </p>
-                        <div class="text-right">
+                        <div class="text-end">
                             {{ util.input_submit(gettext("Search"), icon='search') }}
                         </div>
                     </form>

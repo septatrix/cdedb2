@@ -31,12 +31,12 @@
         {{ util.anti_csrf_token('event/amend_registration') }}
 
         {% if ambience['event']['registration_text'] %}
-            {% call util.bootstrap_panel(title=gettext("Note of the Orga Team"), icon="info-circle", aclass="panel-info") %}
+            {% call util.bootstrap_panel(title=gettext("Note of the Orga Team"), icon="info-circle", aclass="border-info") %}
                 {{ ambience['event']['registration_text']|md }}
             {% endcall %}
         {% endif %}
 
-        <h3 class="sr-only">{% trans %}Course Choices{% endtrans %}</h3>
+        <h3 class="visually-hidden">{% trans %}Course Choices{% endtrans %}</h3>
         {{ generic_event.select_all_course_choices(involved_tracks=involved_tracks) }}
 
         {{ util.h(n_("Additional Information"), underline=true) }}

@@ -39,7 +39,7 @@
                 {{ label }}
             </label>
         {% endif %}
-        <div class="col-sm-1 text-center {% if not label %}col-sm-offset-4{% endif %}">
+        <div class="col-sm-1 text-center {% if not label %}offset-sm-4{% endif %}">
             <div class="checkbox" title="
                 {%- if label -%}
                     {% trans label=label %}
@@ -55,7 +55,7 @@
                     <input type="checkbox" name="enable_{{ name }}" value="True" class="enable-input"
                            {% if anid %}id="enable_{{ anid }}" data-input="{{ anid }}"{% endif %}
                            {% if values.get("enable_{}".format(name), False) %}checked{% endif %} />
-                    <span class="sr-only">
+                    <span class="visually-hidden">
                         {% if label %}
                             {% trans label=label %}
                                 Overwrite ”{{ label }}”
@@ -222,8 +222,8 @@
             {% endfor %}
         {% endif %}
 
-        <div class="panel panel-primary">
-            <div class="panel-body">
+        <div class="card border-primary">
+            <div class="card-body">
                 {{ util.form_input_textarea(name="change_note", label=gettext("Changenotes"),
                     info=gettext("Summary to be added to the log entries. This is prefixed with \"Multi-Edit: \"")) }}
             </div>

@@ -68,7 +68,7 @@
                 {{ candidate['title'] }}
                 {# We show the candidates shortnames on purpose even before the vote starts, so mistakes have a better chance to be noticed #}
                 {% if attends %}
-                    <span class="label label-primary"><span class="sr-only">{% trans %}Short: {% endtrans %}</span>
+                    <span class="badge bg-primary"><span class="visually-hidden">{% trans %}Short: {% endtrans %}</span>
                         {{ candidate['shortname'] }}
                     </span>
                 {% endif %}
@@ -80,7 +80,7 @@
 
 
 {% macro show_manual_for_text_preferential_voting() -%}
-    {% call util.bootstrap_panel(title=gettext("Help for voting"), icon='info-circle', aclass='panel-default panel-condensed mosp') %}
+    {% call util.bootstrap_panel(title=gettext("Help for voting"), icon='info-circle', aclass=' panel-condensed mosp') %}
         <p>
             {% trans link=gettext("<a href='https://en.wikipedia.org/w/index.php?curid=680729'>Schulze method</a>")|s %}
                 This vote is a preferential vote. You can arrange the candidates in the field above
@@ -171,7 +171,7 @@
 
 
 {% macro show_manual_for_js_preferential_voting() -%}
-    {% call util.bootstrap_panel(title=gettext("Help for voting"), icon='info-circle', aclass='panel-default panel-condensed mosp') %}
+    {% call util.bootstrap_panel(title=gettext("Help for voting"), icon='info-circle', aclass=' panel-condensed mosp') %}
         <p>
             {% trans link=gettext("<a href='https://en.wikipedia.org/w/index.php?curid=680729'>Schulze method</a>")|s %}
                 This vote is a preferential vote. You can arrange the candidates in the field above
@@ -225,13 +225,13 @@
     {# Tab controls to switch to javascript preferential voting form #}
     <ul class="nav nav-tabs mosp softhide" role="tablist" id="tablist-formselect">
         <li role="presentation" class="active">
-            <a href="#tab-textform" aria-controls="tab-textform" role="tab" data-toggle="tab"
+            <a href="#tab-textform" aria-controls="tab-textform" role="tab" data-bs-toggle="tab"
                id="tablink-textform">
                 {{ util.make_icon('terminal') }} {% trans %}Text-based Voting{% endtrans %}
             </a>
         </li>
         <li role="presentation">
-            <a href="#tab-jsform" aria-controls="tab-jsform" role="tab" data-toggle="tab"
+            <a href="#tab-jsform" aria-controls="tab-jsform" role="tab" data-bs-toggle="tab"
                     id="tablink-jsform">
                 {{ util.make_icon('magic') }} {% trans %}Interactive Voting{% endtrans %}
             </a>
@@ -256,7 +256,7 @@
 
         {# Javascript preferential voting form #}
         <div role="tabpanel" class="tab-pane" id="tab-jsform">
-            <p class="sr-only">
+            <p class="visually-hidden">
                 {% trans %}
                     This is the interactive voting form. It is inconvenient to used with a keyboard only.
                     Use the link above to switch to the text-based form.
@@ -362,7 +362,7 @@
         </table>
 
         <p>
-            <button type="button" class="btn btn-success softhide pull-right" id="drow-addbutton">
+            <button type="button" class="btn btn-success softhide float-end" id="drow-addbutton">
                 {{ util.make_icon('plus') }} {% trans %}Add Candidate{% endtrans %}
             </button>
         </p>

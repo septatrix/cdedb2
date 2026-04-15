@@ -13,11 +13,11 @@
 
 {% macro persona_quicksearch(mobile=false) %}
     <div class="list-group tear-down
-            {% if mobile %}hidden-md hidden-lg{% elif mobile is sameas false %}hidden-xs hidden-sm{% endif %}
+            {% if mobile %}d-md-none{% elif mobile is sameas false %}d-none d-md-block{% endif %}
     ">
         {% set form_id = "quickpersonasearch" + ("-mobile" if mobile is not sameas false else "") %}
         <form action="{{ cdedblink("core/admin_show_user") }}" method="GET" id="{{ form_id }}">
-            <div class="sr-only">{% trans %}Search for Users by ID or Name{% endtrans %}</div>
+            <div class="visually-hidden">{% trans %}Search for Users by ID or Name{% endtrans %}</div>
             <div class="input-group">
                 {{ util.input_text(type="search", name="phrase", placeholder=gettext("CdEDB-ID, Name or E-Mail")) }}
                 <span class="input-group-btn">
@@ -122,7 +122,7 @@
                              icon="tags", active=(sidenav_active=='core_meta')) }}
             </div>
         {% endif %}
-        <hr class="strong visible-xs visible-sm" />
+        <hr class="strong d-block d-md-none" />
     {% endif %}
 {% endblock %}
 

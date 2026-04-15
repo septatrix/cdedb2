@@ -67,7 +67,7 @@
 {% endmacro %}
 
 {% block content %}
-    <button type="button" class="btn btn-default btn-sm softhide" id="unhide-button">
+    <button type="button" class="btn btn-secondary btn-sm softhide" id="unhide-button">
         {{ util.make_icon('eye-slash') }} {% trans %}Show all Fields{% endtrans %}
     </button>
     {{ util.href(show_user_link(user, pending['id']), gettext("Show Profile"), icon="share", aclass="btn btn-sm btn-info") }}
@@ -145,6 +145,6 @@
             {{ util.input_submit(label=gettext("Reject Changes"), aclass="btn btn-danger", icon="ban") }}
         </form>
         {{ util.href(cdedblink('core/admin_change_user_form'), gettext("Edit Changes"), icon="pen", aclass="btn btn-warning") }}
-        &emsp; {{ util.href(cdedblink('core/list_pending_changes'), gettext("Cancel"), icon="times-circle", aclass="btn btn-default") }}
+        &emsp; {{ util.href(cdedblink('core/list_pending_changes'), gettext("Cancel"), icon="times-circle", aclass="btn btn-secondary") }}
     </div>
 {% endblock %}

@@ -41,7 +41,7 @@
         <h3 id="query-results">{% trans %}Result{% endtrans %} [{{ result|length }}]</h3>
         <!-- Additional buttons for the course_query -->
 
-        <div class="p pull-right query-result-dynamic-actions" style="display: none;">
+        <div class="p float-end query-result-dynamic-actions" style="display: none;">
             {{ generic.query_result_dynamic_action(
                     label=gettext("Set Field"), icon="edit", target="event/field_multiset_select",
                     readonly=not is_privileged_for('field_multiset_select'),

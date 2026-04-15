@@ -56,7 +56,7 @@
 {% block content %}
     {% set course_entries = courses|entries('id', 'shortlabel') %}
 
-    {% call util.bootstrap_panel(title=gettext("Filter"), icon="search", aclass='panel-primary') %}
+    {% call util.bootstrap_panel(title=gettext("Filter"), icon="search", aclass='border-primary') %}
         <form action="{{ cdedblink('event/course_choices_form') }}" method="GET" id="choicefilterform"
               aria-label="{% trans %}Filter{% endtrans %}">
             <div class="p">
@@ -91,7 +91,7 @@
             <p class="nosp">
                 {{ util.input_submit(label=gettext("Go!"), icon="search") }}
                 {{ util.href(cdedblink("event/course_choices",{}), gettext("Show all participants"), icon="times-circle",
-                             aclass="btn btn-default") }}
+                             aclass="btn btn-secondary") }}
             </p>
         </form>
     {% endcall %}
@@ -104,12 +104,12 @@
         {{ util.input_hidden(name="position") }}
         {{ util.input_hidden(name="ids") }}
         {{ util.input_hidden(name="include_active") }}
-        {% call util.bootstrap_panel(title=gettext("Assignment"), icon="crosshairs", aclass='panel-warning',
+        {% call util.bootstrap_panel(title=gettext("Assignment"), icon="crosshairs", aclass='border-warning',
                                      anid="assignment-options") %}
             {% if ambience['event']['tracks']|length == 1 %}
                 {% set tracks=util.input_hidden(name="assign_track_ids", value=(ambience['event']['tracks']|list)[0]) %}
             {% else %}
-                {% set tracks='<label class="sr-only" id="input-track_ids-label">%s</label><div class="col-md-3 strip-inner-space">%s%s</div>'|s|format(
+                {% set tracks='<label class="visually-hidden" id="input-track_ids-label">%s</label><div class="col-md-3 strip-inner-space">%s%s</div>'|s|format(
                     gettext("Coursetracks"), gettext("in Tracks"),
                     util.input_checkboxes(name="assign_track_ids", arialabeledby="input-track_ids-label",
                                           entries=ambience['event']['tracks']|entries('id', 'title'))) %}
@@ -144,23 +144,23 @@
             </div>
         {% endcall %}
 
-        <div class="pull-right">
+        <div class="float-end">
             {{ util.href(cdedblink('event/registration_query', corresponding_query.serialize_to_url()),
-                         gettext("View in Registrations"), icon='list', aclass='btn btn-sm btn-default') }}
+                         gettext("View in Registrations"), icon='list', aclass='btn btn-sm btn-secondary') }}
         </div>
         <div class="p softhide" id="js-button-group">
             <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}Select All{% endtrans %}"
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}Select All{% endtrans %}"
                         id="btn-select-all">
-                    {{ util.make_icon('check-square') }} <span class="hidden-xs">{% trans %}All{% endtrans %}</span>
+                    {{ util.make_icon('check-square') }} <span class="d-none d-sm-inline">{% trans %}All{% endtrans %}</span>
                 </button>
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}Select None{% endtrans %}"
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}Select None{% endtrans %}"
                         id="btn-select-none">
-                    {{ util.make_icon('square') }} <span class="hidden-xs">{% trans %}None{% endtrans %}</span>
+                    {{ util.make_icon('square') }} <span class="d-none d-sm-inline">{% trans %}None{% endtrans %}</span>
                 </button>
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}Invert Selection{% endtrans %}"
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}Invert Selection{% endtrans %}"
                         id="btn-select-swap">
-                    {{ util.make_icon('caret-square-right') }} <span class="hidden-xs">{% trans %}Invert{% endtrans %}</span>
+                    {{ util.make_icon('caret-square-right') }} <span class="d-none d-sm-inline">{% trans %}Invert{% endtrans %}</span>
                 </button>
             </div>
         </div>

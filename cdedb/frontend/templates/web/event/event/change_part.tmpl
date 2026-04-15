@@ -162,14 +162,14 @@
 
         {% if not has_registrations %}
             <p>
-                <button type="button" class="btn btn-success softhide pull-right" id="track-drow-addbutton">
+                <button type="button" class="btn btn-success softhide float-end" id="track-drow-addbutton">
                     {{ util.make_icon('plus') }} {% trans %}Add Coursetrack{% endtrans %}
                 </button>
             </p>
         {% endif %}
 
         {{ util.input_submit(label=gettext("Save")) }}
-        &emsp;{{ util.href(cdedblink("event/part_summary"), gettext("Cancel"), icon="times", aclass="btn btn-default cancel") }}
+        &emsp;{{ util.href(cdedblink("event/part_summary"), gettext("Cancel"), icon="times", aclass="btn btn-secondary cancel") }}
     </form>
 
     <script nonce="{{ csp_nonce }}">

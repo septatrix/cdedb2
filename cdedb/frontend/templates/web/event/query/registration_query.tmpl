@@ -48,22 +48,22 @@
                     {% do usernames.append(entry["persona.username"]) %}
                 {% endfor %}
                 {{ util.href(util.mailto(address="", bcc=";".join(usernames)), gettext("BCC to All"),
-                             icon="envelope", aclass="btn btn-default",
+                             icon="envelope", aclass="btn btn-secondary",
                              title=gettext("Send Mail to all registrations listed below as BCC.")) }}
                 {{ util.href(util.mailto(";".join(usernames)), gettext("Mail to All"),
-                             icon="envelope", aclass="btn btn-default",
+                             icon="envelope", aclass="btn btn-secondary",
                              title=gettext("Send Mail to all registrations listed below.")) }}
             {% else %}
                 {{ util.href("#", gettext("BCC to All"), readonly=True,
-                             icon="envelope", aclass="btn btn-default",
+                             icon="envelope", aclass="btn btn-secondary",
                              title=gettext("Email button is only available, if the email field is shown.")) }}
                 {{ util.href("#", gettext("Mail to All"), readonly=True,
-                             icon="envelope", aclass="btn btn-default",
+                             icon="envelope", aclass="btn btn-secondary",
                              title=gettext("Email button is only available, if the email field is shown.")) }}
             {% endif %}
         </div>
 
-        <div class="p pull-right query-result-dynamic-actions" style="display: none;">
+        <div class="p float-end query-result-dynamic-actions" style="display: none;">
             {% if ambience['event'].tracks %}
                 {{ generic.query_result_dynamic_action(
                         label=gettext("Course Assignments"), icon="crosshairs", aclass="btn-info",

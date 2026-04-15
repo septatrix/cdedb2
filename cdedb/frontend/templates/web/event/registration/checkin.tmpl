@@ -23,21 +23,21 @@
 {% endblock %}
 {% block content %}
     {% if ambience['event']['parts']|length == 1 %}
-        <div class="panel panel-primary panel-condensed softhide" id="namesearch">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ util.make_icon("search") }}{{ nbsp }}{{ gettext("Filter") }}</h3>
+        <div class="card border-primary panel-condensed softhide" id="namesearch">
+            <div class="card-header">
+                <h3 class="card-title">{{ util.make_icon("search") }}{{ nbsp }}{{ gettext("Filter") }}</h3>
             </div>
-            <div class="panel-footer text-right">
+            <div class="card-footer text-end">
                 <input type="search" id="selector" class="form-control" aria-label="{% trans %}Name to Search{% endtrans %}"
                        placeholder="{{ gettext("Search Name") }}"/>
             </div>
         </div>
     {% else %}
-        <div class="panel panel-primary panel-condensed">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ util.make_icon("search") }}{{ nbsp }}{{ gettext("Filter") }}</h3>
+        <div class="card border-primary panel-condensed">
+            <div class="card-header">
+                <h3 class="card-title">{{ util.make_icon("search") }}{{ nbsp }}{{ gettext("Filter") }}</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <form action="{{ cdedblink('event/checkin_form') }}" method="GET" id="checkinfilterform"
                           aria-label="{% trans %}Filter{% endtrans %}">
                     {% trans %}Show only participants in parts:{% endtrans %}
@@ -47,7 +47,7 @@
                     {{ util.input_submit(label=gettext("Go!"), icon="filter") }}
                 </form>
             </div>
-            <div class="panel-footer text-right softhide" id="namesearch">
+            <div class="card-footer text-end softhide" id="namesearch">
                 <input type="search" id="selector" class="form-control" aria-label="{% trans %}Name to Search{% endtrans %}",
                 placeholder="{{ gettext("Search Name") }}"/>
             </div>
@@ -140,7 +140,7 @@
                 {% if registration['orga_notes'] %}
                     <hr class="nosp" />
                     <details>
-                        <summary class="btn btn-sm btn-default">
+                        <summary class="btn btn-sm btn-secondary">
                             <b class="text-muted">
                                 {% trans %}Orga-Notes{% endtrans %}
                             </b>
@@ -151,7 +151,7 @@
                     </details>
                 {% endif %}
                 </div>
-                    <div class="col-sm-3 col-xs-12 button-par">
+                    <div class="col-sm-3 col-12 button-par">
                         {{ util.href(cdedblink('event/change_registration', {'registration_id': registration_id}),
                                      label=none, icon='pen', title=gettext("Edit"), aclass="btn btn-sm btn-warning") }}
                         {{ util.href(cdedblink('event/show_registration',

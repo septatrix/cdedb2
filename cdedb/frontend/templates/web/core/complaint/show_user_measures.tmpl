@@ -57,7 +57,7 @@
         {% set not_yet_active = now() < measure.timestamp %}
         <div id="entry{{ entry.id }}-{{ measure.id }}"
              class="list-group-item{% if inactive %} list-group-item-muted{% endif %}">
-            <div class="float-right text-right{% if not_yet_active %} text-italic{% endif %}">
+            <div class="float-right text-end{% if not_yet_active %} text-italic{% endif %}">
                 {{ measure.timestamp|datetime(lang=lang) -}}
                 {% if measure.etime %}
                     – {{ measure.etime|datetime(lang=lang) }}

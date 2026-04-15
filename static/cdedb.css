@@ -60,22 +60,80 @@ body{
 .has-error .help-block.no-color {
     color: #737373;
 }
+/* BS5 compat: re-add help-block styling removed in BS5 */
+.help-block {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 6px;
+    color: #737373;
+}
+.has-error .help-block,
+.has-error .control-label {
+    color: #a94442;
+}
+.has-warning .help-block,
+.has-warning .control-label {
+    color: #8a6d3b;
+}
+.has-error .form-control {
+    border-color: #a94442;
+}
+.has-warning .form-control {
+    border-color: #8a6d3b;
+}
+/* BS5 compat: form-group no longer provided by BS5 */
+.form-group {
+    margin-bottom: 15px;
+}
+/* BS5 compat: control-label no longer provided by BS5 */
+.control-label {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+/* BS5 compat: form-horizontal layout using BS5 grid */
+.form-horizontal .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.form-horizontal .control-label {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 7px;
+    text-align: right;
+}
+@media (max-width: 575.98px) {
+    .form-horizontal .control-label {
+        text-align: left;
+    }
+}
+/* BS5 compat: checkbox/radio styling */
+.checkbox, .radio {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.checkbox.disabled, .radio.disabled {
+    opacity: 0.65;
+}
 .input-group .form-control {
     /* Prevent creating a Stacking Context (see ), which prevents embedded selectize.js dropdowns from laying on top */
     z-index: auto;
 }
-.input-group-addon {
+.input-group-text {
     font-size: 13px;
 }
-.input-group-addon:last-child .btn {
+.input-group-text:last-child .btn {
     /* dirty workaround. Normally you should choose input-group-btn */
     margin: -5px -10px;
     border-radius: 0 3px 3px 0;
 }
-.input-group-addon label {
+.input-group-text label {
     margin-bottom: 0;
 }
-.input-group, .input-group > *, .input-group-btn>.btn {
+.input-group, .input-group > * {
     height: 100%;
 }
 .alert-info a {
@@ -176,7 +234,7 @@ ul.slim {
 .list-group-condensed .list-group-item {
     padding: 4px 6px;
 }
-.list-group-item.row, .panel-body.row {
+.list-group-item.row, .card-body.row {
     margin-left: 0;
     margin-right: 0;
     padding-left: 0;
@@ -217,7 +275,7 @@ h4, .h4, h5, .h5, h6, .h6 {
     margin-bottom: 6px;
 }
 h4.heading-underline, h5.heading-underline, h6.heading-underline,
-h4.panel-title, h5.panel-title, h6.panel-title {
+h4.card-title, h5.card-title, h6.card-title {
     font-weight: inherit;
 }
 @media (max-width: 767px) {
@@ -244,21 +302,21 @@ h4.panel-title, h5.panel-title, h6.panel-title {
     font-weight: bold;
 }
 
-.panel-condensed>.panel-heading {
+.card-condensed>.card-header {
     padding: 8px 10px;
 }
-.panel-condensed>.panel-heading>.panel-title {
+.card-condensed>.card-header>.card-title {
     font-size: 14px;
 }
-.panel-condensed>.panel-body {
+.card-condensed>.card-body {
     padding: 10px;
 }
 
 /* buttons take a little more vertical space than headings */
-.panel-heading>.btn.pull-right + h3.panel-title {
+.card-header>.btn.float-end + h3.card-title {
     padding: 2px;
 }
-.panel-body:empty {
+.card-body:empty {
     display: none;
 }
 
@@ -358,7 +416,7 @@ ul.nosp, ol.nosp {
 .nav.nav-tabs.mosp {
     margin-bottom: 20px;
 }
-.panel.mosp {
+.card.mosp {
     margin-top: 20px;
 }
 .form-group.mosp {
@@ -367,7 +425,7 @@ ul.nosp, ol.nosp {
 .btn.mosp, img.mosp {
     margin-bottom: 5px
 }
-.panel-body>:last-child, .panel-body>:last-child.row>[class*="col-"]>:last-child {
+.card-body>:last-child, .card-body>:last-child.row>[class*="col-"]>:last-child {
     margin-bottom: 0;
 }
 .strip-inner-space>:first-child {
@@ -391,11 +449,11 @@ ul.spaced li:last-child {
     box-shadow: 0 0 15px rgba(63,63,63,0.2);
     z-index: 2;
 }
-.navbar-default {
+.navbar-light {
     background-color: #f0f0f0;
     border-color: #e7e7e7;
 }
-.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+.navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.active:focus, .navbar-light .navbar-nav .nav-link.active:hover {
     color: #555;
     background-color: #e0e0e0;
 }
@@ -405,7 +463,7 @@ ul.spaced li:last-child {
 .navbar-form .navbar-text {
     margin: 7px 15px;
 }
-.navbar-nav>li>a.btn {
+.navbar-nav .nav-item .btn {
     padding: 5px 10px;
     margin: 10px 5px;
 }
@@ -454,31 +512,31 @@ h1.title {
     }
 }
 
-/* Tabs in Panel Header */
-.panel-heading {
+/* Tabs in Card Header */
+.card-header {
     position: relative;
 }
-.panel-heading .nav-tabs {
+.card-header .nav-tabs {
     position: absolute;
     right: 0;
     bottom: 0;
     border-bottom: none;
 }
-.panel-heading .nav-tabs>li>a {
+.card-header .nav-tabs>li>a {
     padding: 6px 10px;
     border-bottom: none;
 }
-.panel-heading .nav-tabs>li.active>a {
+.card-header .nav-tabs>li.active>a {
     border-bottom: none;
 }
-.panel-heading .nav-tabs>li>a:hover {
+.card-header .nav-tabs>li>a:hover {
     background: rgba(240,240,240,0.3);
     border-bottom: none;
 }
-.panel-primary .panel-heading .nav-tabs>li>a {
+.border-primary .card-header .nav-tabs>li>a {
     color: #fff;
 }
-.panel-primary .panel-heading .nav-tabs>li.active>a {
+.border-primary .card-header .nav-tabs>li.active>a {
     background: #fff;
     color: #337ab7;
 }
@@ -489,15 +547,15 @@ h1.title {
     display: block;
     overflow: hidden;
 }
-.text-right-responsive {
+.text-end-responsive {
     text-align: center;
 }
 @media (min-width: 768px) {
-    .pull-right-responsive {
+    .float-end-responsive {
         float: right;
         margin-left: 20px;
     }
-    .text-right-responsive {
+    .text-end-responsive {
         text-align: right;
     }
 }
@@ -786,27 +844,27 @@ tr.drow-new>td, tr.drow-new1>td {
 tr.drow-delete>td, tr.drow-delete1>td {
     background-color: #f2dede;
 }
-.panel.shaded-info>.panel-body {
+.card.shaded-info>.card-body {
     background-color: #e8e8e8;
 }
-.panel.drow-new, .panel.drow-new {
+.card.drow-new, .card.drow-new {
     border-color: #d6e9c6;
 }
-.panel.drow-new>.panel-heading, .drow-new .panel>.panel-heading {
+.card.drow-new>.card-header, .drow-new .card>.card-header {
     background-color: #dff0d8;
     border-color: #d6e9c6;
 }
-.panel.drow-new>.panel-body, .drow-new .panel>.panel-body {
+.card.drow-new>.card-body, .drow-new .card>.card-body {
     background-color: #f0f4ee;
 }
-.panel.drow-delete, .drow-delete .panel {
+.card.drow-delete, .drow-delete .card {
     border-color: #ebccd1;
 }
-.panel.drow-delete>.panel-heading, .drow-delete .panel>.panel-heading {
+.card.drow-delete>.card-header, .drow-delete .card>.card-header {
     background-color: #f2dede;
     border-color: #ebccd1;
 }
-.panel.drow-delete>.panel-body, .drow-delete .panel>.panel-body {
+.card.drow-delete>.card-body, .drow-delete .card>.card-body {
     background-color: #f3e8e8;
 }
 .drow-delete input, .drow-delete textarea, .drow-delete select,

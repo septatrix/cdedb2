@@ -40,11 +40,11 @@
         {{ util.href(cdedblink('event/course_query'), gettext('Course Query'), icon='search', aclass='btn btn-info btn-sm') }}
         {{ util.href(cdedblink('event/course_choices'), gettext("Course Assignment"), icon='crosshairs',
                                readonly=not is_privileged_for('course_choices'), aclass='btn btn-info btn-sm') }}
-        {{ util.href(cdedblink("event/part_summary"), gettext("Event Parts"), icon='clock', aclass='btn btn-default btn-sm') }}
+        {{ util.href(cdedblink("event/part_summary"), gettext("Event Parts"), icon='clock', aclass='btn btn-secondary btn-sm') }}
     </div>
 
     {% if not include_active %}
-        <p class="pull-right">
+        <p class="float-end">
             {{ util.href(cdedblink("event/course_stats", {'include_active': True}),
                          gettext('Include all active registrations'), aclass='btn btn-sm btn-info',
                          icon='asterisk') }}
@@ -69,7 +69,7 @@
             </p>
             <p>
                 {{ util.href(cdedblink("event/course_stats"), gettext('Only show participants'),
-                             aclass='btn btn-default btn-sm', icon='arrow-left') }}
+                             aclass='btn btn-secondary btn-sm', icon='arrow-left') }}
             </p>
         </div>
     {% endif %}
@@ -101,13 +101,13 @@
             <tr>
                 {% for track in ambience['event']['tracks'].values()|sort %}
                     <th class="b-left"></th>
-                    <th class="text-right">{{ util.make_icon('crosshairs', title=gettext("Assigned")) }}</th>
+                    <th class="text-end">{{ util.make_icon('crosshairs', title=gettext("Assigned")) }}</th>
                     {% for i in range(track['num_choices']) %}
-                        <th class="text-right">{{ (i + 1) }}</th>
+                        <th class="text-end">{{ (i + 1) }}</th>
                     {% endfor %}
                 {% endfor %}
-                <th class="b-left text-right">{% trans %}Min{% endtrans %}</th>
-                <th class="text-right">{% trans %}Max{% endtrans %}</th>
+                <th class="b-left text-end">{% trans %}Min{% endtrans %}</th>
+                <th class="text-end">{% trans %}Max{% endtrans %}</th>
             </tr>
         </thead>
         <tbody>
@@ -133,7 +133,7 @@
                                     {{ util.make_icon(icon, title=gettext(icon_title)) }}
                                 {% endfor %}
                             </td>
-                            <td class="text-right course-primary {{ aclass }}" title="{{ atitle }}">
+                            <td class="text-end course-primary {{ aclass }}" title="{{ atitle }}">
                                 {{ util.href(cdedblink('event/course_choices', {'track_id': track.id,
                                                                                 'course_id': course_id,
                                                                                 'position': enums.CourseFilterPositions.assigned.value,
@@ -144,7 +144,7 @@
                                              readonly=not is_privileged_for('course_choices')) }}
                             </td>
                             {% for i in range(track['num_choices']) %}
-                                <td class="text-right">
+                                <td class="text-end">
                                     {{ util.href(cdedblink('event/course_choices', {'track_id': track.id,
                                                                                     'course_id': course_id,
                                                                                     'position': i,
@@ -158,8 +158,8 @@
                             <td colspan="{{ track['num_choices'] + 1 }}"></td>
                         {% endif %}
                     {% endfor %}
-                    <td class="b-left text-right">{{ course.min_size }}</td>
-                    <td class="text-right">{{ course.max_size }}</td>
+                    <td class="b-left text-end">{{ course.min_size }}</td>
+                    <td class="text-end">{{ course.max_size }}</td>
                     {% if ambience['event']['tracks']|length < 4 %}
                         <td class="b-left text-nowrap">
                             {{ util.href(cdedblink("event/change_course_form", {'course_id': course_id}),

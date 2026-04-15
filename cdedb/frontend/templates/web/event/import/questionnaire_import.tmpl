@@ -19,7 +19,7 @@
 {% endblock %}
 {% block content %}
     {% if errors %}
-        {% call util.bootstrap_panel(gettext("Validation errors"), aclass='panel-danger',
+        {% call util.bootstrap_panel(gettext("Validation errors"), aclass='border-danger',
                                      icon='exclamation-circle') %}
             <p class="text-danger">
                 {% trans %}
@@ -50,7 +50,7 @@
     </p>
 
 
-    {% call util.bootstrap_panel(title=gettext("Proceed with caution"), icon="exclamation-triangle", aclass="panel-warning") %}
+    {% call util.bootstrap_panel(title=gettext("Proceed with caution"), icon="exclamation-triangle", aclass="border-warning") %}
         {% trans %}
             The names of newly created fields cannot be changed after creation without losing data.
             If you need to change the name of an existing datafield, you must create a new one with the appropriate

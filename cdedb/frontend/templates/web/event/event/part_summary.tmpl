@@ -47,10 +47,10 @@
     </p>
 
     {% for part in ambience['event']['parts'].values()|sort %}
-        <div class="panel panel-info" id="part{{ part.id }}">
-            <div class="panel-heading">
+        <div class="card border-info" id="part{{ part.id }}">
+            <div class="card-header">
                 {{ part['title'] }}
-                <div id="part{{ part.id }}_partgroups" class="pull-right">
+                <div id="part{{ part.id }}_partgroups" class="float-end">
                     {% for part_group in part['part_groups'].values()|sort %}
                         {{ util.href(cdedblink("event/group_summary") + ("#partgroup_" + part_group.id|string)|s,
                                      part_group['shortname'], aclass="badge", icon=part_group['constraint_type'].get_icon(),
@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="p button-par">
                     {% if may_change_part_ids and part.id not in referenced_parts %}
                         <form action="{{ cdedblink('event/delete_part', {'part_id' : part.id}) }}"

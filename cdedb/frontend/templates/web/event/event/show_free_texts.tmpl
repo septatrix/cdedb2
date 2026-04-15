@@ -41,7 +41,7 @@
             {{ util.input_submit(anid=key + '-submit') }}
             &emsp;
             {{ util.href(cdedblink("event/show_free_texts", {'edit': ''}), gettext("Cancel"),
-                         anid=key + '-cancel', icon="times", aclass="btn btn-default cancel") }}
+                         anid=key + '-cancel', icon="times", aclass="btn btn-secondary cancel") }}
         </form>
         <div id="{{ key }}-show" {% if edit == key %}style="display: none"{% endif %}>
             {% if ambience['event'][key] -%}

@@ -15,7 +15,7 @@
             <thead>
                 <tr>
                     <th colspan="2"></th>
-                    <th class="text-right">{% trans %}Count{% endtrans %}</th>
+                    <th class="text-end">{% trans %}Count{% endtrans %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +27,7 @@
                         <th {% if not "num_of" in key %}colspan="2"{% endif %}>
                             {{ gettext(key) }}
                         </th>
-                        <td id="simple-stats-{{ key }}" class="text-right">
+                        <td id="simple-stats-{{ key }}" class="text-end">
                             {{ value }}
                         </td>
                     </tr>
@@ -43,7 +43,7 @@
                 <tr>
                     <th></th>
                     {% for key, value in year_stats.items() %}
-                    <th class="text-right">{{ gettext(key) }}</th>
+                    <th class="text-end">{{ gettext(key) }}</th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -52,7 +52,7 @@
                 <tr>
                     <th>{{ year }}</th>
                     {% for key, value in year_stats.items() %}
-                    <td id="year-stats-{{ key }}-{{ year }}" class="text-right">
+                    <td id="year-stats-{{ key }}-{{ year }}" class="text-end">
                         {{ value.get(year, "–") }}
                     </td>
                     {% endfor %}
@@ -79,7 +79,7 @@
         <thead>
             <tr>
                 <th></th>
-                <th class="text-right">{{ gettext(view) }}</th>
+                <th class="text-end">{{ gettext(view) }}</th>
             </tr>
         </thead>
         <tbody>
@@ -92,7 +92,7 @@
                         {{ datum }}
                     {% endif %}
                 </th>
-                <td id="complex-stats-{{ view }}-{{ datum }}" class="text-right">
+                <td id="complex-stats-{{ view }}-{{ datum }}" class="text-end">
                     {{ num }}
                 </td>
             </tr>

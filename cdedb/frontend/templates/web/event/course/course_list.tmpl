@@ -51,7 +51,7 @@
     {% endif %}
     {% if courses_exist %}
         {% if ambience['event'].tracks|length > 1 or show_course_state %}
-            {% call util.bootstrap_panel(title=gettext("Filter"), icon="search", aclass='panel-primary pull-right-responsive') %}
+            {% call util.bootstrap_panel(title=gettext("Filter"), icon="search", aclass='border-primary float-end-responsive') %}
                 <form action="{{ cdedblink('event/course_list') }}" method="GET" id="coursefilterform"
                       aria-label="{% trans %}Filter{% endtrans %}">
                     {% if show_course_state %}
@@ -89,7 +89,7 @@
             <div class="hide-hover-container" id="course-{{ course.id }}">
                 {{ util.h(course.label, anchor="course-" + course.id|string, translate=False) }}
                 {% if orga_view %}
-                    <div class="pull-right heading-supplement">
+                    <div class="float-end heading-supplement">
                         {{ util.href(cdedblink('event/show_course', {'course_id' : course_id}), gettext("Details"),
                                      readonly=not is_privileged_for('show_course'), icon='list',
                                      aclass='btn btn-xs btn-info hide-hover') }}
@@ -100,7 +100,7 @@
                 {% endif %}
                 <p class="heading-supplement">
                     {% if orga_view %}
-                        <span class="label label-primary">{{ course.shortname }}</span>
+                        <span class="badge bg-primary">{{ course.shortname }}</span>
                     {% endif %}
                     {% if "event" in user.roles and course.instructors %}
                         {% trans instructors=course.instructors %}
@@ -119,7 +119,7 @@
                             {%- endif %}
                             {%- if track.id not in course.active_segments and show_course_state %}
                                 <i><s>{{ track['title'] }}</s></i>{# -#}
-                                <span class="sr-only"> ({% trans %}cancelled{% endtrans %})</span>
+                                <span class="visually-hidden"> ({% trans %}cancelled{% endtrans %})</span>
                             {%- else %}
                                 <i>{{ track['title'] }}</i>
                             {%- endif %}

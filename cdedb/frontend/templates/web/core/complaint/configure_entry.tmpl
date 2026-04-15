@@ -131,8 +131,8 @@
                 {{ util.form_input_submit(label=gettext("Revoke"), cancellink=cdedblink('core/show_case'), aclass="btn btn-primary btn-danger", icon="rotate-left",
                                           info=gettext("Only revoke entries if they are no longer valid or have been rescinded. If you made a mistake specifying an entry, remove it instead.")) }}
             {% elif not new_entry %}
-                <div class="panel panel-primary">
-                    <div class="panel-body">
+                <div class="card border-primary">
+                    <div class="card-body">
                         {{ util.form_input_text(name="dreason", label=gettext("Changenotes")) }}
                     </div>
                 </div>

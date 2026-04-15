@@ -62,14 +62,14 @@
                     {{ util.href(cdedblink('cde/lastschrift_show', {'persona_id': lastschrift['persona_id']}),
                                  persona|persona_name) }}
                     {{ util.href(show_user_link(user, lastschrift['persona_id']),
-                                 gettext("Profile"), icon='user', aclass="btn btn-xs btn-default pull-right") }}
+                                 gettext("Profile"), icon='user', aclass="btn btn-xs btn-secondary float-end") }}
                 </td>
                 <td>
                     <form action="{{ cdedblink('cde/lastschrift_download_sepapain') }}" method="GET"
                             id="downloadsepapainform{{ lastschrift_id }}" class="downloadsepapainform">
                         {{ util.anti_csrf_token('cde/lastschrift_download_sepapain') }}
                         {{ util.input_hidden(name="lastschrift_id", value=lastschrift_id) }}
-                        {{ util.input_submit(gettext("Create SEPA-PAIN-file"), icon='download', aclass='btn btn-xs btn-default') }}
+                        {{ util.input_submit(gettext("Create SEPA-PAIN-file"), icon='download', aclass='btn btn-xs btn-secondary') }}
                     </form>
                 </td>
                 <td>
@@ -98,7 +98,7 @@
     <form action="{{ cdedblink('cde/lastschrift_download_sepapain') }}" method="GET"
       id="downloadsepapainform" style="display: inline;">
         {{ util.anti_csrf_token('cde/lastschrift_download_sepapain') }}
-        {{ util.input_submit(gettext("Create SEPA-PAIN-file"), icon='download', aclass='btn btn-default') }}
+        {{ util.input_submit(gettext("Create SEPA-PAIN-file"), icon='download', aclass='btn btn-secondary') }}
     </form>
     <form action="{{ cdedblink('cde/lastschrift_generate_transactions') }}" method="POST"
       id="generatetransactionsform" style="display: inline;">
@@ -128,17 +128,17 @@
 
         <div class="p softhide" id="js-button-group">
             <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}Select All{% endtrans %}"
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}Select All{% endtrans %}"
                         id="btn-select-all">
-                    {{ util.make_icon('check-square') }} <span class="hidden-xs">{% trans %}All{% endtrans %}</span>
+                    {{ util.make_icon('check-square') }} <span class="d-none d-sm-inline">{% trans %}All{% endtrans %}</span>
                 </button>
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}Select None{% endtrans %}"
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}Select None{% endtrans %}"
                         id="btn-select-none">
-                    {{ util.make_icon('square') }} <span class="hidden-xs">{% trans %}None{% endtrans %}</span>
+                    {{ util.make_icon('square') }} <span class="d-none d-sm-inline">{% trans %}None{% endtrans %}</span>
                 </button>
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}Invert Selection{% endtrans %}"
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}Invert Selection{% endtrans %}"
                         id="btn-select-swap">
-                    {{ util.make_icon('caret-square-right') }} <span class="hidden-xs">{% trans %}Invert{% endtrans %}</span>
+                    {{ util.make_icon('caret-square-right') }} <span class="d-none d-sm-inline">{% trans %}Invert{% endtrans %}</span>
                 </button>
             </div>
         </div>
@@ -193,7 +193,7 @@
                     (Selected: {{ num }}, Total: {{ total }})
                 {% endtrans -%}
             </span>:
-            {{ util.input_submit(label=gettext("SEPA-PAIN"), name='download', aclass="btn btn-default", icon="download",
+            {{ util.input_submit(label=gettext("SEPA-PAIN"), name='download', aclass="btn btn-secondary", icon="download",
                                  anid="finalization-download",
                                  formaction=cdedblink("cde/lastschrift_download_sepapain"), formmethod="GET") }}
             {{ util.input_submit(label=gettext("Success"), name='success', aclass="btn btn-success") }}
@@ -256,7 +256,7 @@
                             {{ util.href(cdedblink('cde/lastschrift_show', {'persona_id': lastschrift['persona_id']}),
                                          persona|persona_name) }}
                             {{ util.href(show_user_link(user, lastschrift['persona_id']),
-                                         gettext("Profile"), icon='user', aclass="btn btn-xs btn-default pull-right") }}
+                                         gettext("Profile"), icon='user', aclass="btn btn-xs btn-secondary float-end") }}
                         </li>
                     {% endfor %}
                 </ul>
@@ -281,7 +281,7 @@
                             {{ util.href(cdedblink('cde/lastschrift_show', {'persona_id': lastschrift['persona_id']}),
                                          persona|persona_name) }}
                             {{ util.href(show_user_link(user, lastschrift['persona_id']),
-                                         gettext("Profile"), icon='user', aclass="btn btn-xs btn-default pull-right") }}
+                                         gettext("Profile"), icon='user', aclass="btn btn-xs btn-secondary float-end") }}
                         </li>
                     {% endfor %}
                 </ul>

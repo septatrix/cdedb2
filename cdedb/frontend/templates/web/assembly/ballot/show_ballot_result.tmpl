@@ -199,7 +199,7 @@
             <thead>
                 <tr>
                     <th class="col-sm-11">{% trans %}Vote_[[on a voting paper]]{% endtrans %}</th>
-                    <th class="col-sm-push-1 text-right">{% trans %}Count{% endtrans %}</th>
+                    <th class="col-sm-push-1 text-end">{% trans %}Count{% endtrans %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -213,7 +213,7 @@
                                 <code class="result">{{ print_vote(votestring) }}</code>
                             {% endif %}
                         </td>
-                        <td class="text-right">
+                        <td class="text-end">
                             {{ count }}
                         </td>
                     </tr>
@@ -253,7 +253,7 @@
                 {{ util.anti_csrf_token("assembly/show_old_vote") }}
                 {% call util.output_errors('secret', wrapper=True) %}
                     <div class="input-group">
-                        <span class="input-group-addon"><label for="input-secret">
+                        <span class="input-group-text"><label for="input-secret">
                             {% trans %}Secret{% endtrans %}
                         </label></span>
                         {{ util.input_text(name="secret", anid="input-secret") }}

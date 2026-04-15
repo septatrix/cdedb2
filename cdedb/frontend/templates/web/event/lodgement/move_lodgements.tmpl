@@ -33,10 +33,10 @@
                                   nulloption=gettext("- do not move lodgements -"), sort=True) }}
 
         <div class="form-group mosp">
-            <div class="col-sm-offset-4 col-sm-8">
+            <div class="offset-sm-4 col-sm-8">
                 {{ util.input_submit(gettext("Move Lodgements"), aclass='btn btn-primary', icon='random', name='delete_group', value="False") }}{{ nbsp }}
                 {{ util.input_submit(gettext("Delete Lodgement Group"), aclass='btn btn-danger', icon='trash', name='delete_group', value="True") }}{{ nbsp }}
-                {{ util.href(cdedblink("event/lodgements"), gettext("Cancel"), icon="times", aclass="btn btn-default cancel") }}
+                {{ util.href(cdedblink("event/lodgements"), gettext("Cancel"), icon="times", aclass="btn btn-secondary cancel") }}
             </div>
         </div>
     </form>

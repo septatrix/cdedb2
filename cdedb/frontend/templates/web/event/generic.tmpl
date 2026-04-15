@@ -270,8 +270,8 @@
    aclass is used to pass classes to the row, such as drow-row, drow-prototype, drow-new
    newrow rows will have 'create' instead of 'delete' checkbox and have 'data-basename' attributes #}
 {% macro questionnaire_config_entry(part_id, kind, aclass="", newrow=False) %}
-    <div class="panel panel-default {{ aclass }}" data-drow-id="{{ part_id }}">
-        <div class="panel-body">
+    <div class="card  {{ aclass }}" data-drow-id="{{ part_id }}">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     {{ util.form_input_text(name="title_{}".format(part_id), label=gettext("Title_[[name of an entity]]"),
@@ -314,7 +314,7 @@
                                 {{ util.output_errors("readonly_{}".format(part_id), wrapper=True) }}
                             </div>
                         </div>
-                        <div class="col-sm-4 text-right">
+                        <div class="col-sm-4 text-end">
                             <span class="drow-buttonspace">
                                 {% if newrow %}
                                     {{ util.input_checkbox("create_{}".format(part_id), label=gettext("Add"),
@@ -399,7 +399,7 @@
 {%- endmacro %}
 
 {% macro _fee_amount_td(amount, fee_id) %}
-    <td class="text-right" id="eventfee_amount_{{ fee_id }}">
+    <td class="text-end" id="eventfee_amount_{{ fee_id }}">
         {{ _print_fee_amount(amount) }}
     </td>
 {% endmacro %}
@@ -415,7 +415,7 @@
 {%- endmacro %}
 
 {% macro _fee_amount_range_td(fee) %}
-    <td class="text-right" id="eventfee_amount_{{ fee.id }}">
+    <td class="text-end" id="eventfee_amount_{{ fee.id }}">
         <strong>
             {{ _print_fee_amount_range(fee) }}
         </strong>
@@ -467,7 +467,7 @@
             <tr>
                 <th>{% trans %}Type{% endtrans %}</th>
                 <th>{% trans %}Title{% endtrans %}</th>
-                <th class="text-right">{% trans %}Amount{% endtrans %}</th>
+                <th class="text-end">{% trans %}Amount{% endtrans %}</th>
                 {% if not js_preview and complex_fee %}
                     <th></th>
                 {% endif %}
@@ -553,7 +553,7 @@
                         <form action="{{ cdedblink("event/add_personalized_fee", {'fee_id': fee.id}) }}"
                               method="POST" id="addpersonalizedfeeform{{ fee.id }}">
                             {{ util.anti_csrf_token("event/add_personalized_fee") }}
-                            <td class="text-right">
+                            <td class="text-end">
                                 {% call util.output_errors("amount" + fee.id|string, wrapper=True) %}
                                     {{ util.input_text("amount" + fee.id|string, type="number", placeholder="",
                                                        aclass="form-control float-right no-number-arrows",
@@ -666,8 +666,8 @@
 {% endmacro %}
 
 {% macro fee_preview_panel(show_composition=False, hideable=False) %}
-    <div class="panel panel-primary">
-        <div class="panel-body">
+    <div class="card border-primary">
+        <div class="card-body">
             <noscript>
                 {% trans %}
                     Activate JavaScript for automatic fee preview.
@@ -711,7 +711,7 @@
                     <td style="padding-right: 1em">
                         {{ gettext(kind|string) }}
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ amount|money(lang=lang) }}
                     </td>
                 </tr>
@@ -722,7 +722,7 @@
                 <td>
                     {% trans %}Total{% endtrans %}
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     {{ complex_fee.amount|money(lang=lang) }}
                 </td>
             </tr>
@@ -734,7 +734,7 @@
     {% if is_privileged_for("change_free_text") %}
         {{ util.href(
             cdedblink("event/show_free_texts", {'edit': key}), label=label, icon="pen", anid=key + '-edit',
-            aclass="btn btn-warning" + (" btn-xs" if small else " btn-sm") + (" pull-right" if pull_right else ""),
+            aclass="btn btn-warning" + (" btn-xs" if small else " btn-sm") + (" float-end" if pull_right else ""),
             attributes=('style="color: #fff;' + ('' if display else 'display: none;') + '"')|s) }}
     {% endif %}
 {% endmacro %}
@@ -742,7 +742,7 @@
 
 {% macro filter_violations(endpoint, resultsid, filter_severity=True, filter_event=True, event_options=[]) %}
 
-    {% call util.bootstrap_panel(gettext("Filter"), aclass="panel-primary", icon="filter") %}
+    {% call util.bootstrap_panel(gettext("Filter"), aclass="border-primary", icon="filter") %}
         <form action="{{ cdedblink(endpoint) }}" method="GET" id="filterconstraintsform" class="form-horizontal">
             {% if filter_severity %}
                 {{ util.form_input_select(name="min_severity", label=gettext("Minimum Inconsistency Severity"),

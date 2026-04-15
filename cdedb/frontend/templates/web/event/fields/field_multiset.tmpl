@@ -74,8 +74,8 @@
             {{ util.input_hidden(name="kind") }}
 
             {% if kind == enums['FieldAssociations'].registration.value %}
-            <div class="panel panel-primary">
-                <div class="panel-body">
+            <div class="card border-primary">
+                <div class="card-body">
                     {{ util.form_input_textarea(name="change_note", label=gettext("Changenotes"), anid="changenotes",
                         info=gettext("Summary to be added to the log entries. This is prefixed with \"%s gesetzt: \"")|format(field_name)) }}
                 </div>

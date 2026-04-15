@@ -48,7 +48,7 @@
                              gettext("Registration Preview"), aclass="btn btn-info btn-sm", icon="eye") }}
             {% endif %}
             {{ util.href(cdedblink("event/additional_questionnaire", {"preview": True}),
-                         gettext("Questionnaire Preview"), aclass="btn btn-default btn-sm", icon="eye") }}
+                         gettext("Questionnaire Preview"), aclass="btn btn-secondary btn-sm", icon="eye") }}
         </div>
     {% endif %}
 {% endmacro %}
@@ -91,7 +91,7 @@
             {% set button = generic_event.edit_free_text_button("registration_text") %}
         {% endif %}
         {% call util.bootstrap_panel(gettext("Note of the Orga Team"), button=button,
-                                     icon="info-circle", aclass="panel-info") %}
+                                     icon="info-circle", aclass="border-info") %}
             {{ ambience['event']['registration_text']|md }}
         {% endcall %}
         {% endif %}

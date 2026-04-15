@@ -23,7 +23,7 @@
     <h2>{% trans %}CdE-Semester{% endtrans %}</h2>
 
     <p id="current-semester">
-        {% trans number="<span class='label label-default'>%s</span>"|s|format(period['id']) %}
+        {% trans number="<span class='badge bg-secondary'>%s</span>"|s|format(period['id']) %}
             We are currently in Semester {{ number }}.
         {% endtrans %}
     </p>
@@ -51,12 +51,12 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div id="payment-request" class="panel {% if in_step_1 %}panel-primary{% else %}panel-default{% endif %}">
-                <div class="panel-heading">
-                    <span class="pull-right">(01.01./01.07.)</span>
-                    <h4 class="panel-title">{% trans %}Send Payment Requests & Archival Notification{% endtrans %}</h4>
+            <div id="payment-request" class="card {% if in_step_1 %}border-primary{% else %}{% endif %}">
+                <div class="card-header">
+                    <span class="float-end">(01.01./01.07.)</span>
+                    <h4 class="card-title">{% trans %}Send Payment Requests & Archival Notification{% endtrans %}</h4>
                 </div>
-                <div class="row panel-body">
+                <div class="row card-body">
                     <div class="col-md-8">
                         <p>
                             {% trans lastschriften=util.href(cdedblink('cde/lastschrift_index'), gettext("Direct Debits"),
@@ -110,7 +110,7 @@
                                     readonly="finance" not in user.admin_views) }}
                             </div>
                             {{ util.input_submit(label=gettext("Send Mails"), icon="paper-plane", readonly="finance" not in user.admin_views,
-                                aclass="btn btn-default" if during_step_1 else "btn btn-primary") }}
+                                aclass="btn btn-secondary" if during_step_1 else "btn btn-primary") }}
                         </form>
                     {% else %}
                         <span class="text-success">
@@ -133,12 +133,12 @@
         </div>
 
         <div class="col-md-12">
-            <div id="eject-members" class="panel {% if in_step_2 %}panel-primary{% else %}panel-default{% endif %}">
-                <div class="panel-heading">
-                    <span class="pull-right">(01.02./01.08.)</span>
-                    <h4 class="panel-title">{% trans %}Remove inactive Members & Perform Automatic Archival{% endtrans %}</h4>
+            <div id="eject-members" class="card {% if in_step_2 %}border-primary{% else %}{% endif %}">
+                <div class="card-header">
+                    <span class="float-end">(01.02./01.08.)</span>
+                    <h4 class="card-title">{% trans %}Remove inactive Members & Perform Automatic Archival{% endtrans %}</h4>
                 </div>
-                <div class="row panel-body">
+                <div class="row card-body">
                     <div class="col-md-8">
                         <p>
                             {% trans %}
@@ -217,7 +217,7 @@
                         <form action="{{ cdedblink('cde/semester_eject') }}" method="POST" id="ejectform">
                             {{ util.anti_csrf_token('cde/semester_eject') }}
                             {{ util.input_submit(label=gettext("Process Accounts"), readonly="finance" not in user.admin_views,
-                                aclass="btn btn-default" if during_step_2 else "btn btn-primary") }}
+                                aclass="btn btn-secondary" if during_step_2 else "btn btn-primary") }}
                         </form>
                     {% elif in_step_1 %}
                         <span class="text-muted">{% trans %}To be done later.{% endtrans %}</span>
@@ -242,12 +242,12 @@
         </div>
 
         <div class="col-md-12">
-            <div id="balance-update" class="panel {% if in_step_3 %}panel-primary{% else %}panel-default{% endif %}">
-                <div class="panel-heading">
-                    <span class="pull-right">(15.02./15.08.)</span>
-                    <h4 class="panel-title">{% trans %}Update Balances{% endtrans %}</h4>
+            <div id="balance-update" class="card {% if in_step_3 %}border-primary{% else %}{% endif %}">
+                <div class="card-header">
+                    <span class="float-end">(15.02./15.08.)</span>
+                    <h4 class="card-title">{% trans %}Update Balances{% endtrans %}</h4>
                 </div>
-                <div class="row panel-body">
+                <div class="row card-body">
                     <div class="col-md-8">
                         <p>
                             {% trans %}
@@ -294,7 +294,7 @@
                         <form action="{{ cdedblink('cde/semester_balance_update') }}" method="POST" id="balanceform">
                             {{ util.anti_csrf_token('cde/semester_balance_update') }}
                             {{ util.input_submit(label=gettext("Update Balances"), readonly="finance" not in user.admin_views,
-                                aclass="btn btn-default" if during_step_3 else "btn btn-primary") }}
+                                aclass="btn btn-secondary" if during_step_3 else "btn btn-primary") }}
                         </form>
                     {% endif %}
                     </div>
@@ -367,18 +367,18 @@
     <h2>{% trans %}exPuls-Semester{% endtrans %}</h2>
 
     <p id="expuls-number">
-        {% trans number="<span class='label label-default'>%s</span>"|s|format(expuls['id']) %}
+        {% trans number="<span class='badge bg-secondary'>%s</span>"|s|format(expuls['id']) %}
             The next exPuls will be number {{ number }}.
         {% endtrans %}
     </p>
 
     <div class="row">
         <div class="col-md-6" id="expuls-address">
-            <div class="panel {% if expuls['addresscheck_done'] %}panel-default{% else %}panel-primary{% endif %}">
-                <div class="panel-heading">
-                    <h4 class="panel-title">{% trans %}Send Address-Checks{% endtrans %}</h4>
+            <div class="card {% if expuls['addresscheck_done'] %}{% else %}border-primary{% endif %}">
+                <div class="card-header">
+                    <h4 class="card-title">{% trans %}Send Address-Checks{% endtrans %}</h4>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     {% if expuls['addresscheck_done'] %}
                         <span class="text-success">
                             {% trans date=expuls['addresscheck_done']|datetime(lang=lang), count=expuls['addresscheck_count'] %}
@@ -417,11 +417,11 @@
             </div>
         </div>
         <div class="col-md-6" id="expuls-next">
-            <div class="panel {% if not expuls['addresscheck_done'] %}panel-default{% else %}panel-primary{% endif %}">
-                <div class="panel-heading">
-                    <h4 class="panel-title">{% trans %}Next exPuls{% endtrans %}</h4>
+            <div class="card {% if not expuls['addresscheck_done'] %}{% else %}border-primary{% endif %}">
+                <div class="card-header">
+                    <h4 class="card-title">{% trans %}Next exPuls{% endtrans %}</h4>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     {% if expuls['addresscheck_done'] %}
                         <form action="{{ cdedblink('cde/expuls_advance') }}" method="POST" id="proceedexpulsform">
                             {{ util.anti_csrf_token('cde/expuls_advance') }}

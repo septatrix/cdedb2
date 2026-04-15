@@ -41,8 +41,8 @@
             {{ util.form_input_static(name="description", label=gettext("Description"), value=description|md, info=infotext) }}
         {% endif %}
         {# Add some conditional warnings here. #}
-        <div class="panel panel-primary">
-            <div class="panel-body">
+        <div class="card border-primary">
+            <div class="card-body">
                 {{ util.form_input_text(name="dreason", label=gettext("Deletion Reason")) }}
             </div>
         </div>

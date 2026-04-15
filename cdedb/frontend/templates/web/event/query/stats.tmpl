@@ -20,7 +20,7 @@
     {% set sorted_part_groups = ambience['event']['part_groups'].values()|sort %}
     <div class="p button-par">
         {{ util.href(cdedblink("event/fee_stats"), gettext("Fee Stats"), icon='bar-chart', aclass='btn btn-info btn-sm') }}
-        {{ util.href(cdedblink("event/part_summary"), gettext("Event Parts"), icon='clock', aclass='btn btn-default btn-sm') }}
+        {{ util.href(cdedblink("event/part_summary"), gettext("Event Parts"), icon='clock', aclass='btn btn-secondary btn-sm') }}
     </div>
 
     <h3 class="nosp">{% trans %}Participant Statistics{% endtrans %}</h3>
@@ -30,7 +30,7 @@
                     {% set first_column_width = per_part_max_indent + 1 %}
                     <th colspan="{{ first_column_width }}"></th>
                     {% for part in sorted_parts %}
-                        <th class="text-right" title="{% trans %}Event Part{% endtrans %}: {{ part['title'] }}">
+                        <th class="text-end" title="{% trans %}Event Part{% endtrans %}: {{ part['title'] }}">
                             {% if ambience['event']['parts']|length + ambience['event']['part_groups']|length > 1 %}
                                 {{ part['shortname'] }}
                             {% else %}
@@ -39,7 +39,7 @@
                         </th>
                     {% endfor %}
                     {% for part_group in sorted_part_groups if part_group['parts']|length > 1 and part_group['constraint_type'].is_stats() %}
-                        <th class="text-right {% if loop.first %}b-left{% endif %}" title="{% trans %}Part Group{% endtrans %}: {{ part_group['title'] }}">
+                        <th class="text-end {% if loop.first %}b-left{% endif %}" title="{% trans %}Part Group{% endtrans %}: {{ part_group['title'] }}">
                             {{ part_group['shortname'] }}
                         </th>
                     {% endfor %}
@@ -53,7 +53,7 @@
                         {% endfor %}
                         <th colspan="{{ first_column_width - stat.indent }}">{{ gettext(stat.value) }}</th>
                         {% for part in sorted_parts %}
-                            <td class="text-right">
+                            <td class="text-end">
                                 {% set datum = row['parts'][part.id] %}
                                 {% set query = stat.get_query(ambience['event'], part.id, datum) %}
                                 {{ util.href(
@@ -63,7 +63,7 @@
                             </td>
                         {% endfor %}
                         {% for part_group in sorted_part_groups if part_group['parts']|length > 1 and part_group['constraint_type'].is_stats() %}
-                            <td class="text-right {% if loop.first %}b-left{% endif %}">
+                            <td class="text-end {% if loop.first %}b-left{% endif %}">
                                 {% set datum = row['part_groups'][part_group.id] %}
                                 {% set query = stat.get_query_part_group(ambience['event'], part_group.id, datum) %}
                                 {{ util.href(
@@ -84,7 +84,7 @@
                     <tr>
                         <th></th>
                         {% for track in sorted_tracks %}
-                            <th class="text-right" title="{% trans %}Track{% endtrans %}: {{ track['title'] }}">
+                            <th class="text-end" title="{% trans %}Track{% endtrans %}: {{ track['title'] }}">
                                 {% if ambience['event']['tracks']|length > 1 %}
                                     {{ track['shortname'] }}
                                 {% else %}
@@ -93,12 +93,12 @@
                             </th>
                         {% endfor %}
                         {% for part in sorted_parts if part['tracks']|length > 1 %}
-                            <th class="text-right {% if loop.first %}b-left{% endif %}" title="{% trans %}Event Part{% endtrans %}: {{ part['title'] }}">
+                            <th class="text-end {% if loop.first %}b-left{% endif %}" title="{% trans %}Event Part{% endtrans %}: {{ part['title'] }}">
                                 {{ part['shortname'] }}
                             </th>
                         {% endfor %}
                         {% for part_group in sorted_part_groups if grouper._track_ids_per_part_group[part_group.id]|length > 1 and part_group['constraint_type'].is_stats() %}
-                            <th class="text-right {% if loop.first %}b-left{% endif %}" title="{% trans %}Part Group{% endtrans %}: {{ part_group['title'] }}">
+                            <th class="text-end {% if loop.first %}b-left{% endif %}" title="{% trans %}Part Group{% endtrans %}: {{ part_group['title'] }}">
                                 {{ part_group['shortname'] }}
                             </th>
                         {% endfor %}
@@ -109,7 +109,7 @@
                         <tr>
                             <th>{% trans x = x + 1 %}In {{ x }}. Choice{% endtrans %}</th>
                             {% for track_id, reg_ids in row['tracks'].items() %}
-                                <td class="text-right">
+                                <td class="text-end">
                                     {% if reg_ids is none %}
                                         –
                                     {% else %}
@@ -122,7 +122,7 @@
                                 </td>
                             {% endfor %}
                             {% for part_id, reg_ids in row['parts'].items() if ambience['event']['parts'][part_id]['tracks']|length > 1 %}
-                                <td class="text-right {% if loop.first %}b-left{% endif %}">
+                                <td class="text-end {% if loop.first %}b-left{% endif %}">
                                     {% if reg_ids is none %}
                                         –
                                     {% else %}
@@ -135,7 +135,7 @@
                                 </td>
                             {% endfor %}
                             {% for part_group_id, reg_ids in row['part_groups'].items() if grouper._track_ids_per_part_group[part_group_id]|length > 1 and ambience['event']['part_groups'][part_group_id]['constraint_type'].is_stats() %}
-                                <td class="text-right {% if loop.first %}b-left{% endif %}">
+                                <td class="text-end {% if loop.first %}b-left{% endif %}">
                                     {% if reg_ids is none %}
                                         –
                                     {% else %}
@@ -153,7 +153,7 @@
                         <tr>
                             <th>{{ gettext(stat.value) }}</th>
                             {% for track in ambience['event']['tracks'].values()|sort %}
-                                <td class="text-right">
+                                <td class="text-end">
                                     {% set datum = row['tracks'][track.id] %}
                                     {% set query = stat.get_query(ambience['event'], track.id, datum) %}
                                     {{ util.href(
@@ -163,7 +163,7 @@
                                 </td>
                             {% endfor %}
                             {% for part in sorted_parts if part['tracks']|length > 1 %}
-                                <td class="text-right {% if loop.first %}b-left{% endif %}">
+                                <td class="text-end {% if loop.first %}b-left{% endif %}">
                                     {% set datum = row['parts'][part.id] %}
                                     {% set query = stat.get_query_part(ambience['event'], part.id, datum) %}
                                     {{ util.href(
@@ -173,7 +173,7 @@
                                 </td>
                             {% endfor %}
                             {% for part_group in sorted_part_groups if grouper._track_ids_per_part_group[part_group.id]|length > 1 and part_group['constraint_type'].is_stats() %}
-                                <td class="text-right {% if loop.first %}b-left{% endif %}">
+                                <td class="text-end {% if loop.first %}b-left{% endif %}">
                                     {% set datum = row['part_groups'][part_group.id] %}
                                     {% set query = stat.get_query_part_group(ambience['event'], part_group.id, datum) %}
                                     {{ util.href(

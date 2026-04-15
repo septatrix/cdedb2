@@ -24,7 +24,7 @@
         {{ util.href(cdedblink('core/create_case'), gettext("Create Case"),
                      aclass="btn btn-sm btn-success", icon="plus") }}
         {% if cases %}
-            {{ util.href("#casesearchform", gettext("Go to Search."), aclass="btn btn-default btn-sm", icon="arrow-down") }}
+            {{ util.href("#casesearchform", gettext("Go to Search."), aclass="btn btn-secondary btn-sm", icon="arrow-down") }}
         {% endif %}
     </div>
 
@@ -42,7 +42,7 @@
                 {% for case in cases.values() %}
                     <div id="case{{ case.id }}" class="list-group-item">
                         <div class="row">
-                            <div class="col-md-4 float-right text-right">
+                            <div class="col-md-4 float-right text-end">
                                 {% if case.start_date or case.end_date %}
                                     {{ case.start_date|date(lang=lang) }}–{{ case.end_date|date(lang=lang) }}
                                 {% endif %}
@@ -59,7 +59,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-10 col-md-offset-2">
+                            <div class="col-md-10 offset-md-2">
                             <hr class="nosp" />
                                 {% for involvement_type, involved_ids in case.involved.items() %}
                                     {% if not involvement_type == enums["ComplaintInvolvementType"].withheld %}
@@ -80,7 +80,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-10 col-md-offset-2">
+                            <div class="col-md-10 offset-md-2">
                                 {{ case.summary|md }}
                             </div>
                         </div>
@@ -101,11 +101,11 @@
 
     <form action="{{ cdedblink('core/complaint_index') }}" method="GET" id="complaintsearchform" class="form-horizontal">
         {{ util.input_hidden(name="is_search", value=True) }}
-        <div class="panel panel-primary mosp">
-            <div class="panel-heading">
-                <h2 class="panel-title">{{ util.make_icon('search') }} {% trans %}Search Mask{% endtrans %}</h2>
+        <div class="card border-primary mosp">
+            <div class="card-header">
+                <h2 class="card-title">{{ util.make_icon('search') }} {% trans %}Search Mask{% endtrans %}</h2>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
@@ -155,7 +155,7 @@
                                                 aclass="input-sm", type="datetime-local") }}
                     </div>
                 </div>
-                <hr class="panel-primary nosp" style="margin-bottom: 15px;" />
+                <hr class="border-primary nosp" style="margin-bottom: 15px;" />
                 <div class="row">
                     <div class="col-sm-6">
                         {{ util.form_input_text(type="search", name="qval_involved.persona_id", anid="input-involved_id",
@@ -192,7 +192,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-footer text-right">
+            <div class="card-footer text-end">
                 {{ util.input_submit(gettext("Search"), icon='search') }}
             </div>
         </div>

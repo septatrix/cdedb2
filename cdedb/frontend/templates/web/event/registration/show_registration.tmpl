@@ -32,7 +32,7 @@
         {{ util.href(cdedblink("event/view_event_log",
                                {'event_id': ambience['event']['id'],
                                 'persona_id': ambience['registration']['persona_id']|cdedbid}),
-                     gettext("Log"), aclass="btn btn-default", icon="list-alt") }}
+                     gettext("Log"), aclass="btn btn-secondary", icon="list-alt") }}
     </div>
     <h3 class="heading-underline">{% trans %}Personal Information{% endtrans %}</h3>
     <dl class="dl-horizontal">
@@ -96,7 +96,7 @@
 
     {% if ambience['registration']['orga_notes'] %}
         {% call util.bootstrap_panel(title=gettext("Orga-Notes"), icon="tag",
-                                     aclass="panel-default panel-condensed") %}
+                                     aclass=" panel-condensed") %}
             {{ ambience['registration']['orga_notes']|md }}
         {% endcall %}
     {% endif %}
@@ -245,7 +245,7 @@
                         {{ util.anti_csrf_token('event/add_backdated_checkin_period') }}
                         <div class="input-group {{ util.has_errors('checkin_time') }} {{ util.has_errors('checkout_time') }}">
                             {{ util.input_text(name='checkin_time', type='datetime-local', arialabel=gettext('Checkin time')) }}
-                            <span class="input-group-addon">{% trans %}to{% endtrans %}</span>
+                            <span class="input-group-text">{% trans %}to{% endtrans %}</span>
                             {{ util.input_text(name='checkout_time', type='datetime-local', arialabel=gettext('Checkout time')) }}
                         </div>
                         {{ util.output_errors('checkin_time') }}
@@ -274,7 +274,7 @@
                             {{ util.input_hidden(name='period_id', value=period.id) }}
                             {{ util.input_text(name=inputname1, type='datetime-local', arialabel=gettext('Checkin time'),
                                                defaultvalue=period.checkin_time) }}
-                            <span class="input-group-addon">{% trans %}to{% endtrans %}</span>
+                            <span class="input-group-text">{% trans %}to{% endtrans %}</span>
                             {{ util.input_text(name=inputname2, type='datetime-local', arialabel=gettext('Checkout time'),
                                                defaultvalue=period.checkout_time) }}
                         </div>
@@ -456,7 +456,7 @@
                 </div>
             {% endfor %}
         {% endif %}
-    {% call util.bootstrap_panel(title=gettext("Notes"), aclass="panel-default panel-condensed") %}
+    {% call util.bootstrap_panel(title=gettext("Notes"), aclass=" panel-condensed") %}
         {{ ambience['registration']['notes']|md }}
     {% endcall %}
 
@@ -496,7 +496,7 @@ Verwendungszweck:   {{ reference }}
 </pre>
     {% endif %}
 
-    {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="panel-danger mosp") %}
+    {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="border-danger mosp") %}
         <div class="row">
             <div class="col-sm-4">
                 <div class="p">

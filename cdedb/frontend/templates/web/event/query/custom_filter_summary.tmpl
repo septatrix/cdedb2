@@ -121,7 +121,7 @@
                             {% endfor %}
                         {% endwith %}
                     </td>
-                    <td class="text-right text-nowrap">
+                    <td class="text-end text-nowrap">
                         {{ util.href(cdedblink("event/change_custom_filter", {'custom_filter_id': custom_filter.id}),
                                      label="", icon="pen", aclass="btn btn-sm btn-warning", title="", readonly=is_locked) }}
                         <form action="{{ cdedblink('event/delete_custom_filter', {'custom_filter_id': custom_filter.id}) }}"

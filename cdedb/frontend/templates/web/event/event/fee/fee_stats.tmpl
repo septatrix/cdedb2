@@ -24,9 +24,9 @@
         <thead>
             <tr>
                 <th>{% trans %}Type{% endtrans %}</th>
-                <th class="text-right">{% trans %}Owed{% endtrans %}</th>
+                <th class="text-end">{% trans %}Owed{% endtrans %}</th>
                 <th></th>
-                <th class="text-right">{% trans %}Paid{% endtrans %}</th>
+                <th class="text-end">{% trans %}Paid{% endtrans %}</th>
                 <th></th>
             </tr>
         </thead>
@@ -36,7 +36,7 @@
                     <td>
                         {{ generic_event.print_fee_type_icon(fee_kind, print_name=True) }}
                     </td>
-                    <td class="text-right {{ 'text-danger' if kind_stats.total_owed < 0 }}">
+                    <td class="text-end {{ 'text-danger' if kind_stats.total_owed < 0 }}">
                         <strong>
                             {{ kind_stats.total_owed|money(lang=lang) }}
                         </strong>
@@ -46,7 +46,7 @@
                                 kind_stats.registrations_owed, gettext("Registrations"),
                                 anid="kind_{}_owed_query".format(fee_kind.name), kind=fee_kind) }}
                     </td>
-                    <td class="text-right {{ 'text-danger' if kind_stats.total_paid < 0 }}">
+                    <td class="text-end {{ 'text-danger' if kind_stats.total_paid < 0 }}">
                         <strong>
                             {{ kind_stats.total_paid|money(lang=lang) }}
                         </strong>
@@ -59,11 +59,11 @@
             {% endfor %}
                 <tr>
                     <td>{{ util.make_icon("plus-circle") + nbsp }}{{ gettext("Surplus") }}</td>
-                    <td class="text-right">
+                    <td class="text-end">
                         –
                     </td>
                     <td></td>
-                    <td class="text-right {{ 'text-danger' if fee_stats.surplus_total < 0 }}">
+                    <td class="text-end {{ 'text-danger' if fee_stats.surplus_total < 0 }}">
                         <strong>
                             {{ fee_stats.surplus_total|money(lang=lang) }}
                         </strong>
@@ -79,14 +79,14 @@
             <tr class="summary">
                 {# No suitable free icon exists, but that's fine. We need the spacing though. #}
                 <td>{{ util.make_icon("") + nbsp }}{{ gettext("Total") }}</td>
-                <td class="text-right {{ 'text-danger' if fee_stats.total_owed < 0 }}">
+                <td class="text-end {{ 'text-danger' if fee_stats.total_owed < 0 }}">
                     <strong>
                         {{ fee_stats.total_owed|money(lang=lang) }}
                     </strong>
                 </td>
                 <td></td>
                 {% set total_paid = fee_stats.total_paid + fee_stats.surplus_total %}
-                <td class="text-right {{ 'text-danger' if total_paid < 0 }}">
+                <td class="text-end {{ 'text-danger' if total_paid < 0 }}">
                     <strong>
                         {{ total_paid|money(lang=lang) }}
                     </strong>
@@ -102,9 +102,9 @@
         <thead>
             <tr>
                 <th>{% trans %}Category{% endtrans %}</th>
-                <th class="text-right">{% trans %}Owed{% endtrans %}</th>
+                <th class="text-end">{% trans %}Owed{% endtrans %}</th>
                 <th></th>
-                <th class="text-right">{% trans %}Paid{% endtrans %}</th>
+                <th class="text-end">{% trans %}Paid{% endtrans %}</th>
                 <th></th>
             </tr>
         </thead>
@@ -114,7 +114,7 @@
                     <td>
                         {{- util.make_icon(fee_category.get_icon(), title=gettext(fee_category|string)) }}{{ nbsp }}{{ gettext(fee_category|string) -}}
                     </td>
-                    <td class="text-right {{ 'text-danger' if category_stats.total_owed < 0 }}">
+                    <td class="text-end {{ 'text-danger' if category_stats.total_owed < 0 }}">
                         <strong>
                             {{ category_stats.total_owed|money(lang=lang) }}
                         </strong>
@@ -124,7 +124,7 @@
                                 category_stats.registrations_owed, gettext("Registrations"),
                                 anid="category_{}_owed_query".format(fee_category.name), kind=fee_category) }}
                     </td>
-                    <td class="text-right {{ 'text-danger' if category_stats.total_paid < 0 }}">
+                    <td class="text-end {{ 'text-danger' if category_stats.total_paid < 0 }}">
                         <strong>
                             {{ category_stats.total_paid|money(lang=lang) }}
                         </strong>
@@ -143,9 +143,9 @@
         <thead>
             <tr>
                 <th>{% trans %}Budget{% endtrans %}</th>
-                <th class="text-right">{% trans %}Owed{% endtrans %}</th>
+                <th class="text-end">{% trans %}Owed{% endtrans %}</th>
                 <th></th>
-                <th class="text-right">{% trans %}Paid{% endtrans %}</th>
+                <th class="text-end">{% trans %}Paid{% endtrans %}</th>
                 <th></th>
             </tr>
         </thead>
@@ -155,7 +155,7 @@
                     <td>
                         {{- util.make_icon(fee_budget.get_icon(), title=gettext(fee_budget|string)) }}{{ nbsp }}{{ gettext(fee_budget|string) -}}
                     </td>
-                    <td class="text-right {{ 'text-danger' if budget_stats.total_owed < 0 }}">
+                    <td class="text-end {{ 'text-danger' if budget_stats.total_owed < 0 }}">
                         <strong>
                             {{ budget_stats.total_owed|money(lang=lang) }}
                         </strong>
@@ -165,7 +165,7 @@
                                 budget_stats.registrations_owed, gettext("Registrations"),
                                 anid="budget_{}_owed_query".format(fee_budget.name), kind=fee_budget) }}
                     </td>
-                    <td class="text-right {{ 'text-danger' if budget_stats.total_paid < 0 }}">
+                    <td class="text-end {{ 'text-danger' if budget_stats.total_paid < 0 }}">
                         <strong>
                             {{ budget_stats.total_paid|money(lang=lang) }}
                         </strong>

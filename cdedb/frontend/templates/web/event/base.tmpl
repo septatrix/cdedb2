@@ -15,10 +15,10 @@
 {% import "web/util.tmpl" as util with context %}
 
 {% macro registration_quicksearch(mobile=false) %}
-    <div class="list-group tear-down {% if mobile %}hidden-md hidden-lg{% else %}hidden-xs hidden-sm{% endif %}">
+    <div class="list-group tear-down {% if mobile %}d-md-none{% else %}d-none d-md-block{% endif %}">
         <form action="{{ cdedblink('event/quick_show_registration') }}" method="GET"
               id="quickregistrationform{% if mobile %}-mobile{% endif %}">
-            <div class="sr-only">{% trans %}Search for registration by ID or name{% endtrans %}</div>
+            <div class="visually-hidden">{% trans %}Search for registration by ID or name{% endtrans %}</div>
             <div class="input-group">
                 <input type="search" name="phrase" class="form-control"
                        placeholder="{% trans %}Registration Quick-Access{% endtrans %}"
@@ -80,12 +80,12 @@ This will result in:
 #}
 {% macro event_quicksearch(mobile=false, hidden=false) %}
     <div class="list-group tear-down
-            {% if mobile %}hidden-md hidden-lg{% elif mobile is sameas false %}hidden-xs hidden-sm{% endif %}
+            {% if mobile %}d-md-none{% elif mobile is sameas false %}d-none d-md-block{% endif %}
             {% if hidden %}softhide{% endif %}
     ">
         {% set form_id = "quickeventform" + ("-mobile" if mobile is not sameas false else "") %}
         <form action="{{ cdedblink('event/redirect_event') }}" method="GET" id="{{ form_id }}">
-            <div class="sr-only">{% trans %}Quickly navigate to an event by name{% endtrans %}</div>
+            <div class="visually-hidden">{% trans %}Quickly navigate to an event by name{% endtrans %}</div>
             <div class="input-group">
                 {{ util.input_select(name="event_id", entries=all_events|entries('id', 'title')|reverse,
                                      nulloption=gettext("Event Quick-Access"), force_noselect=True) }}
@@ -115,7 +115,7 @@ This will result in:
                 });
             {% if hidden %}
                 // Adjust sidebar heading styling.
-                {% set heading_selector = ".heading-sidebar .hidden-xs.hidden-sm" %}
+                {% set heading_selector = ".heading-sidebar .d-none.d-md-block" %}
                 $("{{ heading_selector }}")
                     .addClass("selectize-control")
                     .addClass("single")
@@ -142,7 +142,7 @@ This will result in:
             {% endif %}
             {% if mobile is not sameas false %}
                 // Hide the mobile form if the hidden form is available.
-                form.parent().addClass("hidden-lg").addClass("hidden-md");
+                form.parent().addClass("d-md-none");
             {% endif %}
         </script>
     </div>
@@ -346,10 +346,10 @@ This will result in:
         <h3 class="heading-sidebar">
             {% if "event_list" in user.admin_views %}
                 {# This looks strange but is useful to add a "click" event only to the heading for big screens. #}
-                <span class="hidden-xs hidden-sm">
+                <span class="d-none d-md-block">
                     {{ heading }}
                 </span>
-                <span class="hidden-lg hidden-md">
+                <span class="d-md-none">
                     {{ heading }}
                 </span>
             {% else %}
@@ -392,7 +392,7 @@ This will result in:
             {{ event_quicksearch(mobile=True) }}
         {% endif %}
     {% endif %}
-    <hr class="strong visible-xs visible-sm" />
+    <hr class="strong d-block d-md-none" />
 {% endblock %}
 
 {% block adminviews %}

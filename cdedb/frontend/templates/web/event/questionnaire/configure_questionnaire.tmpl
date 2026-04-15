@@ -79,7 +79,7 @@
             {# Prototype row. For non-JS users: an empty row with 'create'-checkbox, for JS: prototype for new rows. #}
             {{ generic_event.questionnaire_config_entry(-values.get('create_last_index', 0) - 1, kind=kind, aclass='drow-prototype', newrow=True) }}
             <p>
-                <button type="button" class="btn btn-success softhide pull-right" id="drow-addbutton">
+                <button type="button" class="btn btn-success softhide float-end" id="drow-addbutton">
                     {{ util.make_icon("plus") }} {% trans %}Add Part{% endtrans %}
                 </button>
             </p>

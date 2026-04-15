@@ -72,12 +72,12 @@
         <h3>
             {% trans %}Result{% endtrans %}
             {{ util.href(cdedblink("assembly/show_ballot_result"), gettext("Detailed Results"),
-                         aclass="btn btn-info btn-sm pull-right", icon="book") }}
+                         aclass="btn btn-info btn-sm float-end", icon="book") }}
         </h3>
         {{ ballot_tallied.show_result(ambience['ballot'], result) }}
         {% if ambience['ballot']['comment'] %}
             {% call util.bootstrap_panel(title=gettext("Ballot Comment"), icon="tag",
-                                         aclass="panel-warning panel-condensed", anid='comment') %}
+                                         aclass="border-warning panel-condensed", anid='comment') %}
                 {{ ambience['ballot']['comment']|md }}
             {% endcall %}
         {% endif %}

@@ -37,7 +37,7 @@
         {{ util.href(cdedblink('event/manage_attendees_form'), gettext("Manage Attendees"), readonly=not is_privileged_for("manage_attendees"),
                      aclass="btn btn-sm btn-warning", icon="users") }}
         {{ util.href(util.mailto(address="", to=";".join(instructor_emails)), gettext("Email to course instructors"),
-                            icon="envelope", aclass="btn btn-sm btn-default", readonly=not instructor_emails,
+                            icon="envelope", aclass="btn btn-sm btn-secondary", readonly=not instructor_emails,
                             title=(gettext("Send Mail to all course instructors.")
                                    if instructor_emails else
                                    gettext("No course instructors / email addresses available."))) }}
@@ -70,7 +70,7 @@
 
     {% if ambience['course'].notes %}
         {% call util.bootstrap_panel(title=gettext("Orga-Notes"), icon="tag",
-                                     aclass="panel-default panel-condensed") %}
+                                     aclass=" panel-condensed") %}
             {{ ambience['course'].notes|md }}
         {% endcall %}
     {% endif %}
@@ -91,10 +91,10 @@
             {% set involved_attendees = attendee_stats.involved[(ambience['course'].id, track.id)] %}
             {% set uninvolved_attendees = attendee_stats.uninvolved[(ambience['course'].id, track.id)] %}
             <div class="col-md-4">
-                <div class="panel panel-info panel-condensed" id="track{{ track.id }}-attendees">
-                    <div class="panel-heading">
-                        <div class="pull-right">{{ involved_attendees.num_learners }}&nbsp;+&nbsp;{{ involved_attendees.num_instructors }}</div>
-                        <h3 class="panel-title">
+                <div class="card border-info panel-condensed" id="track{{ track.id }}-attendees">
+                    <div class="card-header">
+                        <div class="float-end">{{ involved_attendees.num_learners }}&nbsp;+&nbsp;{{ involved_attendees.num_instructors }}</div>
+                        <h3 class="card-title">
                             {% if ambience['event']['tracks']|length > 1 %}
                                 {{ track['title'] }}
                             {% else %}
@@ -102,7 +102,7 @@
                             {% endif %}
                         </h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         {% set track_violations = violations.get(course=ambience['course'], track=track) %}
                         <div id="track-violations-{{ track.id }}">
                             {# Skip violations where the assigned course matches but the instructed course does not. #}
@@ -148,7 +148,7 @@
                             <p class="text-muted"><i>{% trans %}No attendees.{% endtrans %}</i></p>
                         {% endif -%}
                     </div>
-                    <div class="panel-footer">
+                    <div class="card-footer">
                         <ul class="list-unstyled nosp">
                             <li>
                                 {{ util.href(cdedblink('event/course_choices', {
@@ -188,7 +188,7 @@
         </div>
     {% endfor %}
     {% call util.bootstrap_panel(
-                icon="thumbtack", aclass="panel-default panel-condensed",
+                icon="thumbtack", aclass=" panel-condensed",
                 title=
                     gettext("Description") + " (<i>{}</i>)".format(gettext("not visible"))|s
                     if not ambience['course'].is_visible else
@@ -201,7 +201,7 @@
 
     {{ util.pager('event/show_course', 'course_id', prev_course, next_course, "label") }}
 
-    {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="panel-danger mosp") %}
+    {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="border-danger mosp") %}
         <div class="row">
             <div class="col-sm-4">
                 <div class="p">

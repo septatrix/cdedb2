@@ -90,7 +90,7 @@
                 {{ util.anti_csrf_token('assembly/add_presiders') }}
                 {% call util.output_errors('presider_ids', wrapper=True) %}
                     <div class="input-group has-success">
-                        <span class="input-group-addon">{{ util.make_icon('plus', title=gettext("Add Presiders")) }}</span>
+                        <span class="input-group-text">{{ util.make_icon('plus', title=gettext("Add Presiders")) }}</span>
                         {{ util.input_text(type="search", name="presider_ids", placeholder="DB-XXXX-X, DB-XXXX-X, …",
                                            anid='input-add-presiders', arialabel=gettext("IDs of the new Presiders.")) }}
                         <script nonce="{{ csp_nonce }}">
@@ -113,7 +113,7 @@
 
     {% if ambience['assembly']['notes'] and ("assembly_presider" in user.admin_views
                                              or ambience['assembly']['id'] in user.presider) %}
-        {% call util.bootstrap_panel(title=gettext("Admin Notes"), icon="tag", aclass="panel-default panel-condensed") %}
+        {% call util.bootstrap_panel(title=gettext("Admin Notes"), icon="tag", aclass=" panel-condensed") %}
             <div id="notes">
                 {{ ambience['assembly']['notes']|md }}
             </div>
@@ -145,7 +145,7 @@
                 not ambience['assembly']['presider_address'] or not attendee_list_exists)) %}
         {# This ensures no empty box is shown for presiders. #}
         {% if ambience['assembly']['is_active'] or "ballot_is_locked" not in delete_blockers %}
-            {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="panel-danger mosp") %}
+            {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="border-danger mosp") %}
                 {% if ambience['assembly']['is_active'] %}
                     {% if not ambience['assembly']['presider_address'] %}
                         <div class="row" id="create-presider-list">

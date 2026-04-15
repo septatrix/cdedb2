@@ -15,7 +15,7 @@
     {% if values['is_search'] %}
         {% if result %}
             <div class="p">
-                {{ util.href("#coursesearchform", gettext("Go to Search."), aclass="btn btn-default btn-sm", icon="arrow-down") }}
+                {{ util.href("#coursesearchform", gettext("Go to Search."), aclass="btn btn-secondary btn-sm", icon="arrow-down") }}
             </div>
             <h2 id="result-count">
                 {% trans %}Result{% endtrans %}
@@ -52,11 +52,11 @@
 
     <form action="{{ cdedblink('cde/past_course_search') }}" method="GET" id="coursesearchform" class="form-horizontal">
         {{ util.input_hidden(name="is_search", value=True) }}
-        <div class="panel panel-primary mosp">
-            <div class="panel-heading">
-                <h2 class="panel-title">{{ util.make_icon('search') }} {% trans %}Search Mask{% endtrans %}</h2>
+        <div class="card border-primary mosp">
+            <div class="card-header">
+                <h2 class="card-title">{{ util.make_icon('search') }} {% trans %}Search Mask{% endtrans %}</h2>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-sm-6">
                         {{ util.form_input_text(
@@ -72,14 +72,14 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-footer">
+            <div class="card-footer">
                 <div style="float: left;">
                     {{ util.make_icon('info-circle') }}
                     {% trans membersearch=util.href(cdedblink("cde/member_search"), gettext("Member Search")) %}
                         To search by course instructor, use the {{ membersearch }} instead.
                     {% endtrans %}
                 </div>
-                <div class=text-right>{{ util.input_submit(gettext("Search"), icon='search') }}</div>
+                <div class=text-end>{{ util.input_submit(gettext("Search"), icon='search') }}</div>
             </div>
         </div>
     </form>

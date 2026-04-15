@@ -53,7 +53,7 @@
                   id="addmoderatorform" class="p">
                 {{ util.anti_csrf_token('ml/add_moderators') }}
                 <div class="input-group has-success">
-                    <span class="input-group-addon">{{ util.make_icon('plus') }}</span>
+                    <span class="input-group-text">{{ util.make_icon('plus') }}</span>
                     {{ util.input_text(type="search", name="moderators", anid="input-add-moderator",
                                        placeholder="DB-XXXX-X,DB-XXXX-X,…",
                                        arialabel=gettext("IDs of the new moderators")) }}
@@ -112,7 +112,7 @@
                             <form action="{{ cdedblink('ml/handle_request') }}"
                                   method="POST"
                                   id="handlerequestform{{ request }}"
-                                  class="hide-hover display-inline pull-right">
+                                  class="hide-hover display-inline float-end">
                                     {{ util.anti_csrf_token('ml/handle_request') }}
                                     {{ util.input_hidden(name="persona_id", value=request) }}
                                 <div class="btn-group">
@@ -150,7 +150,7 @@
           id="addsubscriberform" class="p">
         {{ util.anti_csrf_token('ml/add_subscribers') }}
         <div class="input-group has-success">
-            <span class="input-group-addon">{{ util.make_icon('plus') }}</span>
+            <span class="input-group-text">{{ util.make_icon('plus') }}</span>
             {{ util.input_text(type="search", name="subscriber_ids", placeholder="DB-XXXX-X,DB-XXXX-X,…", anid="input-add-subscriber",
                                arialabel=gettext("ID of the new subscribers")) }}
             <script nonce="{{ csp_nonce }}">

@@ -19,7 +19,7 @@
         {% set entry = entries[measure.entry_id] %}
         <div class="list-group list-group-hover nosp">
             <div id="entry{{ entry.id }}-{{ measure.id }}" class="list-group-item">
-                <div class="float-right text-right">
+                <div class="float-right text-end">
                     {{ measure.timestamp|datetime(lang=lang) -}}
                     {% if measure.etime %}
                         – {{ measure.etime|datetime(lang=lang) }}

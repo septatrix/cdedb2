@@ -28,7 +28,7 @@
 {# A really generic macro to generate <a href=""></a> tags.
 
    ref        The full URL to reference to
-   label      The Link text. (Please consider to add some sr-only text, if this is empty, to maintain a11y.
+   label      The Link text. (Please consider to add some visually-hidden text, if this is empty, to maintain a11y.
    readonly   If True, a simple text instead of a link is added
    icon       If set, the icon is prepended to the link text. Must be the short icon name, as passed to make_icon()
    aclass     Additional HTML/CSS classes to be added to the link tag
@@ -102,17 +102,17 @@
  # ############## #}
 
 {% macro bootstrap_panel(
-        title="", aclass="panel-default", icon=none, anid=none, button=none,
+        title="", aclass="", icon=none, anid=none, button=none,
         footer_text=none, footer_class="", footer_icon=none, level=3
 ) %}
     {# Map BS3 panel-* classes to BS5 card equivalents #}
     {% set card_class = aclass
-        |replace("panel-default", "")
-        |replace("panel-primary", "border-primary")
-        |replace("panel-success", "border-success")
-        |replace("panel-info", "border-info")
-        |replace("panel-warning", "border-warning")
-        |replace("panel-danger", "border-danger")
+        |replace("", "")
+        |replace("border-primary", "border-primary")
+        |replace("border-success", "border-success")
+        |replace("border-info", "border-info")
+        |replace("border-warning", "border-warning")
+        |replace("border-danger", "border-danger")
     %}
     <div{{ dict(class="card " + card_class, id=anid)|xmlattr }}>
         {%- if title or icon or button %}
@@ -141,7 +141,7 @@
 
 
 {% macro conditional_bootstrap_panel(
-        title="", aclass="panel-default", icon=none, anid=none, button=none,
+        title="", aclass="", icon=none, anid=none, button=none,
         footer_text=none, footer_class="", footer_icon=none, level=3
 ) %}
     {# caller() can only be called once #}
@@ -276,7 +276,7 @@
 {# Helper macro to create a large, right-floated 'Help' button, linking to the off-page documentation as referenced by
    docurl(). #}
 {% macro doclink_(topic, anchor=none) %}
-    <a href="{{ docurl(topic, anchor) }}" class="btn btn-info pull-right" target="_blank">
+    <a href="{{ docurl(topic, anchor) }}" class="btn btn-info float-end" target="_blank">
         {{ make_icon('question-circle') }}
         {% trans %}Help{% endtrans %}
         <span class="visually-hidden">{% trans %}for this site{% endtrans %}</span>

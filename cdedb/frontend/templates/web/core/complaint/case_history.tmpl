@@ -34,7 +34,7 @@
         <div class="list-group list-group-hover nosp">
         {% if entry.entry_type %}
             <div id="entry{{ entry.id }}" class="list-group-item{% if entry.is_revoked or not entry.active_version %} list-group-item-muted{% endif %}">
-                <div class="float-right text-right">
+                <div class="float-right text-end">
                     {% trans count=entry.all_versions|length %}
                         {{ count }} versions
                     {% endtrans %}
@@ -65,12 +65,12 @@
                 <hr class="nosp" />
                 {% for version in entry.all_versions %}
                     <div class="row" style="margin-left: -8px; margin-right: -8px; margin-top: -4px">
-                        <div class="col-md-11 col-md-offset-1 {% if version.dtime %}text-muted {% endif %}{% if version.marked_for_purge or version.is_purged %}bg-danger {% endif %}"
+                        <div class="col-md-11 offset-md-1 {% if version.dtime %}text-muted {% endif %}{% if version.marked_for_purge or version.is_purged %}bg-danger {% endif %}"
                              style="padding-left: 8px; padding-right: 8px; padding-top: 4px;" id="version{{ version.id }}">
                             {% if not loop.first %}
                                 <hr class="nosp" />
                             {% endif %}
-                            <div class="float-right text-right">
+                            <div class="float-right text-end">
                                 <div style="margin-bottom: 5px;">
                                     {{ version.timestamp|datetime(lang=lang) }}
                                     {% if version.etime %}
@@ -165,7 +165,7 @@
             </div>
         {% elif entry['code'].is_historic %}
             <div id="logentry{{ entry.id }}" class="list-group-item">
-                <div class="float-right text-right">
+                <div class="float-right text-end">
                     {{ entry['ctime']|datetime(lang=lang) }}
                 </div>
                 <strong>

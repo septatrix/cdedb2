@@ -72,7 +72,7 @@
             and (ambience['mailinglist']['id'] in user.moderator
                  or ambience['mailinglist'].has_moderator_view(user)
                  or ambience['mailinglist'].has_management_view(user)) %}
-        {% call util.bootstrap_panel(title=gettext("Admin Notes"), icon="tag", aclass="panel-default panel-condensed",
+        {% call util.bootstrap_panel(title=gettext("Admin Notes"), icon="tag", aclass=" panel-condensed",
                                      anid="adminnotes") %}
             {{ ambience['mailinglist']['notes']|md }}
         {% endcall %}
@@ -82,7 +82,7 @@
         <p class="text-warning"><strong>{% trans %}This mailinglist is inactive.{% endtrans %}</strong></p>
     {% else %}
         {% call util.bootstrap_panel(title=gettext("Your Subscription"),
-                                     aclass=("panel-success" if state and state.is_subscribed() else "panel-default")) %}
+                                     aclass=("border-success" if state and state.is_subscribed() else "")) %}
                 {% if state and state.is_subscribed() %}
                     <p class="text-success"><strong>
                         {% trans %}You are subscribed to this mailinglist.{% endtrans %}
@@ -132,7 +132,7 @@
                         <form action="{{ cdedblink('ml/change_address') }}" method="POST" id="changeaddressform"
                               {% if 'email' in errors %}class="has-error"{% endif %}>
                             {{ util.anti_csrf_token('ml/change_address') }}
-                            <label for="input-new-adress" class="sr-only">
+                            <label for="input-new-adress" class="visually-hidden">
                                 {% trans %}New Subsciption Address{% endtrans %}
                             </label>
                             <div class="input-group">
@@ -199,7 +199,7 @@
     {% endif %}
 
     {% if ambience['mailinglist'].has_management_view(user) %}
-        {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="panel-danger mosp") %}
+        {% call util.bootstrap_panel(title=gettext("Actions"), icon="exclamation-triangle", aclass="border-danger mosp") %}
             <div class="row">
                 <div class="col-sm-4">
                     <div class="p">

@@ -49,7 +49,7 @@
             <div class="orderrow-outer" data-id="{{ loop.index0 }}" tabindex="0">
                 <div class="orderrow-inner clearfix" draggable="true">
                     <div class="orderrow-indicator">
-                        <span class="label label-primary">
+                        <span class="badge bg-primary">
                             {{ loop.index0 }}
                         </span>
                     </div>
@@ -65,7 +65,7 @@
                             {% endif %}
                             {% if FIELD['entries'] %}
                                 <div class="miniature-text">
-                                    {{ util.make_icon('angle-down', aclass='pull-right') }}
+                                    {{ util.make_icon('angle-down', aclass='float-end') }}
                                     → [{{ FIELD['field_name'] }}]
                                 </div>
                             {% else %}
@@ -111,6 +111,6 @@
         $('#rowlist').cdedbOrderRow(input).find('.orderrow-indicator').hide();
         form.cdedbProtectChanges();
         input.closest('.form-group').hide();
-        form.find('.col-sm-offset-2').removeClass('col-sm-offset-2');
+        form.find('.offset-sm-2').removeClass('offset-sm-2');
     </script>
 {% endblock %}

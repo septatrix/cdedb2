@@ -99,12 +99,12 @@
                 {% if jshint %}
                     <noscript>
                         {% if jshint == 'strong' %}
-                            <div class="text-right text-danger">
+                            <div class="text-end text-danger">
                                 {{ util.make_icon('exclamation-triangle') }}
                                 {% trans %}This site provides additional functionality with JavaScript enabled.{% endtrans %}
                             </div>
                         {% else %}
-                            <div class="text-right text-warning">
+                            <div class="text-end text-warning">
                                 {{ util.make_icon('exclamation-triangle') }}
                                 {% trans %}This site can be used more easily with JavaScript enabled.{% endtrans %}
                             </div>

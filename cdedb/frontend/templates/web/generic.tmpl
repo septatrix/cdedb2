@@ -121,25 +121,25 @@
 {% macro format_query(scope, spec, output_selection=True, selection_blacklist=[], selection_default=[]) %}
     <form action="{{ cdedblink(scope.get_target()) }}#query-results" method="GET" id="queryform" aria-labelledby="qf_title">
         {{ util.input_hidden(name="is_search", value=True) }}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title" id="qf_title">{{ util.make_icon('search') }} {% trans %}Search Mask{% endtrans %}</h3>
+        <div class="card border-primary">
+            <div class="card-header">
+                <h3 class="card-title" id="qf_title">{{ util.make_icon('search') }} {% trans %}Search Mask{% endtrans %}</h3>
 
                 <!-- Tabs to chose between NonJS- and JS-form -->
                 <ul class="nav nav-tabs softhide" role="tablist" id="qf_tablist">
                     <li role="presentation" class="active">
-                        <a href="#tab_qf_nojs" data-toggle="tab" aria-controls="tab_qf_nojs" role="tab" id="tab_link_qf_nojs">
+                        <a href="#tab_qf_nojs" data-bs-toggle="tab" aria-controls="tab_qf_nojs" role="tab" id="tab_link_qf_nojs">
                             {{ util.make_icon('list') }} {% trans %}Tabular{% endtrans %}
                         </a>
                     </li>
                     <li role="presentation">
-                        <a href="#tab_qf_js" data-toggle="tab" aria-controls="tab_qf_js" role="tab" id="tab_link_qf_js">
+                        <a href="#tab_qf_js" data-bs-toggle="tab" aria-controls="tab_qf_js" role="tab" id="tab_link_qf_js">
                             {{ util.make_icon('magic') }} {% trans %}Magic{% endtrans %}
                         </a>
                     </li>
                 </ul>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="tab-content" id="queryform_tabcontent">
 
                     <!-- Non-JS form -->
@@ -260,7 +260,7 @@
                         <h4 class="filter-title nosp">{{ util.make_icon('filter') }} {% trans %}Filter{% endtrans %}</h4>
                         <ul class="list-group list-group-condensed list-group-hover filterfield-list"></ul>
                         <div class="input-group has-success queryform-add">
-                            <span class="input-group-addon">{{ util.make_icon('plus', title=gettext("add filter")) }}</span>
+                            <span class="input-group-text">{{ util.make_icon('plus', title=gettext("add filter")) }}</span>
                             <select id="addfilter" class="form-control input-sm addfilter"
                                     aria-label="{% trans %}field to filter on{% endtrans %}"></select>
                         </div>
@@ -270,7 +270,7 @@
                                     {{ util.make_icon('eye') }} {% trans %}Displayed Fields{% endtrans %}</h4>
                                 <p class="viewfield-list"></p>
                                 <div class="input-group has-success queryform-fields">
-                                    <span class="input-group-addon">
+                                    <span class="input-group-text">
                                         {{ util.make_icon('plus', title=gettext("add displayed field")) }}
                                     </span>
                                     <select id="addviewfield" class="form-control input-sm addviewfield"
@@ -282,7 +282,7 @@
                                     {{ util.make_icon('sort-alpha-down') }} {% trans %}Sorting{% endtrans %}</h4>
                                 <ul class="list-group list-group-condensed list-group-hover sortfield-list"></ul>
                                 <div class="input-group has-success queryform-add">
-                                    <span class="input-group-addon">
+                                    <span class="input-group-text">
                                         {{ util.make_icon('plus', title=gettext("add sort key")) }}
                                     </span>
                                     <select id="addsortfield" class="form-control input-sm addsortfield"
@@ -301,9 +301,9 @@
                             {{ util.input_submit(label=gettext("Search"), icon="search") }}
                             <div class="btn-group">
                                 {{ util.input_submit(label=gettext("CSV file"), value="csv", name="download", icon="download",
-                                    aclass="btn btn-default") }}
+                                    aclass="btn btn-secondary") }}
                                 {{ util.input_submit(label=gettext("JSON file"), value="json", name="download", icon="download",
-                                    aclass="btn btn-default") }}
+                                    aclass="btn btn-secondary") }}
                             </div>
                         </div>
                     </div>
@@ -404,7 +404,7 @@
                 var $link = $('<a></a>', {'href':'#',
                                           'title':'{% trans %}show in search mask{% endtrans %}',
                                           'aria-label':'{% trans %}show in search mask{% endtrans %}',
-                                          'class': 'btn btn-default btn-xs'})
+                                          'class': 'btn btn-secondary btn-xs'})
                     .append($('<span></span>',{'class':'fas fa-eye', 'aria-hidden':'true'}))
                     .click(function(){
                         $('#queryform').data('cdedbQueryForm').queryFromURL(url);
@@ -453,19 +453,19 @@
         </script>
         <div class="p softhide" id="js-button-group">
             <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}select all{% endtrans %}" id="btn-select-all">
-                    {{ util.make_icon('check-square') }} <span class="hidden-xs">{% trans %}all{% endtrans %}</span>
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}select all{% endtrans %}" id="btn-select-all">
+                    {{ util.make_icon('check-square') }} <span class="d-none d-sm-inline">{% trans %}all{% endtrans %}</span>
                 </button>
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}select none{% endtrans %}" id="btn-select-none">
-                    {{ util.make_icon('square') }} <span class="hidden-xs">{% trans %}none{% endtrans %}</span>
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}select none{% endtrans %}" id="btn-select-none">
+                    {{ util.make_icon('square') }} <span class="d-none d-sm-inline">{% trans %}none{% endtrans %}</span>
                 </button>
-                <button type="button" class="btn btn-sm btn-default" title="{% trans %}invert selection{% endtrans %}" id="btn-select-swap">
-                    {{ util.make_icon('caret-square-right') }} <span class="hidden-xs">{% trans %}invert{% endtrans %}</span>
+                <button type="button" class="btn btn-sm btn-secondary" title="{% trans %}invert selection{% endtrans %}" id="btn-select-swap">
+                    {{ util.make_icon('caret-square-right') }} <span class="d-none d-sm-inline">{% trans %}invert{% endtrans %}</span>
                 </button>
             </div>
             <button type="button" class="btn btn-sm btn-info" title="{% trans %}filter for selected rows{% endtrans %}"
                     id="btn-select-filter">
-                {{ util.make_icon('share-square') }} <span class="hidden-xs">{% trans %}selected only{% endtrans %}</span>
+                {{ util.make_icon('share-square') }} <span class="d-none d-sm-inline">{% trans %}selected only{% endtrans %}</span>
             </button>
             <button type="button" class="btn btn-sm btn-trigger-wide" title="{% trans %}widen results table{% endtrans %}">
                 {{ util.make_icon('arrows-alt-h', arialabel=gettext("widen results table")) }}
@@ -482,13 +482,13 @@
                             <th>
                                 {{ query.spec[field].get_title(gettext) }}
                                 {% if values.get("qop_{}".format(field)) %}
-                                    <span class="label label-default" title="{% trans %}filtered column{% endtrans %}">
+                                    <span class="badge bg-secondary" title="{% trans %}filtered column{% endtrans %}">
                                         {{ util.make_icon('filter') }}
                                     </span>
                                 {% endif %}
                                 {% for i in range(MAX_QUERY_ORDERS) %}
                                     {% if values.get("qord_" + i|string) == field %}
-                                        <span id="queryresult-sorted-column-marker" class="label label-default" title="{% trans %}sorted column{% endtrans %}">
+                                        <span id="queryresult-sorted-column-marker" class="badge bg-secondary" title="{% trans %}sorted column{% endtrans %}">
                                         {% if values.get("qord_" + i|string + "_ascending") == "False" %}
                                             {{ util.make_icon('sort-alpha-down') }}
                                         {% else %}
@@ -668,7 +668,7 @@
 
 {% macro nav_tab(target, label, icon=none, anid="") %}
     <li role="presentation">
-        <a data-toggle="tab" role="tab" data-target="{{ target }}" id="{{ anid }}">
+        <a data-bs-toggle="tab" role="tab" data-bs-target="{{ target }}" id="{{ anid }}">
             {{ util.make_icon(icon) if icon }}{{ nbsp if icon and label -}}
             {{ label }}
         </a>

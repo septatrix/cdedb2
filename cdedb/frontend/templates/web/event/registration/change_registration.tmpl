@@ -94,8 +94,8 @@
 
         {{ generic_event.fee_preview_panel(show_composition=True, hideable=True) }}
 
-        <div class="panel panel-primary">
-            <div class="panel-body">
+        <div class="card border-primary">
+            <div class="card-body">
                 {{ util.form_input_textarea(name="change_note", label=gettext("Changenotes"),
                    info=gettext("Summary to be added to the log entry.")) }}
             </div>

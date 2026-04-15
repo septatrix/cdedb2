@@ -16,7 +16,7 @@
 
 {% macro filterlink() %}
     <div class="p">
-        {{ util.href("#logshowform", gettext("Go to Filter."), aclass="btn btn-default btn-sm", icon="arrow-down") }}
+        {{ util.href("#logshowform", gettext("Go to Filter."), aclass="btn btn-secondary btn-sm", icon="arrow-down") }}
     </div>
 {% endmacro %}
 
@@ -73,7 +73,7 @@
 {% endmacro %}
 
 {% macro filter(endpoint, enum, kind, filter_name=None) %}
-    {% call util.bootstrap_panel(title=gettext("Filter"), icon="search", aclass="panel-primary") %}
+    {% call util.bootstrap_panel(title=gettext("Filter"), icon="search", aclass="border-primary") %}
         <form action="{{ cdedblink(endpoint) }}" method="GET" id="logshowform" class="form-horizontal">
             {% set entries = enum|enum_entries(processing=gettext) %}
             {% if entries is mapping %}
@@ -153,10 +153,10 @@
             {{ util.form_input_from_to(
                 'ctime_from', 'ctime_to', label=gettext("Timestamp"), type='datetime-local', small=True) }}
             <div class="form-group mosp">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="offset-sm-2 col-sm-10">
                     {{ util.input_submit(label=gettext("Apply")) }}
                     {{ util.input_submit(label=gettext("CSV file"), value="csv", name="download", icon="download",
-                                 aclass="btn btn-default") }}
+                                 aclass="btn btn-secondary") }}
                 </div>
             </div>
         </form>
