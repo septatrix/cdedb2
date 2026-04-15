@@ -105,16 +105,7 @@
         title="", aclass="", icon=none, anid=none, button=none,
         footer_text=none, footer_class="", footer_icon=none, level=3
 ) %}
-    {# Map BS3 panel-* classes to BS5 card equivalents #}
-    {% set card_class = aclass
-        |replace("", "")
-        |replace("border-primary", "border-primary")
-        |replace("border-success", "border-success")
-        |replace("border-info", "border-info")
-        |replace("border-warning", "border-warning")
-        |replace("border-danger", "border-danger")
-    %}
-    <div{{ dict(class="card " + card_class, id=anid)|xmlattr }}>
+    <div{{ dict(class="card " + aclass, id=anid)|xmlattr }}>
         {%- if title or icon or button %}
             <div class="card-header">
                 {{- button -}}

@@ -81,11 +81,11 @@ class ViolationSeverity(CdEEnum):
 
     def panel_class(self) -> str:
         return {
-            ViolationSeverity.CRITICAL: 'panel-danger fw-bold',
-            ViolationSeverity.ERROR: 'panel-danger',
-            ViolationSeverity.WARNING: 'panel-warning',
-            ViolationSeverity.INFO: 'panel-info',
-            ViolationSeverity.DEBUG: 'panel-default',
+            ViolationSeverity.CRITICAL: 'border-danger fw-bold',
+            ViolationSeverity.ERROR: 'border-danger',
+            ViolationSeverity.WARNING: 'border-warning',
+            ViolationSeverity.INFO: 'border-info',
+            ViolationSeverity.DEBUG: '',
         }[self]
 
     def alert_class(self) -> str:
