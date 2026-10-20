@@ -31,10 +31,10 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
     \
     postgresql-client \
     \
-    texlive \
-    texlive-latex-extra \
-    texlive-lang-german \
-    texlive-luatex \
+    libpango-1.0-0 \
+    libpangoft2-1.0-0 \
+    libharfbuzz-subset0 \
+    fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install "uv>=0.11.8" --break-system-packages

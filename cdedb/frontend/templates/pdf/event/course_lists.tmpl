@@ -1,0 +1,84 @@
+{% extends "pdf/base.tmpl" %}
+{% block title %}{{ ambience['event']['title'] }} – {% trans %}Course Attendee Lists{% endtrans %}{% endblock %}
+{% block style %}
+    @page {
+        size: A5;
+        margin: 12mm 12mm 20mm;
+        @bottom-left {
+            content: element(course-room);
+            vertical-align: top;
+        }
+    }
+    html {
+        font-size: 12pt;
+    }
+    .course-room {
+        position: running(course-room);
+    }
+    header {
+        display: flex;
+        align-items: center;
+        gap: 4mm;
+    }
+    header .info {
+        flex: 1;
+    }
+    header img {
+        width: 25mm;
+        height: 25mm;
+    }
+    h1 {
+        margin: 0;
+        font-size: 26pt;
+    }
+    .minor {
+        border: 0.4pt solid black;
+        padding: 0 0.2em;
+    }
+{% endblock %}
+{% block content %}
+    {% for course_id, course in courses.items() %}
+        {% for track in tracks.values()|sort if track.id in course['active_segments'] %}
+        {% set key = (course_id, track.id) %}
+            <section class="page">
+                {# This is placed at the bottom of the page. #}
+                <div class="course-room">
+                    {%- if course_room_fields[track.id] -%}
+                        {% trans %}Course room{% endtrans %}:
+                        {{ course['fields'].get(course_room_fields[track.id], "") }}
+                    {%- endif -%}
+                </div>
+                <header>
+                    <div class="info">
+                        <h1>{{ course['shortname'] }}</h1>
+                        {{ course['title'] }}<br>
+                        {% if ambience['event']['tracks']|length > 1 -%}
+                            <em>{{ ambience['event']['tracks'][track.id]['shortname'] }}</em><br>
+                        {%- endif %}
+                        {{ attendees[key]|length - instructors[key]|length }} {% trans %}Participants{% endtrans -%}
+                        , {{ instructors[key]|length }} {% trans %}Instructors{% endtrans %}
+                    </div>
+                    <img src="course-logo-{{ course_id }}.png" alt="">
+                </header>
+                <ul>
+                    {% for reg_id, reg in registrations.items() if reg_id in attendees[(course_id, track.id)] %}
+                        {% with p = personas[registrations[reg_id]['persona_id']] %}
+                            <li>
+                                {% if reg_id in instructors[(course_id, track.id)] %}
+                                    <em>{{ personas[registrations[reg_id]['persona_id']]|persona_name }}</em>
+                                {% else %}
+                                    {{ personas[registrations[reg_id]['persona_id']]|persona_name }}
+                                    {% if personas_age[p['id']].is_minor() %}
+                                        <span class="minor">{{ personas_age[p['id']].name|upper }}</span>
+                                    {% endif %}
+                                {% endif %}
+                            </li>
+                        {% endwith %}
+                    {% else %}
+                        <li><em>{% trans %}nobody{% endtrans %}</em></li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}

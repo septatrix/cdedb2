@@ -56,7 +56,8 @@ echo "--------------------------------------------"
 
 # this is categorized into
 # - devtools
-# - runtime dependencies (app, postgres, latex)
+# - runtime dependencies (app, postgres, weasyprint)
+# - latex for the template renderer shipped with the offline vm
 # - python package dependencies:
 #   - building/running pyicu: g++ pkg-config python3-dev libicu-dev
 #   - building/running graphviz: graphviz
@@ -72,6 +73,9 @@ apt-get install --yes --no-install-recommends                       \
     ldap-utils                                                      \
     \
     postgresql-client postgresql postgresql-contrib pgbouncer       \
+    \
+    libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0            \
+    fonts-dejavu-core                                               \
     \
     texlive texlive-plain-generic texlive-latex-extra               \
     texlive-lang-german texlive-luatex                              \

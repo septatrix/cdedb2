@@ -1,0 +1,47 @@
+{#
+    This is the base template to be extended by all templates for PDF
+    documents which are letters. The layout follows DIN 5008 (form B), so
+    the address fits into the window of a DL envelope.
+#}
+{% extends "pdf/base.tmpl" %}
+{% block style %}
+    @page {
+        margin: 20mm 20mm 15mm 25mm;
+    }
+    html {
+        hyphens: auto;
+    }
+    .address-field {
+        {# The window starts 45mm from the top of the page. #}
+        margin-top: 25mm;
+        width: 80mm;
+        height: 45mm;
+    }
+    .backaddress {
+        margin-top: 10mm;
+        min-height: 1.3em;
+        font-size: 7pt;
+        text-decoration: underline;
+    }
+    .recipient {
+        margin-top: 3mm;
+    }
+    .subject {
+        margin: 8mm 0 0;
+        font-size: 1em;
+        font-weight: bold;
+    }
+    {% block letter_style %}{% endblock %}
+{% endblock %}
+{% block content %}
+    <div class="address-field">
+        <div class="backaddress">
+            {%- block backaddress -%}
+                CdE e.&#x202F;V., c/o Rechtsanwalt Manger, Goseriede 13, 30159 Hannover
+            {%- endblock -%}
+        </div>
+        <div class="recipient">{% block recipient %}{% endblock %}</div>
+    </div>
+    <h1 class="subject">{% block subject %}{% endblock %}</h1>
+    {% block letter %}{% endblock %}
+{% endblock %}

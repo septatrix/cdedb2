@@ -1,0 +1,63 @@
+{% extends "pdf/base.tmpl" %}
+{% block title %}{{ ambience['event']['title'] }} – {% trans %}Course Puzzle{% endtrans %}{% endblock %}
+{% block style %}
+    html {
+        font-size: 12pt;
+    }
+    .piece {
+        break-inside: avoid;
+        margin-bottom: 1em;
+    }
+    .piece h2 {
+        margin: 0 0 0.3em;
+        font-size: 1.3em;
+    }
+    .piece p {
+        margin: 0;
+    }
+{% endblock %}
+{% block content %}
+    <section class="page">
+        {% for course_id, course in courses.items() %}
+            {% for track in tracks.values()|sort if track.id in course['active_segments'] %}
+                <div class="piece">
+                    <h2>{{ course['title'] }} ({{ ambience['event']['tracks'][track.id]['title'] }})</h2>
+                    <p>{% trans %}Instructors{% endtrans %}: {{ course['instructors'] }}</p>
+                    <p>{% trans %}Minimum size/maximum size{% endtrans %}: {{ course['min_size'] }}/{{ course['max_size'] }}</p>
+                    <p>{% trans %}Notes{% endtrans %}: {{ course['notes'] }}</p>
+                    <p>
+                        {% trans %}First/second/third choice{% endtrans %}:
+                        {{ counts[course_id].get((track.id, 0), 0) -}}
+                        /{{ counts[course_id].get((track.id, 1), 0) -}}
+                        /{{ counts[course_id].get((track.id, 2), 0) }}
+                    </p>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </section>
+    <section>
+        {% for registration_id, registration in registrations.items() %}
+            {% for track in tracks.values()|sort %}
+                {% if registration['parts'][ambience['event']['tracks'][track.id]['part_id']]['status'] == enums['RegistrationPartStati'].participant %}
+                    <div class="piece">
+                        <h2>{{ personas[registration['persona_id']]|persona_name(include_nickname=True) }} ({{ track['title'] }})</h2>
+                        {% if registration['tracks'][track.id]['course_instructor'] %}
+                            <p>
+                                {% trans %}Instructed Course{% endtrans %}:
+                                {{ courses[registration['tracks'][track.id]['course_instructor']]['title'] }}
+                            </p>
+                        {% endif %}
+                        {% for label in (gettext("First choice"), gettext("Second choice"), gettext("Third choice")) %}
+                            {% if registration['tracks'][track.id]['choices']|length > loop.index0 %}
+                                <p>
+                                    {{ label }}:
+                                    {{ courses[registration['tracks'][track.id]['choices'][loop.index0]]['title'] }}
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </section>
+{% endblock %}

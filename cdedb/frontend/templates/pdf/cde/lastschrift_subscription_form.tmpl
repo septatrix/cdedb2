@@ -1,0 +1,171 @@
+{% extends "pdf/base_letter.tmpl" %}
+{% macro field(value, width="10cm") -%}
+    {% if value %}{{ value }}{% else %}<span class="blank" style="width: {{ width }}"></span>{% endif %}
+{%- endmacro %}
+{% block title %}SEPA-Lastschriftmandat{% endblock %}
+{% block letter_style %}
+    p {
+        margin: 0 0 10pt;
+    }
+    h2 {
+        margin: 1.5em 0 0.3em;
+        font-size: 1.2em;
+    }
+    .blank {
+        display: inline-block;
+        height: 1em;
+        border-bottom: 1pt dotted black;
+    }
+    .data {
+        margin: 6mm 0 10pt;
+        border-collapse: collapse;
+    }
+    .data td {
+        padding: 0.1em 1em 0.1em 0;
+        vertical-align: bottom;
+    }
+    .data td:first-child {
+        white-space: nowrap;
+    }
+    .signature {
+        display: flex;
+        gap: 1cm;
+        margin-top: 12mm;
+    }
+    .signature div {
+        border-top: 1pt dotted black;
+        padding-top: 0.2em;
+    }
+    .footnote {
+        float: footnote;
+        font-size: 9pt;
+    }
+    .information {
+        break-before: page;
+    }
+{% endblock %}
+{% block backaddress %}
+    {%- if data["full_name"] and data["address"] and data["postal_code"] and data["location"] -%}
+        {{ "{}, {} {}, {} {} {}".format(data["full_name"], data["address_supplement"], data["address"],
+                                        data["postal_code"], data["location"], data["country"]) }}
+    {%- endif -%}
+{% endblock %}
+{% block recipient %}
+    Club der Ehemaligen e.&#x202F;V.<br>
+    c/o {{ meta_info['Finanzvorstand_Name'] }}
+    {% for i in ("2", "3", "4") %}
+        {% if meta_info['Finanzvorstand_Adresse_Zeile{}'.format(i)] %}
+            <br>{{ meta_info['Finanzvorstand_Adresse_Zeile{}'.format(i)] }}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+{% block subject %}SEPA-Lastschriftmandat{% endblock %}
+{% block letter %}
+    <table class="data">
+        <tr><td>Name des Mitglieds</td><td>{{ field(data["full_name"]) }}</td></tr>
+        <tr><td>Adresszusatz</td><td>{{ field(data["address_supplement"]) }}</td></tr>
+        <tr><td>Straße</td><td>{{ field(data["address"]) }}</td></tr>
+        <tr>
+            <td>PLZ, Ort</td>
+            <td>
+                {%- if data["postal_code"] and data["location"] -%}
+                    {{ data["postal_code"] }} {{ data["location"] }}
+                {%- else -%}
+                    {{ field(None) }}
+                {%- endif -%}
+            </td>
+        </tr>
+        <tr><td>Land</td><td>{{ field(data["country"]) }}</td></tr>
+        <tr><td>E-Mail</td><td>{{ field(data["username"]) }}</td></tr>
+        <tr><td>Datenbank-ID</td><td>{{ field(data["db_id"]|cdedbid if data["db_id"] else None) }}</td></tr>
+        <tr><td>Kontoinhaber:in (falls abweichend)</td><td>{{ field(data["account_holder"]) }}</td></tr>
+        <tr><td>IBAN</td><td>{{ field(data["iban"]|iban if data["iban"] else None) }}</td></tr>
+        <tr>
+            <td>Initiale Spende</td>
+            <td>
+                {%- if data["donation"] -%}
+                    {{ data["donation"]|money }}
+                {%- else -%}
+                    {{ field(None, width="1.35cm") }}&#x202F;€
+                    (mindestens {{ min_donation|money }}, typischerweise {{ typical_donation|money }})
+                {%- endif -%}
+            </td>
+        </tr>
+    </table>
+
+    <p>
+        <em>SEPA-Lastschriftmandat:</em> Hiermit ermächtige ich den Club der Ehemaligen der Deutschen SchülerAkademien
+        e.&#x202F;V., von meinem oben angegebenem Konto mittels Lastschrift den jährlichen Mitgliedsbeitrag
+        <strong>zuzüglich</strong> der in der Mitgliederdatenbank hinterlegten jährlichen Spende jährlich einzuziehen.
+        Zugleich weise ich mein Kreditinstitut an, die von dem Club der Ehemaligen der Deutschen
+        SchülerAkademien e.&#x202F;V. gezogenen Lastschriften einzulösen. Die Höhe der einzuziehenden Spende kann ich jederzeit
+        in der Mitgliederdatenbank ändern. Eine Änderung wird zum nächsten Einzug gültig, sofern dieser nicht
+        bereits per Mail angekündigt wurde.
+    </p>
+    <p>
+        <em>Hinweis:</em> Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des
+        belasteten Betrages verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen. Die
+        Mandatsreferenz wird separat mitgeteilt.
+    </p>
+    <p>
+        Der CdE e.&#x202F;V. beabsichtigt, mit einem Teil der auf diese Weise eingehenden Spendenmittel die Organisation,
+        Betreuung und Durchführung von Deutschen SchülerAkademien durch Bildung &amp; Begabung gGmbH, Bonn, zu unterstützen.
+    </p>
+
+    <div class="signature">
+        <div style="width: 5cm">Ort, Datum</div>
+        <div style="width: 10cm">Unterschrift Kontoinhaber:in</div>
+    </div>
+
+    <div class="information">
+        <h2>Lastschriftinitiative</h2>
+        <p>
+            Sofern Du die Erlaubnis dazu erteilst, zieht der CdE e.&#x202F;V. in Zukunft wie oben beschrieben jährlich den
+            – jeweils aktuellen – Mitgliedsbeitrag (von derzeit {{ annual_fee|money }}) zuzüglich einer in der Datenbank
+            angegebenen Spende ein.
+            Dabei gilt derzeit insgesamt ein Mindestbetrag von {{ (annual_fee + min_donation)|money }}.
+            Im Rahmen der Vereinsarbeit soll darauf geachtet werden, dass von den dadurch eingehenden Spenden in etwa
+            40 bis 50 Prozent davon der Deutschen SchülerAkademie gespendet oder für eine
+            sonstige Unterstützung der „Idee SchülerAkademie“ verwendet werden.
+        </p>
+        <p>
+            Aus rechtlichen Gründen benötigen wir die Einzugsermächtigung im Original. Schicke uns daher bitte die
+            ausgefüllte und unterschriebene Ermächtigung an die oben aufgeführte Adresse zu.
+        </p>
+
+        <h2>Wofür benötigt der CdE Spenden?</h2>
+        <p>
+            Die Pfingst-, Sommer-, Winter- und Multinationale Akademie werden durch Spenden bezuschusst. Dadurch sinken ihre
+            Teilnahmebeiträge, was allen Teilnehmenden zugute kommt. Seit 2013 unterstützen wir auch einige kleinere
+            Veranstaltungen mit einem Teil der eingegangen Spenden, darunter das CdE-Seminar, die Familien&shy;Akademie und das
+            Studieninformationswochenende.
+        </p>
+
+        <h2>Die SchülerAkademie fördern</h2>
+        <p>
+            Mit der <em>Lastschriftinitiative</em> (vormals: Initiative 25+) soll außerdem ein Beschluss der Mitgliederversammlung 2008
+            umgesetzt und von nun an die „Idee SchülerAkademie“ auch finanziell unterstützt werden. Dazu darf der CdE einen
+            Teil der auf diesem Weg erhaltenen Spenden an Bildung &amp; Begabung gem. GmbH weiterreichen oder aber auf anderem Wege
+            die SchülerAkademien fördern.
+        </p>
+
+        <h2>Änderung des Lastschriftbetrags &amp; Kündigung</h2>
+        <p>
+            Du kannst den Betrag für den Einzug jederzeit in der Datenbank<span class="footnote">{{ cdedblink('core/mydata') }}</span>
+            anpassen. Falls du nicht selbst Kontoinhaber/-in bist,
+            muss diese Person natürlich vorher zustimmen. Du kannst das Lastschriftmandat außerdem jederzeit per Mail
+            an <a href="mailto:{{ MANAGEMENT_ADDRESS }}">{{ MANAGEMENT_ADDRESS }}</a> kündigen.
+        </p>
+        <p>
+            Etwa zwei Wochen vor einem Lastschrifteinzug erhälst du eine Ankündigung per Mail über den anstehenden Einzug.
+            Ab diesem Zeitpunkt kann der Betrag nicht mehr geändert werden oder eine Kündigung erfolgen. Diese werden dann erst
+            mit dem nächsten Einzug wirksam.
+        </p>
+
+        <h2>Fragen?</h2>
+        <p>
+            Bei Fragen wende Dich bitte an <a href="mailto:{{ MANAGEMENT_ADDRESS }}">{{ MANAGEMENT_ADDRESS }}</a>.
+            Herzlichen Dank für Deine Unterstützung des CdE e.&#x202F;V.!
+        </p>
+    </div>
+{% endblock %}

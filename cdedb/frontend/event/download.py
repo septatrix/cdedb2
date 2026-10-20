@@ -51,13 +51,13 @@ class EventDownloadMixin(EventBaseFrontend):
 
     @access(Roles.event)
     @event_guard(EventPrivileges.registrations_read)
-    @REQUESTdata("runs")
+    @REQUESTdata("source")
     def download_nametags(
-        self, rs: RequestState, event_id: vtypes.EventID, runs: vtypes.SingleDigitInt
+        self, rs: RequestState, event_id: vtypes.EventID, source: bool
     ) -> Response:
         """Create nametags.
 
-        You probably want to edit the provided tex file.
+        You probably want to edit the provided HTML file.
         """
         if rs.has_validation_errors():
             return self.redirect(rs, 'event/downloads')
@@ -90,9 +90,9 @@ class EventDownloadMixin(EventBaseFrontend):
                     registrations_by_part_by_age[part_id][reg['age']][reg_id] = reg
         course_ids = self.eventproxy.list_courses(rs, event_id)
         courses = self.eventproxy.get_courses(rs, course_ids)
-        tex = self.fill_template(
+        html = self.fill_template(
             rs,
-            "tex",
+            "pdf",
             "nametags",
             {
                 'lodgements': lodgements,
@@ -101,33 +101,31 @@ class EventDownloadMixin(EventBaseFrontend):
                 'registrations_by_part_by_age': registrations_by_part_by_age,
             },
         )
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            work_dir = pathlib.Path(tmp_dir, rs.ambience['event'].shortname)
-            work_dir.mkdir()
-            filename = f"{rs.ambience['event'].shortname}_nametags.tex"
-            with open(work_dir / filename, 'w', encoding='utf-8') as f:
-                f.write(tex)
-            src: pathlib.Path = self.conf["REPOSITORY_PATH"] / "misc/blank.png"
-            shutil.copy(src, work_dir / "aka-logo.png")
-            shutil.copy(src, work_dir / "orga-logo.png")
-            shutil.copy(src, work_dir / "minor-pictogram.png")
-            shutil.copy(src, work_dir / "multicourse-logo.png")
-            for course_id in courses:
-                shutil.copy(src, work_dir / f"logo-{course_id}.png")
-            file = self.serve_complex_latex_document(
-                rs, tmp_dir, rs.ambience['event'].shortname, filename, runs
-            )
-            if file:
-                return file
-            else:
-                rs.notify("info", n_("Empty PDF."))
-                return self.redirect(rs, "event/downloads")
+        blank: pathlib.Path = self.conf["REPOSITORY_PATH"] / "misc/blank.png"
+        assets = {
+            "aka-logo.png": blank,
+            "orga-logo.png": blank,
+            "minor-pictogram.png": blank,
+            "multicourse-logo.png": blank,
+        }
+        for course_id in courses:
+            assets[f"logo-{course_id}.png"] = blank
+        file = self.serve_pdf_document(
+            rs,
+            html,
+            f"{rs.ambience['event'].shortname}_nametags",
+            source,
+            assets=assets,
+        )
+        if file:
+            return file
+        return self.redirect(rs, "event/downloads")
 
     @access(Roles.event)
     @event_guard(EventPrivileges.registrations_read)
-    @REQUESTdata("runs")
+    @REQUESTdata("source")
     def download_course_puzzle(
-        self, rs: RequestState, event_id: vtypes.EventID, runs: vtypes.SingleDigitInt
+        self, rs: RequestState, event_id: vtypes.EventID, source: bool
     ) -> Response:
         """Aggregate course choice information.
 
@@ -170,9 +168,12 @@ class EventDownloadMixin(EventBaseFrontend):
             ),
         )
         registrations = {reg_id: registrations[reg_id] for reg_id in reg_order}
-        tex = self.fill_template(
+        if not source and not courses:
+            rs.notify("info", n_("Empty PDF."))
+            return self.redirect(rs, "event/downloads")
+        html = self.fill_template(
             rs,
-            "tex",
+            "pdf",
             "course_puzzle",
             {
                 'courses': courses,
@@ -182,20 +183,18 @@ class EventDownloadMixin(EventBaseFrontend):
                 'personas': personas,
             },
         )
-        file = self.serve_latex_document(
-            rs, tex, f"{rs.ambience['event'].shortname}_course_puzzle", runs
+        file = self.serve_pdf_document(
+            rs, html, f"{rs.ambience['event'].shortname}_course_puzzle", source
         )
         if file:
             return file
-        else:
-            rs.notify("info", n_("Empty PDF."))
-            return self.redirect(rs, "event/downloads")
+        return self.redirect(rs, "event/downloads")
 
     @access(Roles.event)
     @event_guard(EventPrivileges.registrations_read)
-    @REQUESTdata("runs")
+    @REQUESTdata("source")
     def download_lodgement_puzzle(
-        self, rs: RequestState, event_id: vtypes.EventID, runs: vtypes.SingleDigitInt
+        self, rs: RequestState, event_id: vtypes.EventID, source: bool
     ) -> Response:
         """Aggregate lodgement information.
 
@@ -243,9 +242,12 @@ class EventDownloadMixin(EventBaseFrontend):
             for reg_id in registrations
         }
 
-        tex = self.fill_template(
+        if not source and not lodgements:
+            rs.notify("info", n_("Empty PDF."))
+            return self.redirect(rs, "event/downloads")
+        html = self.fill_template(
             rs,
-            "tex",
+            "pdf",
             "lodgement_puzzle",
             {
                 'lodgements': lodgements,
@@ -255,20 +257,18 @@ class EventDownloadMixin(EventBaseFrontend):
                 'wish_problems': problems,
             },
         )
-        file = self.serve_latex_document(
-            rs, tex, f"{rs.ambience['event'].shortname}_lodgement_puzzle", runs
+        file = self.serve_pdf_document(
+            rs, html, f"{rs.ambience['event'].shortname}_lodgement_puzzle", source
         )
         if file:
             return file
-        else:
-            rs.notify("info", n_("Empty PDF."))
-            return self.redirect(rs, "event/downloads")
+        return self.redirect(rs, "event/downloads")
 
     @access(Roles.event)
     @event_guard(EventPrivileges.registrations_read)
-    @REQUESTdata("runs")
+    @REQUESTdata("source")
     def download_course_lists(
-        self, rs: RequestState, event_id: vtypes.EventID, runs: vtypes.SingleDigitInt
+        self, rs: RequestState, event_id: vtypes.EventID, source: bool
     ) -> Response:
         """Create lists to post to course rooms."""
         if rs.has_validation_errors():
@@ -314,9 +314,12 @@ class EventDownloadMixin(EventBaseFrontend):
             ),
         )
         registrations = {reg_id: registrations[reg_id] for reg_id in reg_order}
-        tex = self.fill_template(
+        if not source and not courses:
+            rs.notify("info", n_("Empty PDF."))
+            return self.redirect(rs, "event/downloads")
+        html = self.fill_template(
             rs,
-            "tex",
+            "pdf",
             "course_lists",
             {
                 'courses': courses,
@@ -329,41 +332,29 @@ class EventDownloadMixin(EventBaseFrontend):
                 'tracks': tracks,
             },
         )
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            work_dir = pathlib.Path(tmp_dir, rs.ambience['event'].shortname)
-            work_dir.mkdir()
-            filename = "{}_course_lists.tex".format(rs.ambience['event'].shortname)
-            with open(work_dir / filename, 'w', encoding='utf-8') as f:
-                f.write(tex)
-            src: pathlib.Path = self.conf["REPOSITORY_PATH"] / "misc/blank.png"
-            shutil.copy(src, work_dir / "event-logo.png")
-            for course_id in courses:
-                dest = work_dir / f"course-logo-{course_id}.png"
-                path: pathlib.Path = (
-                    self.conf["STORAGE_DIR"] / "course_logo" / str(course_id)
-                )
-                if path.exists():
-                    shutil.copy(path, dest)
-                else:
-                    shutil.copy(src, dest)
-            file = self.serve_complex_latex_document(
-                rs,
-                tmp_dir,
-                rs.ambience['event'].shortname,
-                f"{rs.ambience['event'].shortname}_course_lists.tex",
-                runs,
+        blank: pathlib.Path = self.conf["REPOSITORY_PATH"] / "misc/blank.png"
+        assets = {"event-logo.png": blank}
+        for course_id in courses:
+            path: pathlib.Path = (
+                self.conf["STORAGE_DIR"] / "course_logo" / str(course_id)
             )
-            if file:
-                return file
-            else:
-                rs.notify("info", n_("Empty PDF."))
-                return self.redirect(rs, "event/downloads")
+            assets[f"course-logo-{course_id}.png"] = path if path.exists() else blank
+        file = self.serve_pdf_document(
+            rs,
+            html,
+            f"{rs.ambience['event'].shortname}_course_lists",
+            source,
+            assets=assets,
+        )
+        if file:
+            return file
+        return self.redirect(rs, "event/downloads")
 
     @access(Roles.event)
     @event_guard(EventPrivileges.registrations_read)
-    @REQUESTdata("runs")
+    @REQUESTdata("source")
     def download_lodgement_lists(
-        self, rs: RequestState, event_id: vtypes.EventID, runs: vtypes.SingleDigitInt
+        self, rs: RequestState, event_id: vtypes.EventID, source: bool
     ) -> Response:
         """Create lists to post to lodgements."""
         if rs.has_validation_errors():
@@ -382,9 +373,12 @@ class EventDownloadMixin(EventBaseFrontend):
             key="lodgement_id",
             personas={p.id: p.as_dict() for p in personas.values()},
         )
-        tex = self.fill_template(
+        if not source and not lodgements:
+            rs.notify("info", n_("Empty PDF."))
+            return self.redirect(rs, "event/downloads")
+        html = self.fill_template(
             rs,
-            "tex",
+            "pdf",
             "lodgement_lists",
             {
                 'lodgements': lodgements,
@@ -393,35 +387,26 @@ class EventDownloadMixin(EventBaseFrontend):
                 'inhabitants': inhabitants,
             },
         )
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            work_dir = pathlib.Path(tmp_dir, rs.ambience['event'].shortname)
-            work_dir.mkdir()
-            filename = "{}_lodgement_lists.tex".format(rs.ambience['event'].shortname)
-            with open(work_dir / filename, 'w', encoding='utf-8') as f:
-                f.write(tex)
-            src: pathlib.Path = self.conf["REPOSITORY_PATH"] / "misc/blank.png"
-            shutil.copy(src, work_dir / "aka-logo.png")
-            file = self.serve_complex_latex_document(
-                rs,
-                tmp_dir,
-                rs.ambience['event'].shortname,
-                f"{rs.ambience['event'].shortname}_lodgement_lists.tex",
-                runs,
-            )
-            if file:
-                return file
-            else:
-                rs.notify("info", n_("Empty PDF."))
-                return self.redirect(rs, "event/downloads")
+        blank: pathlib.Path = self.conf["REPOSITORY_PATH"] / "misc/blank.png"
+        file = self.serve_pdf_document(
+            rs,
+            html,
+            f"{rs.ambience['event'].shortname}_lodgement_lists",
+            source,
+            assets={"aka-logo.png": blank},
+        )
+        if file:
+            return file
+        return self.redirect(rs, "event/downloads")
 
     @access(Roles.event)
     @event_guard(EventPrivileges.registrations_read)
-    @REQUESTdata("runs", "landscape", "orgas_only", "part_ids")
+    @REQUESTdata("source", "landscape", "orgas_only", "part_ids")
     def download_participant_list(
         self,
         rs: RequestState,
         event_id: vtypes.EventID,
-        runs: vtypes.SingleDigitInt,
+        source: bool,
         landscape: bool,
         orgas_only: bool,
         part_ids: Collection[vtypes.ID],
@@ -430,12 +415,12 @@ class EventDownloadMixin(EventBaseFrontend):
         if rs.has_validation_errors():
             return self.redirect(rs, 'event/downloads')
         data = self._get_participant_list_data(rs, event_id, part_ids, orgas_only)
-        if runs and not data['registrations']:
+        if not source and not data['registrations']:
             rs.notify("info", n_("Empty PDF."))
             return self.redirect(rs, "event/downloads")
-        tex = self.fill_template(
+        html = self.fill_template(
             rs,
-            "tex",
+            "pdf",
             "participant_list",
             {
                 'orientation': "landscape" if landscape else "portrait",
@@ -443,14 +428,12 @@ class EventDownloadMixin(EventBaseFrontend):
                 **data,
             },
         )
-        file = self.serve_latex_document(
-            rs, tex, f"{rs.ambience['event'].shortname}_participant_list", runs
+        file = self.serve_pdf_document(
+            rs, html, f"{rs.ambience['event'].shortname}_participant_list", source
         )
         if file:
             return file
-        else:
-            rs.notify("info", n_("Empty PDF."))
-            return self.redirect(rs, "event/downloads")
+        return self.redirect(rs, "event/downloads")
 
     @access(Roles.event)
     @event_guard(EventPrivileges.courses_read)

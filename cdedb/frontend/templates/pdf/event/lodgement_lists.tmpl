@@ -1,0 +1,30 @@
+{% extends "pdf/base.tmpl" %}
+{% block title %}{{ ambience['event']['title'] }} – {% trans %}Lodgement Inhabitant Lists{% endtrans %}{% endblock %}
+{% block style %}
+    html {
+        font-size: 12pt;
+    }
+    .logo {
+        float: right;
+        width: 30mm;
+        height: 30mm;
+        margin-left: 5mm;
+    }
+{% endblock %}
+{% block content %}
+    {% for lodgement in lodgements.values() %}
+        {% for part in ambience['event'].parts.values() %}
+            <section class="page">
+                <img class="logo" src="aka-logo.png" alt="">
+                <h1>{{ lodgement.title }} ({{ part.title }})</h1>
+                <ul>
+                    {% for registration_id in inhabitants[(lodgement.id, part.id)] %}
+                        <li>{{ personas[registrations[registration_id]['persona_id']]|persona_name }}</li>
+                    {% else %}
+                        <li>{% trans %}nobody{% endtrans %}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}

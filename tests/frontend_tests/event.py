@@ -5453,19 +5453,18 @@ Teilnahmebeitrag Grosse Testakademie 2222, Emilia Eventis, DB-5-1"""
     def test_downloads(self) -> None:
         magic_bytes = {
             'pdf': b"%PDF",
-            'targz': b"\x1f\x8b",
             'zip': b"PK\x03\x04",
         }
 
-        def assertLatex(*phrases: str) -> None:
-            self.assertEqual("text/x-tex", self.response.content_type)
-            self.assertIn("documentclass", self.response.text)
+        def assertHTML(*phrases: str) -> None:
+            self.assertEqual("text/html", self.response.content_type)
+            self.assertIn("<!DOCTYPE html>", self.response.text)
             for phrase in phrases:
                 self.assertIn(phrase, self.response.text)
 
-        def assertLatexNotIn(*phrases: str) -> None:
-            self.assertEqual("text/x-tex", self.response.content_type)
-            self.assertIn("documentclass", self.response.text)
+        def assertHTMLNotIn(*phrases: str) -> None:
+            self.assertEqual("text/html", self.response.content_type)
+            self.assertIn("<!DOCTYPE html>", self.response.text)
             for phrase in phrases:
                 self.assertNotIn(phrase, self.response.text)
 
@@ -5479,67 +5478,67 @@ Teilnahmebeitrag Grosse Testakademie 2222, Emilia Eventis, DB-5-1"""
 
         # printables
         # nametags
-        self.response = save.click(href='/event/event/1/download/nametag\\?runs=0')
-        self.assertTrue(self.response.body.startswith(magic_bytes['targz']))
+        self.response = save.click(href='/event/event/1/download/nametag\\?source=True')
+        self.assertTrue(self.response.body.startswith(magic_bytes['zip']))
         self.assertLess(1000, len(self.response.body))
         with tempfile.TemporaryFile() as f:
             f.write(self.response.body)
-        self.response = save.click(href='/event/event/1/download/nametag\\?runs=2')
+        self.response = save.click(href='/event/event/1/download/nametag$')
         self.assertTrue(self.response.body.startswith(magic_bytes['pdf']))
         self.assertLess(1000, len(self.response.body))
         # course attendee list
-        self.response = save.click(href='/event/event/1/download/courselists\\?runs=0')
-        self.assertTrue(self.response.body.startswith(magic_bytes['targz']))
+        self.response = save.click(
+            href='/event/event/1/download/courselists\\?source=True'
+        )
+        self.assertTrue(self.response.body.startswith(magic_bytes['zip']))
         self.assertLess(1000, len(self.response.body))
-        self.response = save.click(href='/event/event/1/download/courselists\\?runs=2')
+        self.response = save.click(href='/event/event/1/download/courselists$')
         self.assertTrue(self.response.body.startswith(magic_bytes['pdf']))
         self.assertLess(1000, len(self.response.body))
         # lodgement inhabitant list
         self.response = save.click(
-            href='/event/event/1/download/lodgementlists\\?runs=0'
+            href='/event/event/1/download/lodgementlists\\?source=True'
         )
-        self.assertTrue(self.response.body.startswith(magic_bytes['targz']))
+        self.assertTrue(self.response.body.startswith(magic_bytes['zip']))
         self.assertLess(1000, len(self.response.body))
-        self.response = save.click(
-            href='/event/event/1/download/lodgementlists\\?runs=2'
-        )
+        self.response = save.click(href='/event/event/1/download/lodgementlists$')
         self.assertTrue(self.response.body.startswith(magic_bytes['pdf']))
         self.assertLess(1000, len(self.response.body))
         # course puzzle
-        self.response = save.click(href='/event/event/1/download/coursepuzzle\\?runs=0')
-        assertLatex('Planetenretten für Anfänger')
-        self.response = save.click(href='/event/event/1/download/coursepuzzle\\?runs=2')
+        self.response = save.click(
+            href='/event/event/1/download/coursepuzzle\\?source=True'
+        )
+        assertHTML('Planetenretten für Anfänger')
+        self.response = save.click(href='/event/event/1/download/coursepuzzle$')
         self.assertTrue(self.response.body.startswith(magic_bytes['pdf']))
         self.assertLess(1000, len(self.response.body))
         # lodgement puzzle
         self.response = save.click(
-            href='/event/event/1/download/lodgementpuzzle\\?runs=0'
+            href='/event/event/1/download/lodgementpuzzle\\?source=True'
         )
-        assertLatex('Kalte Kammer')
-        self.response = save.click(
-            href='/event/event/1/download/lodgementpuzzle\\?runs=2'
-        )
+        assertHTML('Kalte Kammer')
+        self.response = save.click(href='/event/event/1/download/lodgementpuzzle$')
         self.assertTrue(self.response.body.startswith(magic_bytes['pdf']))
         self.assertLess(1000, len(self.response.body))
 
         # participant lists
         # public list
         self.response = save.click(
-            href='/event/event/1/download/participantlist\\?runs=0', index=0
+            href='/event/event/1/download/participantlist\\?source=True', index=0
         )
-        assertLatex('Heldentum', 'Emilia')  # we don't want nicknames here
-        assertLatexNotIn('Garcia')
+        assertHTML('Heldentum', 'Emilia')  # we don't want nicknames here
+        assertHTMLNotIn('Garcia')
         self.response = save.click(
-            href='/event/event/1/download/participantlist\\?runs=2', index=0
+            href='/event/event/1/download/participantlist$', index=0
         )
         self.assertTrue(self.response.body.startswith(magic_bytes['pdf']))
         self.assertLess(1000, len(self.response.body))
         # orga list
         self.response = save.click(
-            href='/event/event/1/download/participantlist\\?runs=0&orgas_only=True',
+            href='/event/event/1/download/participantlist\\?source=True&orgas_only=True',
             index=0,
         )
-        assertLatex('Heldentum', 'Emilia', 'Garcia')  # we don't want nicknames here
+        assertHTML('Heldentum', 'Emilia', 'Garcia')  # we don't want nicknames here
 
         # export
         # partial event export
@@ -5665,10 +5664,10 @@ Teilnahmebeitrag Grosse Testakademie 2222, Emilia Eventis, DB-5-1"""
 
         # Test nametags
         save = self.response
-        self.traverse({'href': '/event/event/2/download/nametag\\?runs=2'})
+        self.traverse({'href': '/event/event/2/download/nametag$'})
         self.assertTrue(self.response.body.startswith(b"%PDF"))
-        self.response = save.click(href='/event/event/2/download/nametag\\?runs=0')
-        self.assertTrue(self.response.body.startswith(b"\x1f\x8b"))
+        self.response = save.click(href='/event/event/2/download/nametag\\?source=True')
+        self.assertTrue(self.response.body.startswith(b"PK\x03\x04"))
         self.response = save
 
         downloads = [  # name of download, visibility over UI
@@ -5686,16 +5685,16 @@ Teilnahmebeitrag Grosse Testakademie 2222, Emilia Eventis, DB-5-1"""
             else:
                 self.assertNoLink(link)
             # now check empty pdfs
-            self.get(link + '?runs=2')
+            self.get(link)
             self.assertPresence('Leeres PDF', div='notifications')
-            self.assertNonPresence('konnte nicht kompiliert werden.')
-            # and availability of (empty) LaTeX sources
-            self.get(link + '?runs=0')
+            self.assertNonPresence('PDF-Erstellung fehlgeschlagen.')
+            # and availability of (empty) HTML sources
+            self.get(link + '?source=True')
             if link.endswith('lists'):  # downloads with multiple docs are zipped
-                self.assertTrue(self.response.body.startswith(b"\x1f\x8b"))
+                self.assertTrue(self.response.body.startswith(b"PK\x03\x04"))
             else:
-                self.assertEqual("text/x-tex", self.response.content_type)
-                self.assertIn("documentclass", self.response.text)
+                self.assertEqual("text/html", self.response.content_type)
+                self.assertIn("<!DOCTYPE html>", self.response.text)
 
     @as_users("garcia")
     def test_questionnaire_manipulation(self) -> None:

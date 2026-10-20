@@ -23,6 +23,8 @@ def setup_root_logger(*, identifier: str = "cdedb", replace: bool = False) -> No
 
     loglevel = _CONFIG["LOG_LEVEL"]
     logger.setLevel(loglevel)
+    # WeasyPrint reports every single rendering step on level INFO.
+    logging.getLogger("weasyprint.progress").setLevel(logging.WARNING)
 
     # ignore errors inside the logging system on prod
     if pathlib.Path("/PRODUCTIONVM").is_file():

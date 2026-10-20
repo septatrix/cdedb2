@@ -764,16 +764,10 @@ class CdELastschriftMixin(CdEBaseFrontend):
             "typical_donation": self.conf["TYPICAL_LASTSCHRIFT_DONATION"],
             "annual_fee": self.cdeproxy.annual_membership_fee(rs),
         }
-        tex = self.fill_template(rs, "tex", "lastschrift_subscription_form", params)
-        errormsg = n_(
-            "Form could not be created. Please refrain from using "
-            "special characters if possible."
-        )
+        html = self.fill_template(rs, "pdf", "lastschrift_subscription_form", params)
 
         filename = cdedbid_filter(persona.id) + " " + persona.get_name()
-        pdf = self.serve_latex_document(
-            rs, tex, sanitize_filename(filename), errormsg=errormsg, runs=1
-        )
+        pdf = self.serve_pdf_document(rs, html, sanitize_filename(filename))
         if pdf:
             return pdf
         else:

@@ -32,13 +32,13 @@ import pprint
 import re
 import shutil
 import smtplib
-import subprocess
 import sys
 import tempfile
 import threading
 import typing
 import urllib.error
 import urllib.parse
+import urllib.request
 import weakref
 from collections.abc import (
     Callable,
@@ -70,6 +70,7 @@ import mailmanclient.restobjects.held_message
 import mailmanclient.restobjects.mailinglist
 import markupsafe
 import segno.helpers
+import weasyprint
 import werkzeug
 import werkzeug.datastructures
 import werkzeug.exceptions
@@ -423,6 +424,27 @@ class CdEDBUndefined(jinja2.StrictUndefined):
         return jinja2.Undefined.__bool__(self)
 
 
+class RestrictedURLFetcher(weasyprint.URLFetcher):
+    """Fetcher for WeasyPrint which does not allow arbitrary access.
+
+    Only data URLs and files inside the given directory may be accessed. In
+    particular this prevents any network access while rendering documents.
+    """
+
+    def __init__(self, base_dir: pathlib.Path | None) -> None:
+        super().__init__(allowed_protocols={'file', 'data'})
+        self.base_dir = base_dir.resolve() if base_dir else None
+
+    def fetch(self, url: str, headers: Mapping[str, str] | None = None) -> Any:
+        if url.lower().startswith('file:'):
+            path = pathlib.Path(
+                urllib.request.url2pathname(urllib.parse.urlsplit(url).path)
+            ).resolve()
+            if self.base_dir is None or not path.is_relative_to(self.base_dir):
+                raise ValueError(f"Access to {url} denied.")
+        return super().fetch(url, headers)
+
+
 class AbstractFrontend(BaseApp, metaclass=abc.ABCMeta):
     """Common base class for all frontends."""
 
@@ -494,6 +516,8 @@ class AbstractFrontend(BaseApp, metaclass=abc.ABCMeta):
             comment_start_string="<<#",
             comment_end_string="#>>",
         )
+        # PDF documents are HTML documents rendered by WeasyPrint.
+        self.jinja_env_pdf = self.jinja_env.overlay()
         self.jinja_env_mail = self.jinja_env.overlay(
             autoescape=False,
             trim_blocks=True,
@@ -545,6 +569,7 @@ class AbstractFrontend(BaseApp, metaclass=abc.ABCMeta):
           * web,
           * mail,
           * tex,
+          * pdf,
           * xml,
           * other.
         :param templatename: file name of template without extension
@@ -695,6 +720,8 @@ class AbstractFrontend(BaseApp, metaclass=abc.ABCMeta):
             jinja_env = self.jinja_env_mail
         elif modus == "tex":
             jinja_env = self.jinja_env_tex
+        elif modus == "pdf":
+            jinja_env = self.jinja_env_pdf
         elif modus == "xml":
             jinja_env = self.jinja_env_xml
         elif modus == "other":
@@ -1373,188 +1400,107 @@ class AbstractFrontend(BaseApp, metaclass=abc.ABCMeta):
             params['quote_me'] = True
         return self.redirect(rs, 'core/show_user', params=params)
 
-    def safe_compile(
+    def render_pdf(
         self,
         rs: RequestState,
-        target_file: str,
-        cwd: pathlib.Path,
-        runs: int,
-        errormsg: str | None,
-    ) -> pathlib.Path:
-        """Helper to compile latex documents in a safe way.
+        html: str,
+        base_dir: pathlib.Path | None = None,
+        errormsg: str | None = None,
+    ) -> bytes | None:
+        """Render an HTML document to PDF using WeasyPrint.
 
-        This catches exepctions during compilation and displays a more helpful
+        This catches exceptions during rendering and displays a more helpful
         error message instead.
 
-        :param target_file: name of the file to compile.
-        :param cwd: Path of the target file.
-        :param runs: number of times LaTeX is run (for references etc.)
-        :param errormsg: Error message to display when compilation fails.
-            Defaults to error message for event downloads.
-        :returns: Path to the compiled pdf.
+        :param base_dir: Directory relative URLs (e.g. of images) are resolved
+            against. Only files inside this directory may be accessed.
+        :param errormsg: Error message to display when rendering fails.
+        :returns: the rendered document as blob
         """
-        if target_file.endswith('.tex'):
-            pdf_file = f"{target_file[:-4]}.pdf"
-        else:
-            pdf_file = f"{target_file}.pdf"
-        pdf_path = pathlib.Path(cwd, pdf_file)
-
-        args = ("lualatex", "-interaction", "batchmode", target_file)
-        self.logger.info(f"Invoking {args}")
+        base_url = base_dir.as_uri() + "/" if base_dir else None
+        self.logger.info("Rendering PDF document.")
         try:
-            for _ in range(runs):
-                subprocess.run(
-                    args, cwd=cwd, check=True, capture_output=True, text=True
-                )
-        except subprocess.CalledProcessError as e:
-            if pdf_path.exists():
-                self.logger.debug(f"Deleting corrupted file {pdf_path}")
-                pdf_path.unlink()
-            self.logger.debug(f"Exception \"{e}\" caught and handled. Output follows:")
-            self.logger.debug(e.stdout)  # lualatex puts its errors to stdout
-            self.logger.debug(e.stderr)
+            return weasyprint.HTML(
+                string=html,
+                base_url=base_url,
+                url_fetcher=RestrictedURLFetcher(base_dir),
+            ).write_pdf()
+        except Exception as e:
+            self.logger.debug(f"Exception \"{e}\" caught and handled.", exc_info=True)
             if self.conf["CDEDB_DEV"]:
                 tstamp = round(now().timestamp())
-                backup_path = f"/tmp/cdedb-latex-error-{tstamp}.tex"
+                backup_path = pathlib.Path(f"/tmp/cdedb-pdf-error-{tstamp}.html")
                 self.logger.info(f"Copying source file to {backup_path}")
-                shutil.copy2(cwd / target_file, backup_path)
-            errormsg = errormsg or n_(
-                "LaTeX compilation failed. Try downloading the "
-                "source files and compiling them manually."
-            )
-            rs.notify("error", errormsg)
-        return pdf_path
+                backup_path.write_text(html, encoding='utf-8')
+            rs.notify("error", errormsg or n_("PDF creation failed."))
+            return None
 
-    def latex_compile(
-        self, rs: RequestState, data: str, runs: int = 2, errormsg: str | None = None
-    ) -> bytes | None:
-        """Run LaTeX on the provided document.
-
-        This takes care of the necessary temporary files.
-
-        :param runs: number of times LaTeX is run (for references etc.)
-        :param errormsg: Error message to display when compilation fails.
-            Defaults to error message for event downloads.
-        :returns: the compiled document as blob
-        """
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            with tempfile.NamedTemporaryFile(dir=tmp_dir) as tmp_file:
-                tmp_file.write(data.encode('utf8'))
-                tmp_file.flush()
-                path = self.safe_compile(
-                    rs,
-                    tmp_file.name,
-                    pathlib.Path(tmp_dir),
-                    runs=runs,
-                    errormsg=errormsg,
-                )
-                if path.exists():
-                    # noinspection PyTypeChecker
-                    with open(path, 'rb') as pdf:
-                        return pdf.read()
-                else:
-                    return None
-
-    def serve_latex_document(
+    def serve_pdf_document(
         self,
         rs: RequestState,
-        data: str,
+        html: str,
         filename: str,
-        runs: int = 2,
+        source: bool = False,
+        assets: Mapping[str, pathlib.Path] | None = None,
         errormsg: str | None = None,
     ) -> Response | None:
-        """Generate a response from a LaTeX document.
+        """Generate a response from an HTML document rendered to PDF.
 
-        This takes care of the necessary temporary files.
+        If the document references additional files (like images) they have
+        to be passed as ``assets``. They are placed next to the document, so
+        they can be referenced by their name. The layout is as follows::
 
-        :param data: the LaTeX document
+            filename
+            |------- filename.html
+            +------- ...
+
+        :param html: the HTML document
         :param filename: name to serve the document as, without extension
-        :param runs: Number of times LaTeX is run (for references etc.). If this
-          is zero, we serve the source tex file, instead of the compiled pdf.
-        :param errormsg: Error message to display when compilation fails.
-            Defaults to error message for event downloads.
+        :param source: If this is True, we serve the HTML source instead of the
+          rendered PDF. If there are assets, we serve a zip archive
+          containing the document and all assets.
+        :param assets: Mapping of file names (as referenced in the document) to
+          the paths of the files to provide under that name.
+        :param errormsg: Error message to display when rendering fails.
         """
-        if not runs:
-            return self.send_file(
-                rs, data=data, inline=False, filename=f"{filename}.tex"
-            )
-        else:
-            pdf = self.latex_compile(rs, data, runs=runs, errormsg=errormsg)
-            if not pdf:
-                return None
-            return self.send_file(
-                rs, mimetype="application/pdf", data=pdf, filename=f"{filename}.pdf"
-            )
-
-    def serve_complex_latex_document(
-        self,
-        rs: RequestState,
-        tmp_dir: str | pathlib.Path,
-        work_dir_name: str,
-        tex_file_name: str,
-        runs: int = 2,
-        errormsg: str | None = None,
-    ) -> Response | None:
-        """Generate a response from a LaTeX document.
-
-        In contrast to :py:meth:`serve_latex_document` this expects that the
-        caller takes care of creating a temporary directory and doing the
-        setup. Actually this is only usefull if the caller does some
-        additional setup (like providing image files).
-
-        Everything has to happen inside a working directory, so the layout
-        is as follows::
-
-            tmp_dir
-            +------ work_dir
-                    |------- tex_file.tex
-                    +------- ...
-
-        :param tmp_dir: path of temporary directory
-        :param work_dir_name: name of working directory inside temporary
-          directory.
-        :param tex_file_name: name of the tex file (including extension),
-          this will be used to derived the name to use when serving the
-          compiled pdf file.
-        :param runs: Number of times LaTeX is run (for references etc.). If this
-          is zero, we serve the source tex file, instead of the compiled
-          pdf. More specifically we serve a gzipped tar archive containing
-          the working directory.
-        :param errormsg: Error message to display when compilation fails.
-            Defaults to error message for event downloads.
-        """
-        if not runs:
-            target = pathlib.Path(tmp_dir, work_dir_name)
-            archive = shutil.make_archive(
-                str(target),
-                "gztar",
-                base_dir=work_dir_name,
-                root_dir=tmp_dir,
-                logger=self.logger,
-            )
-            if tex_file_name.endswith('.tex'):
-                tex_file = f"{tex_file_name[:-4]}.tar.gz"
-            else:
-                tex_file = f"{tex_file_name}.tar.gz"
-            return self.send_file(rs, path=archive, inline=False, filename=tex_file)
-        else:
-            work_dir = pathlib.Path(tmp_dir, work_dir_name)
-            if tex_file_name.endswith('.tex'):
-                pdf_file = f"{tex_file_name[:-4]}.pdf"
-            else:
-                pdf_file = f"{tex_file_name}.pdf"
-            path = self.safe_compile(
-                rs, tex_file_name, cwd=work_dir, runs=runs, errormsg=errormsg
-            )
-            if path.exists():
+        if not assets:
+            if source:
                 return self.send_file(
                     rs,
-                    mimetype="application/pdf",
-                    path=(work_dir / pdf_file),
-                    filename=pdf_file,
+                    mimetype="text/html",
+                    data=html,
+                    inline=False,
+                    filename=f"{filename}.html",
                 )
-            else:
-                return None
+            pdf = self.render_pdf(rs, html, errormsg=errormsg)
+        else:
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                work_dir = pathlib.Path(tmp_dir, filename)
+                work_dir.mkdir()
+                (work_dir / f"{filename}.html").write_text(html, encoding='utf-8')
+                for name, path in assets.items():
+                    shutil.copy(path, work_dir / name)
+                if source:
+                    archive = shutil.make_archive(
+                        str(work_dir),
+                        "zip",
+                        root_dir=tmp_dir,
+                        base_dir=filename,
+                        logger=self.logger,
+                    )
+                    return self.send_file(
+                        rs,
+                        mimetype="application/zip",
+                        data=pathlib.Path(archive).read_bytes(),
+                        inline=False,
+                        filename=f"{filename}.zip",
+                    )
+                pdf = self.render_pdf(rs, html, base_dir=work_dir, errormsg=errormsg)
+        if not pdf:
+            return None
+        return self.send_file(
+            rs, mimetype="application/pdf", data=pdf, filename=f"{filename}.pdf"
+        )
 
     def check_anti_csrf(
         self, rs: RequestState, action: str, token_name: str, token_payload: str

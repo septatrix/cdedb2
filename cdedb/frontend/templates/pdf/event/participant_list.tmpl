@@ -1,0 +1,133 @@
+{% extends "pdf/base.tmpl" %}
+{% block title %}
+    {% trans title=ambience['event']['title'] %}
+        Participant list {{ title }}
+    {% endtrans %}
+{% endblock %}
+{% block style %}
+    @page {
+        size: A4 {{ orientation }};
+        margin: 15mm 5mm 10mm;
+        @top-center {
+            content: element(header);
+        }
+        @bottom-center {
+            content: element(footer);
+        }
+    }
+    html {
+        font-size: 10pt;
+    }
+    header {
+        position: running(header);
+        font-size: 14pt;
+        font-weight: bold;
+    }
+    footer {
+        position: running(footer);
+    }
+    .current-page::after {
+        content: counter(page);
+    }
+    .total-pages::after {
+        content: counter(pages);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 0.4pt solid black;
+    }
+    th, td {
+        padding: 0.15em 0.4em;
+        text-align: left;
+        vertical-align: top;
+    }
+    th {
+        background-color: black;
+        color: white;
+    }
+    tbody tr:nth-child(even) {
+        background-color: #bfbfbf;
+    }
+{% endblock %}
+{% block content %}
+    {% set show_parts = ambience['event']['parts']|length > 1 or ambience['event']['tracks']|length > 0 %}
+    {% set participant = enums['RegistrationPartStati'].participant %}
+    <header>{{ self.title() }}</header>
+    <footer>
+        {% trans curr_page='<span class="current-page"></span>'|safe, total_pages='<span class="total-pages"></span>'|safe %}
+            Page {{ curr_page }} of {{ total_pages }}
+        {% endtrans %}
+    </footer>
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans %}Given Name{% endtrans %}</th>
+                <th>{% trans %}Family Name{% endtrans %}</th>
+                <th>{% trans %}Email Address{% endtrans %}</th>
+                <th>{% trans %}Postal Code, City{% endtrans %}</th>
+                {# Kursschienen/Eventparts #}
+                {% for ep in parts.values()|sort if show_parts %}
+                    {% if ep['tracks']|length < 1 %}
+                        <th>{{ ep.shortname }}</th>
+                    {% endif %}
+                    {% for t in ep['tracks'].values()|sort %}
+                        <th>{{ t.shortname }}</th>
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for reg_id in ordered if orgas_only or registrations[reg_id]['list_consent'] %}
+                {% with registration = registrations[reg_id] %}
+                    <tr>
+                        <td>{{ personas[registration['persona_id']]|persona_name(with_family_name=False) }}</td>
+                        <td>{{ personas[registration['persona_id']]['family_name'] }}</td>
+                        <td>{{ personas[registration['persona_id']]['username'] }}</td>
+                        <td>
+                            {{ personas[registration['persona_id']]['postal_code'] }}
+                            {{ personas[registration['persona_id']]['location'] }}
+                            {% if personas[registration['persona_id']]['country'] and
+                                   personas[registration['persona_id']]['country'] != DEFAULT_COUNTRY %}
+                                {# util.gettext_country is not available here. #}
+                                {{ gettext("CountryCodes." + personas[registration['persona_id']]['country']) }}
+                            {% endif %}
+                        </td>
+                        {# Kurse #}
+                        {% for ep in parts.values()|sort if show_parts %}
+                            {% if ep['tracks']|length < 1 %}
+                                <td>
+                                    {%- if registration['parts'][ep.id]['status'] == participant -%}
+                                        ✓
+                                    {%- else -%}
+                                        —
+                                    {%- endif -%}
+                                </td>
+                            {% endif %}
+                            {% for t in ep['tracks'].values()|sort %}
+                                <td>
+                                    {%- if registration['parts'][t['part_id']]['status'] == participant -%}
+                                        {%- if registration['tracks'][t.id]['course_id'] -%}
+                                            {%- if registration['tracks'][t.id]['course_instructor']
+                                                    == registration['tracks'][t.id]['course_id'] -%}
+                                                <em>{{ courses[registration['tracks'][t.id]['course_id']].shortname }}</em>
+                                            {%- else -%}
+                                                {{ courses[registration['tracks'][t.id]['course_id']].shortname }}
+                                            {%- endif -%}
+                                        {%- elif registration['persona_id'] in ambience['event']['orgas'] -%}
+                                            <em>{% trans %}Orga{% endtrans %}</em>
+                                        {%- else -%}
+                                            ✓
+                                        {%- endif -%}
+                                    {%- else -%}
+                                        —
+                                    {%- endif -%}
+                                </td>
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+                {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

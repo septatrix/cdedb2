@@ -1,0 +1,45 @@
+{#
+    This is the base template to be extended by all templates for PDF
+    documents. These are HTML documents which get rendered to PDF by
+    WeasyPrint, so the page layout is controlled via CSS (especially the
+    @page rule). See https://doc.courtbouillon.org/weasyprint/stable/ for
+    the supported features.
+
+    Images and other files referenced by relative URLs have to be provided
+    as assets when serving the document.
+#}
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        html {
+            font-family: "DejaVu Sans", sans-serif;
+            font-size: 11pt;
+            line-height: 1.3;
+        }
+        body {
+            margin: 0;
+        }
+        h1, h2, h3 {
+            break-after: avoid;
+            line-height: 1.2;
+        }
+        img {
+            object-fit: contain;
+        }
+        .page {
+            break-after: page;
+        }
+        {% block style %}{% endblock %}
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

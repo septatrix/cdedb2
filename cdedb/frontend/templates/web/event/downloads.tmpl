@@ -28,26 +28,26 @@
         <tbody>
             <tr>
                 <td>{% trans %}Nametags{% endtrans %}</td>
-                <td>{{ util.href(cdedblink('event/download_nametags', {'runs': 0}), gettext("LaTeX"), icon='download',
+                <td>{{ util.href(cdedblink('event/download_nametags', {'source': True}), gettext("HTML"), icon='download',
                                  readonly=not is_privileged_for('event/download_nametags')) }}</td>
-                <td>{{ util.href(cdedblink('event/download_nametags', {'runs': 2}), gettext("PDF"), icon='file',
+                <td>{{ util.href(cdedblink('event/download_nametags'), gettext("PDF"), icon='file',
                                  readonly=not is_privileged_for('event/download_nametags')) }}</td>
             </tr>
             {% if ambience['event']['tracks'] %}
             <tr>
                 <td>{% trans %}Course Attendee Lists{% endtrans %}</td>
-                <td>{{ util.href(cdedblink('event/download_course_lists', {'runs': 0}), gettext("LaTeX"), icon='download',
+                <td>{{ util.href(cdedblink('event/download_course_lists', {'source': True}), gettext("HTML"), icon='download',
                                  readonly=not is_privileged_for('event/download_course_lists')) }}</td>
-                <td>{{ util.href(cdedblink('event/download_course_lists', {'runs': 2}), gettext("PDF"), icon='file',
+                <td>{{ util.href(cdedblink('event/download_course_lists'), gettext("PDF"), icon='file',
                                  readonly=not is_privileged_for('event/download_course_lists')) }}</td>
             </tr>
             {% endif %}
             {% if lodgements_exist %}
             <tr>
                 <td>{% trans %}Lodgement Inhabitant Lists{% endtrans %}</td>
-                <td>{{ util.href(cdedblink('event/download_lodgement_lists', {'runs': 0}), gettext("LaTeX"), icon='download',
+                <td>{{ util.href(cdedblink('event/download_lodgement_lists', {'source': True}), gettext("HTML"), icon='download',
                                  readonly=not is_privileged_for('event/download_lodgement_lists')) }}</td>
-                <td>{{ util.href(cdedblink('event/download_lodgement_lists', {'runs': 2}), gettext("PDF"), icon='file',
+                <td>{{ util.href(cdedblink('event/download_lodgement_lists'), gettext("PDF"), icon='file',
                                  readonly=not is_privileged_for('event/download_lodgement_lists')) }}</td>
             </tr>
             {% endif %}
@@ -57,9 +57,9 @@
                     {% trans %}Course Puzzle{% endtrans %}
                     <small>({% trans %}cut out and sort into a course assignment{% endtrans %})</small>
                 </td>
-                <td>{{ util.href(cdedblink('event/download_course_puzzle', {'runs': 0}), gettext("LaTeX"), icon='download',
+                <td>{{ util.href(cdedblink('event/download_course_puzzle', {'source': True}), gettext("HTML"), icon='download',
                                  readonly=not is_privileged_for('event/download_course_puzzle')) }}</td>
-                <td>{{ util.href(cdedblink('event/download_course_puzzle', {'runs': 2}), gettext("PDF"), icon='file',
+                <td>{{ util.href(cdedblink('event/download_course_puzzle'), gettext("PDF"), icon='file',
                                  readonly=not is_privileged_for('event/download_course_puzzle')) }}</td>
             </tr>
             {% endif %}
@@ -69,9 +69,9 @@
                     {% trans %}Lodgement Puzzle{% endtrans %}
                     <small>({% trans %}cut out and sort into a lodgement assignment{% endtrans %})</small>
                 </td>
-                <td>{{ util.href(cdedblink('event/download_lodgement_puzzle', {'runs': 0}), gettext("LaTeX"), icon='download',
+                <td>{{ util.href(cdedblink('event/download_lodgement_puzzle', {'source': True}), gettext("HTML"), icon='download',
                                  readonly=not is_privileged_for('event/download_lodgement_puzzle')) }}</td>
-                <td>{{ util.href(cdedblink('event/download_lodgement_puzzle', {'runs': 2}), gettext("PDF"), icon='file',
+                <td>{{ util.href(cdedblink('event/download_lodgement_puzzle'), gettext("PDF"), icon='file',
                                  readonly=not is_privileged_for('event/download_lodgement_puzzle')) }}</td>
             </tr>
             {% endif %}
@@ -90,28 +90,28 @@
             {% set endpoint = 'event/download_participant_list' %}
             <tr>
                 <td>{% trans %}Public List{% endtrans %}</td>
-                <td>{{ util.href(cdedblink(endpoint, {'runs': 0}), gettext("LaTeX"), icon='download', readonly=not is_privileged_for(endpoint)) }}</td>
-                <td>{{ util.href(cdedblink(endpoint, {'runs': 2}), gettext("PDF"), icon='file', readonly=not is_privileged_for(endpoint)) }}</td>
+                <td>{{ util.href(cdedblink(endpoint, {'source': True}), gettext("HTML"), icon='download', readonly=not is_privileged_for(endpoint)) }}</td>
+                <td>{{ util.href(cdedblink(endpoint), gettext("PDF"), icon='file', readonly=not is_privileged_for(endpoint)) }}</td>
             </tr>
             <tr>
                 <td>{% trans %}Public List (Landscape){% endtrans %}</td>
-                <td>{{ util.href(cdedblink(endpoint, {'runs': 0, 'landscape': True}), gettext("LaTeX"), icon='download',
+                <td>{{ util.href(cdedblink(endpoint, {'source': True, 'landscape': True}), gettext("HTML"), icon='download',
                                            readonly=not is_privileged_for(endpoint)) }}</td>
-                <td>{{ util.href(cdedblink(endpoint, {'runs': 2, 'landscape': True}), gettext("PDF"), icon='file',
+                <td>{{ util.href(cdedblink(endpoint, {'landscape': True}), gettext("PDF"), icon='file',
                                            readonly=not is_privileged_for(endpoint)) }}</td>
             </tr>
             <tr>
                 <td>{% trans %}Orga List{% endtrans %}</td>
-                <td>{{ util.href(cdedblink(endpoint, {'runs': 0, 'orgas_only': True}), gettext("LaTeX"), icon='download',
+                <td>{{ util.href(cdedblink(endpoint, {'source': True, 'orgas_only': True}), gettext("HTML"), icon='download',
                                            readonly=not is_privileged_for(endpoint)) }}</td>
-                <td>{{ util.href(cdedblink(endpoint, {'runs': 2, 'orgas_only': True}), gettext("PDF"), icon='file',
+                <td>{{ util.href(cdedblink(endpoint, {'orgas_only': True}), gettext("PDF"), icon='file',
                                            readonly=not is_privileged_for(endpoint)) }}</td>
             </tr>
             <tr>
                 <td>{% trans %}Orga List (Landscape){% endtrans %}</td>
-                <td>{{ util.href(cdedblink(endpoint, {'runs': 0, 'orgas_only': True, 'landscape': True}), gettext("LaTeX"), icon='download',
+                <td>{{ util.href(cdedblink(endpoint, {'source': True, 'orgas_only': True, 'landscape': True}), gettext("HTML"), icon='download',
                                  readonly=not is_privileged_for(endpoint)) }}</td>
-                <td>{{ util.href(cdedblink(endpoint, {'runs': 2, 'orgas_only': True, 'landscape': True}), gettext("PDF"), icon='file',
+                <td>{{ util.href(cdedblink(endpoint, {'orgas_only': True, 'landscape': True}), gettext("PDF"), icon='file',
                                  readonly=not is_privileged_for(endpoint)) }}</td>
             </tr>
             {% if ambience['event']['parts']|length > 1 %}
@@ -119,13 +119,13 @@
                     <td>{% trans %}Public Lists by part{% endtrans %}</td>
                     <td>
                         {% for part in ambience['event']['parts'].values()|sort %}
-                            {{ util.href(cdedblink(endpoint, {'runs': 0, 'part_ids': [part.id]}), "{}.tex".format(part['shortname']), icon='download',
+                            {{ util.href(cdedblink(endpoint, {'source': True, 'part_ids': [part.id]}), "{}.html".format(part['shortname']), icon='download',
                                          readonly=not is_privileged_for(endpoint)) }}<br/>
                         {% endfor %}
                     </td>
                     <td>
                         {% for part in ambience['event']['parts'].values()|sort %}
-                            {{ util.href(cdedblink(endpoint, {'runs': 2, 'part_ids': [part.id]}), "{}.pdf".format(part['shortname']), icon='file',
+                            {{ util.href(cdedblink(endpoint, {'part_ids': [part.id]}), "{}.pdf".format(part['shortname']), icon='file',
                                          readonly=not is_privileged_for(endpoint)) }}<br/>
                         {% endfor %}
                     </td>
@@ -134,13 +134,13 @@
                     <td>{% trans %}Orga Lists by part{% endtrans %}</td>
                     <td>
                         {% for part in ambience['event']['parts'].values()|sort %}
-                            {{ util.href(cdedblink(endpoint, {'runs': 0, 'part_ids': [part.id], 'orgas_only': True}), "{}.tex".format(part['shortname']), icon='download',
+                            {{ util.href(cdedblink(endpoint, {'source': True, 'part_ids': [part.id], 'orgas_only': True}), "{}.html".format(part['shortname']), icon='download',
                                          readonly=not is_privileged_for(endpoint)) }}<br/>
                         {% endfor %}
                     </td>
                     <td>
                         {% for part in ambience['event']['parts'].values()|sort %}
-                            {{ util.href(cdedblink(endpoint, {'runs': 2, 'part_ids': [part.id], 'orgas_only': True}), "{}.pdf".format(part['shortname']), icon='file',
+                            {{ util.href(cdedblink(endpoint, {'part_ids': [part.id], 'orgas_only': True}), "{}.pdf".format(part['shortname']), icon='file',
                                          readonly=not is_privileged_for(endpoint)) }}<br/>
                         {% endfor %}
                     </td>

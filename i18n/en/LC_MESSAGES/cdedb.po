@@ -5215,11 +5215,6 @@ msgstr ""
 msgid "No transactions selected."
 msgstr ""
 
-msgid ""
-"Form could not be created. Please refrain from using special characters if "
-"possible."
-msgstr ""
-
 #, python-format
 msgid "Line %(lineno)s does not have the correct columns."
 msgstr ""
@@ -5382,9 +5377,7 @@ msgstr ""
 msgid "Scope mismatch."
 msgstr ""
 
-msgid ""
-"LaTeX compilation failed. Try downloading the source files and compiling "
-"them manually."
+msgid "PDF creation failed."
 msgstr ""
 
 msgid "Anti CSRF token is required for this form."
@@ -11162,7 +11155,7 @@ msgstr ""
 msgid "Nametags"
 msgstr ""
 
-msgid "LaTeX"
+msgid "HTML"
 msgstr ""
 
 msgid "PDF"

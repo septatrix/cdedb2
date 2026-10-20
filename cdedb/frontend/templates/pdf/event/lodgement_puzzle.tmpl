@@ -1,0 +1,95 @@
+{% extends "pdf/base.tmpl" %}
+{% block title %}{{ ambience['event']['title'] }} – {% trans %}Lodgement Puzzle{% endtrans %}{% endblock %}
+{% block style %}
+    @page {
+        margin: 5mm;
+    }
+    html {
+        font-size: 12pt;
+    }
+    .pieces {
+        columns: 2;
+        column-gap: 10mm;
+    }
+    .piece {
+        break-inside: avoid;
+        padding-bottom: 0.5cm;
+        border-bottom: 0.4pt solid black;
+        margin-bottom: 0.5em;
+    }
+    .piece h2 {
+        margin: 0 0 0.3em;
+        font-size: 1.3em;
+    }
+    .piece p {
+        margin: 0;
+    }
+{% endblock %}
+{% block content %}
+    {% if wish_problems %}
+        <section class="page">
+            <h2>{% trans %}Lodgement Wish Problems{% endtrans %}</h2>
+            <ul>
+                {% for ntype, message, params in wish_problems %}
+                    <li>{{ gettext(message)|format(**params) }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    <section class="pieces page">
+        {% for lodgement in lodgements.values() %}
+            {% for part in ambience['event'].parts.values() %}
+                <div class="piece">
+                    <h2>{{ lodgement.title }} ({{ part.title }})</h2>
+                    <p>{% trans %}Capacity{% endtrans %}: {{ lodgement.regular_capacity }}</p>
+                    <p>{% trans %}Reserve{% endtrans %}: {{ lodgement.camping_mat_capacity }}</p>
+                    <p>{% trans %}Notes{% endtrans %}: {{ lodgement.notes }}</p>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </section>
+    <section class="pieces">
+        {% for registration_id, registration in registrations.items() %} {# This is already sorted. #}
+            {% for part in ambience['event'].parts.values() %}
+                {% if enums['RegistrationPartStati'](registration['parts'][part.id]['status']).is_present() %}
+                    <!-- ID {{ registration_id }} -->
+                    <div class="piece">
+                        <h2>
+                            {{ personas[registration['persona_id']]|persona_name(include_nickname=True) }}
+                            ({% if ambience['event'].parts|length > 1 %}{{ part.title }}; {% endif -%}
+                            {{ personas[registration['persona_id']]['birthday'].year }}
+                            {%- if registration['parts'][part.id]['status'] == enums['RegistrationPartStati'].guest -%}
+                                {{ nbsp }}[{% trans %}guest{% endtrans %}]
+                            {%- endif %})
+                        </h2>
+                        <p>
+                            {{ gettext(enums['Genders'](personas[registration['persona_id']]['gender'])|string) }}
+                            {% if not registration['mixed_lodging'] %}
+                                {% trans %}separated{% endtrans %}
+                            {% endif %}
+                            {% if registration['age'] == enums['AgeClasses'].u18 %}U18{% endif -%}
+                            {% if registration['age'] == enums['AgeClasses'].u16 %}U16{% endif -%}
+                            {% if registration['age'] == enums['AgeClasses'].u14 %}U14{% endif -%}
+                            {% if registration['age'] == enums['AgeClasses'].u10 %}U10{% endif %}
+                            {% if ambience['event'].parts[part.id].camping_mat_field and
+                                    registration['fields'].get(ambience['event'].parts[part.id].camping_mat_field.field_name) %}
+                                {% trans %}camping mat{% endtrans %}
+                            {% endif %}
+                        </p>
+                        {% if ambience['event'].lodge_field
+                                and registration['fields'].get(ambience['event'].lodge_field.field_name) %}
+                            <p>
+                                {% trans %}Wish{% endtrans %}:
+                                {{ registration['fields'].get(ambience['event'].lodge_field.field_name) }}
+                            </p>
+                        {% endif %}
+                        {% if reverse_wish.get(registration_id) %}
+                            <p>{% trans %}Reverse wish heuristic{% endtrans %}: {{ reverse_wish[registration_id] }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </section>
+{% endblock %}
