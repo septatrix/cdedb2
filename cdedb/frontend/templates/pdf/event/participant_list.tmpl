@@ -39,16 +39,23 @@
         border: 0.4pt solid black;
     }
     th, td {
+        line-height: 12pt;
         padding: 0 0.4em;
         text-align: left;
         vertical-align: top;
     }
-    th {
+    thead tr {
+        {# Set on the row, as backgrounds of adjacent cells leave visible seams. #}
         background-color: black;
         color: white;
     }
+    .check {
+        {# Latin Modern lacks ✓, so it is taken from a fallback font with other metrics. #}
+        {# This keeps it from enlarging the rows. #}
+        line-height: 0;
+    }
     tbody tr:nth-child(even) {
-        background-color: #bfbfbf;
+        background-color: #dfdfdf;
     }
 {% endblock %}
 {% block content %}
@@ -99,7 +106,7 @@
                             {% if ep['tracks']|length < 1 %}
                                 <td>
                                     {%- if registration['parts'][ep.id]['status'] == participant -%}
-                                        ✓
+                                        <span class="check">✓</span>
                                     {%- else -%}
                                         —
                                     {%- endif -%}
@@ -118,7 +125,7 @@
                                         {%- elif registration['persona_id'] in ambience['event']['orgas'] -%}
                                             <em>{% trans %}Orga{% endtrans %}</em>
                                         {%- else -%}
-                                            ✓
+                                            <span class="check">✓</span>
                                         {%- endif -%}
                                     {%- else -%}
                                         —

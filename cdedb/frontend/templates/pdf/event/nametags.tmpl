@@ -2,20 +2,23 @@
 {% block title %}{{ ambience['event']['title'] }} – {% trans %}Nametags{% endtrans %}{% endblock %}
 {% block style %}
     @page {
-        margin: 10mm;
+        margin: 17mm 15mm;
     }
     {# Add an outline to all parts of the nametags for debugging. #}
-    {# .nametag > div { outline: 1px dotted red; } #}
+    {# .tag > div { outline: 1px dotted red; } #}
     .nametag {
-        position: relative;
         float: left;
+        padding: 3pt;
+        {# Let the frames of adjacent nametags overlap, so they are only drawn once. #}
+        margin: 0 -0.4pt -0.4pt 0;
+        border: 0.4pt solid black; {# use "border-color: white" to eliminate the frame #}
+    }
+    .tag {
+        position: relative;
         width: 87mm;
         height: 53mm;
-        margin: 0 1mm 1mm 0;
-        border: 0.4pt solid black; {# use "border-color: white" to eliminate the frame #}
-        overflow: hidden;
     }
-    .nametag > div {
+    .tag > div {
         position: absolute;
     }
     .nametag img {
@@ -93,7 +96,7 @@
                             {% endfor %}
                             {% set persona = personas[registration['persona_id']] %}
                             <!-- {{ registration_id }} / {{ mycourses }} -->
-                            <article class="nametag">
+                            <article class="nametag"><div class="tag">
                                 <div class="name">
                                     <div class="given-names">{{ persona['nickname'] or persona['given_names'] }}</div>
                                     <span class="family-name">
@@ -144,7 +147,7 @@
                                         <img src="minor-pictogram.png" alt="">
                                     {%- endif -%}
                                 </div>
-                            </article>
+                            </div></article>
                         {% endif %}
                     {% endfor %}
                 </section>

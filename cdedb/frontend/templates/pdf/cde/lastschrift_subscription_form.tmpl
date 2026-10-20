@@ -38,7 +38,22 @@
     }
     .footnote {
         float: footnote;
-        font-size: 9pt;
+        padding-top: 4pt;
+        font-size: 10pt;
+        {# A short rule above the footnote like LaTeX. #}
+        background: no-repeat url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='5cm' height='0.4pt'><rect width='100%' height='100%'/></svg>");
+    }
+    ::footnote-call, ::footnote-marker {
+        content: counter(footnote);
+        vertical-align: super;
+        font-size: 0.7em;
+        line-height: 1;
+    }
+    a {
+        {# Mimic \url of LaTeX. #}
+        color: inherit;
+        text-decoration: none;
+        font-family: "Latin Modern Mono", monospace;
     }
     .information {
         break-before: page;
