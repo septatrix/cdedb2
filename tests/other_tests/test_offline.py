@@ -3,7 +3,6 @@ import pathlib
 import subprocess
 import tempfile
 
-import webtest
 from bin.make_offline_vm import work
 
 import cdedb.models.droid as model_droid
@@ -11,7 +10,7 @@ from cdedb.cli.database import connect
 from cdedb.common.roles import AdminViews
 from cdedb.config import SecretsConfig
 from cdedb.frontend.application import Application
-from tests.common import FrontendTest, storage
+from tests.common import CachingTestApp, FrontendTest, storage
 
 
 class TestOffline(FrontendTest):
@@ -49,7 +48,7 @@ class TestOffline(FrontendTest):
 
                 # Reset web test app for changed configuration
                 new_app = Application()
-                self.__class__.app = webtest.TestApp(
+                self.__class__.app = CachingTestApp(
                     new_app, extra_environ=self.app_extra_environ
                 )
                 self.app.reset()

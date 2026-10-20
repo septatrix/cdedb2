@@ -516,12 +516,10 @@ class BackendTest(CdEDBTest):
         cls.assembly = cls.initialize_backend(AssemblyBackend)
         cls.complaint = cls.initialize_backend(ComplaintBackend)
         # Workaround to make orga and presider info available for calls into MLBackend.
-        cls.ml.orga_info = lambda rs, persona_id: cls.event.orga_info(  # type: ignore[attr-defined]
-            rs.sessionkey, persona_id
-        )
-        cls.ml.presider_info = lambda rs, persona_id: cls.assembly.presider_info(  # type: ignore[attr-defined]
-            rs.sessionkey, persona_id
-        )
+        # Like the frontend, reuse the RequestState of the call, because going
+        # through the shims would set up an entirely new RequestState each time.
+        cls.ml.orga_info = EventBackend().orga_info  # type: ignore[attr-defined]
+        cls.ml.presider_info = AssemblyBackend().presider_info  # type: ignore[attr-defined]
         cls.translations = setup_translations(cls.conf)
 
     def setUp(self) -> None:
@@ -1105,6 +1103,28 @@ def execsql(sql: str, verbose: int = 0) -> None:
     execute_sql_script(Config(), SecretsConfig(), sql, verbose=verbose)
 
 
+class CachingTestResponse(webtest.TestResponse):
+    """Parse the HTML of a response only once.
+
+    Webtest parses the whole page again whenever the parsed HTML is accessed,
+    which includes every form with an id and every link lookup.
+    """
+
+    @functools.cached_property
+    def html(self) -> Any:
+        return super().html
+
+
+class CachingTestRequest(webtest.TestRequest):
+    ResponseClass = CachingTestResponse
+
+
+class CachingTestApp(webtest.TestApp):
+    """Test app producing responses which parse their HTML only once."""
+
+    RequestClass = CachingTestRequest
+
+
 class FrontendTest(BackendTest):
     """
     Base class for frontend tests.
@@ -1134,7 +1154,7 @@ class FrontendTest(BackendTest):
         super().setUpClass()
         app = Application()
         cls.gettext = staticmethod(app.translations[cls.lang].gettext)
-        cls.app = webtest.TestApp(app, extra_environ=cls.app_extra_environ)
+        cls.app = CachingTestApp(app, extra_environ=cls.app_extra_environ)
 
         # set `do_scrap` to True to capture a snapshot of all visited pages
         # TODO move this in the TestConfig?
@@ -2514,7 +2534,7 @@ class MultiAppFrontendTest(FrontendTest):
         """Create n new apps, overwrite cls.app with a reference."""
         super().setUpClass()
         cls.apps = [
-            webtest.TestApp(
+            CachingTestApp(
                 Application(),
                 extra_environ=cls.app_extra_environ,
             )
