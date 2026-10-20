@@ -26,14 +26,31 @@
     .recipient {
         margin-top: 3mm;
     }
+    h1, h2, h3 {
+        font-family: inherit;
+    }
+    .fold-mark {
+        position: absolute;
+        left: -20mm;
+        width: 3mm;
+        border-top: 0.4pt solid black;
+    }
+    .date {
+        margin-top: 8mm;
+        text-align: right;
+    }
     .subject {
-        margin: 8mm 0 0;
+        margin: 4mm 0 0;
         font-size: 1em;
         font-weight: bold;
     }
     {% block letter_style %}{% endblock %}
 {% endblock %}
 {% block content %}
+    {# Fold marks for a DL envelope and a punch mark, relative to the page area. #}
+    <div class="fold-mark" style="top: 85mm"></div>
+    <div class="fold-mark" style="top: 128.5mm; width: 5mm"></div>
+    <div class="fold-mark" style="top: 190mm"></div>
     <div class="address-field">
         <div class="backaddress">
             {%- block backaddress -%}
@@ -42,6 +59,7 @@
         </div>
         <div class="recipient">{% block recipient %}{% endblock %}</div>
     </div>
+    <div class="date">{% block date %}{{ now()|date(lang=lang, verbosity="long") }}{% endblock %}</div>
     <h1 class="subject">{% block subject %}{% endblock %}</h1>
     {% block letter %}{% endblock %}
 {% endblock %}

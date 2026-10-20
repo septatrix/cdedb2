@@ -2,10 +2,10 @@
 {% block title %}{{ ambience['event']['title'] }} – {% trans %}Lodgement Puzzle{% endtrans %}{% endblock %}
 {% block style %}
     @page {
-        margin: 5mm;
-    }
-    html {
-        font-size: 12pt;
+        margin: 5mm 5mm 10mm;
+        @bottom-center {
+            content: counter(page);
+        }
     }
     .pieces {
         columns: 2;

@@ -75,7 +75,7 @@ apt-get install --yes --no-install-recommends                       \
     postgresql-client postgresql postgresql-contrib pgbouncer       \
     \
     libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0            \
-    fonts-dejavu-core                                               \
+    fonts-lmodern fonts-dejavu-core                                 \
     \
     texlive texlive-plain-generic texlive-latex-extra               \
     texlive-lang-german texlive-luatex                              \

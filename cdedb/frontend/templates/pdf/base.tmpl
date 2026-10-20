@@ -19,14 +19,17 @@
             margin: 15mm;
         }
         html {
-            font-family: "DejaVu Sans", sans-serif;
-            font-size: 11pt;
-            line-height: 1.3;
+            {# Latin Modern is the default font of LaTeX (based on Computer Modern). #}
+            font-family: "Latin Modern Roman", serif;
+            font-size: 12pt;
+            line-height: 1.2;
         }
         body {
             margin: 0;
         }
         h1, h2, h3 {
+            {# KOMA-Script uses a sans-serif font for headings. #}
+            font-family: "Latin Modern Sans", sans-serif;
             break-after: avoid;
             line-height: 1.2;
         }

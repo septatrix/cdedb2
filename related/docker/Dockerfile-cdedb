@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
     libpango-1.0-0 \
     libpangoft2-1.0-0 \
     libharfbuzz-subset0 \
+    fonts-lmodern \
     fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 

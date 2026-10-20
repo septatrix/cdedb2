@@ -1,8 +1,10 @@
 {% extends "pdf/base.tmpl" %}
 {% block title %}{{ ambience['event']['title'] }} – {% trans %}Course Puzzle{% endtrans %}{% endblock %}
 {% block style %}
-    html {
-        font-size: 12pt;
+    @page {
+        @bottom-center {
+            content: counter(page);
+        }
     }
     .piece {
         break-inside: avoid;
