@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import unittest
 from typing import Any, ClassVar, cast
 
@@ -42,6 +43,55 @@ class TestDatabase(unittest.TestCase):
         with factory(DBRole.persona) as conn:
             self.assertIsInstance(conn, psycopg2.extensions.connection)
             self.assertIsInstance(conn, IrradiatedConnection)
+
+    def test_pooled_connection(self) -> None:
+        factory = connection_pool_factory(
+            self.config["CDB_DATABASE_NAME"],
+            (DBRole.anonymous, DBRole.persona),
+            self.secrets["CDB_DATABASE_ROLES"],
+            self.config["DB_HOST"],
+            self.config["DB_PORT"],
+            max_idle=1,
+        )
+        conn = factory(DBRole.persona)
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SET statement_timeout = 1234")
+                cur.execute("SELECT pg_backend_pid() AS pid")
+                pid = cur.fetchone()["pid"]
+        conn.close()
+        self.assertFalse(conn.closed)
+
+        # Connections are reused per role ...
+        reused = factory(DBRole.persona)
+        self.assertIs(conn, reused)
+        other = factory(DBRole.anonymous)
+        self.assertIsNot(conn, other)
+        # ... but without any leftover session state.
+        with reused:
+            with reused.cursor() as cur:
+                cur.execute("SELECT pg_backend_pid() AS pid")
+                self.assertEqual(pid, cur.fetchone()["pid"])
+                cur.execute("SHOW statement_timeout")
+                self.assertEqual("0", cur.fetchone()["statement_timeout"])
+                cur.execute("SHOW client_encoding")
+                self.assertEqual("UTF8", cur.fetchone()["client_encoding"])
+
+        # Connections exceeding max_idle are closed for real.
+        surplus = factory(DBRole.persona)
+        reused.close()
+        surplus.close()
+        self.assertFalse(reused.closed)
+        self.assertTrue(surplus.closed)
+        self.assertIs(reused, factory(DBRole.persona))
+        reused.close()
+
+        # Idle connections are not shared with forked processes.
+        if (pid := os.fork()) == 0:
+            os._exit(0)  # pragma: no cover
+        os.waitpid(pid, 0)
+        self.assertTrue(reused.closed)
+        self.assertIsNot(reused, factory(DBRole.persona))
 
     def test_less_users(self) -> None:
         factory = connection_pool_factory(

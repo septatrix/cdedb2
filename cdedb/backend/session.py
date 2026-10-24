@@ -71,6 +71,7 @@ class SessionBackend:
             self.conf["DB_HOST"],
             self.conf["DB_PORT"],
             isolation_level=psycopg2.extensions.ISOLATION_LEVEL_READ_COMMITTED,
+            max_idle=self.conf["DB_POOL_MAX_IDLE"],
         )
 
     def _is_locked_down(self, conn: IrradiatedConnection | None = None) -> bool:

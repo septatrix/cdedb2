@@ -92,6 +92,7 @@ class Application(BaseApp):
             secrets["CDB_DATABASE_ROLES"],
             self.conf["DB_HOST"],
             self.conf["DB_PORT"],
+            max_idle=self.conf["DB_POOL_MAX_IDLE"],
         )
         # Construct a reduced Jinja environment for rendering error pages.
         self.jinja_env = jinja2.Environment(

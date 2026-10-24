@@ -69,6 +69,11 @@ DB_PORT = 6432
 # port of the db itself, for skipping pooler during tests or deploys.
 DIRECT_DB_PORT = 5432
 
+# number of idle database connections per role each process keeps for reuse.
+# Positive values enable client side pooling, making a pooler like pgbouncer
+# unnecessary. Only used by the web application.
+DB_POOL_MAX_IDLE = 0
+
 # host name where the ldap server is running
 LDAP_HOST = "sandbox.cdedb.virtual"
 # dPROD: LDAP_HOST = "ldap.cde-ev.de"

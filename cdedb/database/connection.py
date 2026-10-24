@@ -9,7 +9,11 @@ This should be the only module which makes subsistantial use of psycopg.
 """
 
 import enum
+import functools
 import logging
+import os
+import threading
+import time
 from collections.abc import Callable, Collection, Mapping
 from types import TracebackType
 from typing import Any
@@ -96,6 +100,8 @@ def _create_connection(
         password=password,
         host=host,
         port=port,
+        # Send this on startup, so it survives the DISCARD ALL of _ConnectionPool.
+        client_encoding="UTF8",
         connection_factory=IrradiatedConnection,
         cursor_factory=RealDictCursor,
     )
@@ -105,6 +111,94 @@ def _create_connection(
     return conn
 
 
+class _ConnectionPool:
+    """Idle connections of one process for one database role.
+
+    Connections are handed out by :py:func:`connection_pool_factory` and come
+    back here when :py:meth:`IrradiatedConnection.close` is called on them.
+    Connections which are never closed explicitly are simply garbage collected.
+    """
+
+    # Check that idle connections are still alive before handing them out.
+    PING_AFTER = 30.0  # seconds
+
+    def __init__(self, connect: Callable[[], "IrradiatedConnection"], max_idle: int):
+        self._connect = connect
+        self._max_idle = max_idle
+        self._idle: list[tuple[IrradiatedConnection, float]] = []
+        self._lock = threading.Lock()
+
+    def close_idle(self) -> None:
+        with self._lock:
+            idle, self._idle = self._idle, []
+        for conn, _ in idle:
+            conn.close()
+
+    def get(self) -> "IrradiatedConnection":
+        while True:
+            with self._lock:
+                if not self._idle:
+                    break
+                conn, since = self._idle.pop()
+            if time.monotonic() - since < self.PING_AFTER or _ping(conn):
+                conn._pool = self
+                return conn
+            _LOGGER.info("Dropping dead pooled connection.")
+            conn.close()
+        conn = self._connect()
+        conn._pool = self
+        return conn
+
+    def put(self, conn: "IrradiatedConnection") -> None:
+        """Reset the connection and keep it, if there is room."""
+        try:
+            conn.rollback()
+            conn.autocommit = True
+            with conn.cursor() as cur:
+                # Clear all session state (prepared statements, locks, ...).
+                cur.execute("DISCARD ALL")
+            conn.autocommit = False
+        except psycopg2.Error:
+            _LOGGER.info("Dropping broken pooled connection.", exc_info=True)
+            conn.close()
+            return
+        conn.reset_state()
+        with self._lock:
+            if len(self._idle) < self._max_idle:
+                self._idle.append((conn, time.monotonic()))
+                return
+        conn.close()
+
+
+def _ping(conn: "IrradiatedConnection") -> bool:
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1")
+        conn.rollback()
+    except psycopg2.Error:
+        return False
+    return True
+
+
+_POOLS: dict[tuple[str, DBRole, str, int, int | None, int], _ConnectionPool] = {}
+_POOLS_LOCK = threading.Lock()
+
+
+def _close_idle_connections() -> None:
+    """Close idle connections before forking.
+
+    Otherwise parent and child would share the same server sessions.
+    The child cannot even close them, as that would terminate them for the parent.
+    """
+    with _POOLS_LOCK:
+        pools = list(_POOLS.values())
+    for pool in pools:
+        pool.close_idle()
+
+
+os.register_at_fork(before=_close_idle_connections)
+
+
 def connection_pool_factory(
     dbname: str,
     roles: Collection[DBRole],
@@ -112,14 +206,16 @@ def connection_pool_factory(
     host: str,
     port: int,
     isolation_level: int | None = SERIALIZABLE,
+    max_idle: int = 0,
 ) -> Callable[[DBRole], "IrradiatedConnection"]:
     """This returns callable which takes a database role and returns a
     connection using that role.
 
     Database connections are a costly good (in memory terms), so it is
     wise to create them only when necessary. Since this is costly in
-    itself (in time terms) it is advisable to use connection pooling
-    (e.g. pgbouncer). Additionally this approach offers thread-safety
+    itself (in time terms) it is advisable to use connection pooling,
+    either via an external pooler (e.g. pgbouncer) or by setting ``max_idle``.
+    Additionally this approach offers thread-safety
     since connetions created at runtime are not shared between threads.
 
     :param roles: roles for which database connections shall be available.
@@ -127,6 +223,9 @@ def connection_pool_factory(
     :param isolation_level: Isolation level of database connection, a
         constant coming from :py:mod:`psycopg2.extensions`.
         This should be used very sparingly!
+    :param max_idle: If positive, closed connections are reset and kept for reuse,
+        up to this many per role. The pools are shared by all factories of
+        this process with the same parameters.
     """
     roles = frozenset(roles)
     passwords: Mapping[str, str] = dict(db_passwords)
@@ -134,11 +233,29 @@ def connection_pool_factory(
     def connect(role: DBRole) -> "IrradiatedConnection":
         if role not in roles:
             raise ValueError(f"Role {role!r} not available.")
-        return _create_connection(
-            dbname, role, passwords[role.value], host, port, isolation_level
-        )
+        if max_idle <= 0:
+            return _create_connection(
+                dbname, role, passwords[role.value], host, port, isolation_level
+            )
+        key = (dbname, role, host, port, isolation_level, max_idle)
+        with _POOLS_LOCK:
+            if key not in _POOLS:
+                _POOLS[key] = _ConnectionPool(
+                    functools.partial(
+                        _create_connection,
+                        dbname,
+                        role,
+                        passwords[role.value],
+                        host,
+                        port,
+                        isolation_level,
+                    ),
+                    max_idle,
+                )
+            pool = _POOLS[key]
+        return pool.get()
 
-    _LOGGER.debug(f"Initialised instant connection pool for roles {roles}")
+    _LOGGER.debug(f"Initialised connection factory for roles {roles}")
     return connect
 
 
@@ -206,11 +323,24 @@ class IrradiatedConnection(psycopg2.extensions.connection):
 
     def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
+        # set while handed out by a _ConnectionPool
+        self._pool: _ConnectionPool | None = None
+        self.reset_state()
+
+    def reset_state(self) -> None:
         self._radiation_level = 0
         # keep a copy of any exception we encounter.
         self._saved_etype: type[BaseException] | None = None
         self._saved_evalue: BaseException | None = None
         self._saved_tb: TracebackType | None = None
+
+    def close(self) -> None:
+        """Return the connection to its pool, if any, otherwise close it."""
+        pool, self._pool = self._pool, None
+        if pool is not None and not self.closed:
+            pool.put(self)
+        else:
+            super().close()
 
     def __enter__(self) -> "IrradiatedConnection":
         if self._radiation_level:
