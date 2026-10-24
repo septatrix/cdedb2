@@ -10,6 +10,7 @@ special in here.
 """
 
 import logging
+from contextlib import closing
 
 import psycopg2.extensions
 from passlib.utils import consteq
@@ -22,7 +23,10 @@ from cdedb.common.exceptions import APITokenError
 from cdedb.common.roles import Roles
 from cdedb.config import Config, SecretsConfig
 from cdedb.database import DBRole
-from cdedb.database.connection import connection_pool_factory
+from cdedb.database.connection import (
+    IrradiatedConnection,
+    connection_pool_factory,
+)
 from cdedb.models.core import CorePersona, PersonaStatus
 from cdedb.models.droid import (
     DynamicAPIToken,
@@ -69,12 +73,18 @@ class SessionBackend:
             isolation_level=psycopg2.extensions.ISOLATION_LEVEL_READ_COMMITTED,
         )
 
-    def _is_locked_down(self) -> bool:
-        """Helper to determine if CdEDB is locked."""
+    def _is_locked_down(self, conn: IrradiatedConnection | None = None) -> bool:
+        """Helper to determine if CdEDB is locked.
+
+        :param conn: Reuse this connection instead of opening a new one.
+        """
         if self.conf["LOCKDOWN"]:
             return True
+        if conn is None:
+            with closing(self.connpool(DBRole.anonymous)) as new_conn:
+                return self._is_locked_down(new_conn)
         # we do not have the core backend, so we have to query meta info by hand
-        with self.connpool(DBRole.anonymous) as conn:
+        with conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT info FROM core.meta_info LIMIT 1")
                 data = dict(cur.fetchone() or {})
@@ -92,13 +102,17 @@ class SessionBackend:
         data = None
         sessionkey, sessionkey_errs = inspect(vtypes.PrintableASCII, sessionkey)
         ip, ip_errs = inspect(vtypes.PrintableASCII, ip)
-        if not sessionkey_errs and not ip_errs:
+        if sessionkey_errs or ip_errs:
+            return User()
+
+        # The session key is not yet verified, so use the least privileged role.
+        with closing(self.connpool(DBRole.anonymous)) as conn:
             query = """
                 SELECT persona_id, ip, is_active, atime, ctime
                 FROM core.sessions
                 WHERE sessionkey = %s
             """
-            with self.connpool(DBRole.anonymous) as conn:
+            with conn:
                 with conn.cursor() as cur:
                     cur.execute(query, (sessionkey,))
                     if cur.rowcount == 1:
@@ -106,7 +120,8 @@ class SessionBackend:
                     else:
                         # log message to be picked up by fail2ban
                         self.logger.warning(f"CdEDB invalid session key from {ip}")
-        if data:
+            if not data:
+                return User()
             deactivate = False
             if data["is_active"]:
                 timestamp = now()
@@ -128,33 +143,34 @@ class SessionBackend:
                     SET is_active = False
                     WHERE sessionkey = %s
                 """
-                with self.connpool(DBRole.anonymous) as conn:
+                with conn:
                     with conn.cursor() as cur:
                         cur.execute(query, (sessionkey,))
 
         if not persona_id:
             return User()
 
-        query = "UPDATE core.sessions SET atime = now() WHERE sessionkey = %s"
-        with self.connpool(DBRole.persona) as conn:
-            with conn.cursor() as cur:
-                cur.execute(query, (sessionkey,))
+        with closing(self.connpool(DBRole.persona)) as conn:
+            query = "UPDATE core.sessions SET atime = now() WHERE sessionkey = %s"
+            with conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, (sessionkey,))
 
-                # retrieve the persona
-                cur.execute(*CorePersona.get_select_query([persona_id]))
-                data = cur.fetchone()
-                assert data is not None
-                persona = CorePersona.from_database(data)
+                    # retrieve the persona
+                    cur.execute(*CorePersona.get_select_query([persona_id]))
+                    data = cur.fetchone()
+                    assert data is not None
+                    persona = CorePersona.from_database(data)
 
-                # retrieve its status bits
-                cur.execute(*PersonaStatus.get_select_query([persona_id]))
-                data = cur.fetchone()
-                assert data is not None
-                status = PersonaStatus.from_database(data)
+                    # retrieve its status bits
+                    cur.execute(*PersonaStatus.get_select_query([persona_id]))
+                    data = cur.fetchone()
+                    assert data is not None
+                    status = PersonaStatus.from_database(data)
 
-        if self._is_locked_down() and not (
-            status.is_meta_admin or status.is_core_admin
-        ):
+            is_locked_down = self._is_locked_down(conn)
+
+        if is_locked_down and not (status.is_meta_admin or status.is_core_admin):
             # Short circuit in case of lockdown
             return User()
         if not status.is_active:
